@@ -1,0 +1,47 @@
+/* Reset toàn bộ trang */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Container chính */
+.home {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fdfdfd;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Nội dung bên trong */
+.homeContent {
+  width: 100%;
+  max-width: 1252px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Danh sách bài học */
+.lessonList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+  .lessonList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .lessonList {
+    grid-template-columns: 1fr;
+  }
+}

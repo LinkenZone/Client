@@ -1,0 +1,15 @@
+import React from "react";
+import style from "./Hero.module.css";
+import noPict from "../../assets/no_pic.png";
+
+export default function Hero({ infoImg }) {
+  const finalImage = infoImg || noPict;
+
+  return (
+    <section className={style.hero}>
+      <div className={style.heroContainer}>
+        <img src={finalImage} alt="Thông báo sự kiện" className={style.heroImage} />
+      </div>
+    </section>
+  );
+}
