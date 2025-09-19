@@ -1,0 +1,20 @@
+# Auto-detect text files and perform LF normalization
+* text=auto
+
+# Ensure common web assets use LF line endings
+*.js  text eol=lf
+*.jsx text eol=lf
+*.ts  text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.md  text eol=lf
+
+# Do not normalize images/binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg text eol=lf
