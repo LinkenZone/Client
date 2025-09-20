@@ -1,12 +1,10 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Cách thay bằng API thật (tham khảo)
+Trong api.js, thay các dòng TODO:
+authService.login:
+return await http('/auth/login', { method: 'POST', body: { username, password } });
+authService.register:
+return await http('/auth/register', { method: 'POST', body: { username, password } });
+lessonService.getRecentLessons:
+return await http(/users/${user.id}/recent-lessons);
+lessonService.markRecent:
+return await http(/users/${user.id}/recent-lessons, { method: 'POST', body: { lessonId: lesson.id } });
