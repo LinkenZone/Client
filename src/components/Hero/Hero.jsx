@@ -2,8 +2,8 @@ import React from "react";
 import style from "./Hero.module.css";
 import noPict from "../../assets/no_pic.png";
 
-export default function Hero({ infoImg }) {
-  const finalImage = infoImg || noPict;
+export default function Hero({ infoImg, imageUrl }) {
+  const finalImage = infoImg || imageUrl || noPict;
 
   return (
     <section className={style.hero}>

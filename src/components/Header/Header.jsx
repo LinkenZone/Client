@@ -1,9 +1,13 @@
 import React from "react";
+import { NavLink, useNavigate } from 'react-router-dom';
 import style from "./Header.module.css";
 import logo from "../../assets/LinkenZone_Logo.png";
 import avatar from "../../assets/avatar_ic.jpg";
+import { useAuth } from '../../context/AuthContext';
 
-function Header({ currentPage }) {
+function Header() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const navMap = {
     "Giới thiệu": "intro",
     "Trang chính": "home",
@@ -18,21 +22,26 @@ function Header({ currentPage }) {
         <img className={style.logo} src={logo} alt="Logo" />
         <div className={style.userSection}>
           <div className={style.userName}>Chào mừng bạn đến với LinkenZone</div>
-          <img className={style.avatar} src={avatar} alt="Avatar" />
+          <img
+            className={style.avatar}
+            src={avatar}
+            alt="Avatar"
+            onClick={() => navigate(user ? '/user' : '/login')}
+            style={{ cursor: 'pointer' }}
+          />
         </div>
       </div>
 
       <nav className={style.nav}>
         {Object.entries(navMap).map(([label, slug]) => {
-          const isActive = currentPage === slug;
           return (
             <div key={label} className={style.navItem}>
-              <a
-                href={`/${slug}`}
-                className={`${style.navLink} ${isActive ? style.active : ""}`}
+              <NavLink
+                to={`/${slug}`}
+                className={({ isActive }) => `${style.navLink} ${isActive ? style.active : ""}`}
               >
                 {label}
-              </a>
+              </NavLink>
             </div>
           );
         })}
