@@ -1,4 +1,5 @@
-Cách thay bằng API thật (tham khảo)
+#Cách thay bằng API thật (tham khảo)
+
 Trong api.js, thay các dòng TODO:
 authService.login:
 return await http('/auth/login', { method: 'POST', body: { username, password } });
