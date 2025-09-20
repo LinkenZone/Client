@@ -1,27 +1,29 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import { authService } from '../services/api';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const raw = localStorage.getItem('lz_user');
-    if (raw) {
-      try {
-        setUser(JSON.parse(raw));
-      } catch {
-        // ignore parse error
-      }
-    }
-  }, []);
+  async function login({ username }) {
+    const u = await authService.login({ username });
+    setUser(u);
+    return u;
+  }
 
-  useEffect(() => {
-    if (user) localStorage.setItem('lz_user', JSON.stringify(user));
-    else localStorage.removeItem('lz_user');
-  }, [user]);
+  async function register({ username }) {
+    const u = await authService.register({ username });
+    setUser(u);
+    return u;
+  }
 
-  const value = useMemo(() => ({ user, setUser }), [user]);
+  async function logout() {
+    await authService.logout();
+    setUser(null);
+  }
+
+  const value = useMemo(() => ({ user, login, register, logout }), [user]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

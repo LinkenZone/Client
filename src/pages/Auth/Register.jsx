@@ -3,15 +3,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Register() {
-  const { setUser } = useAuth();
+  const { register } = useAuth();
   const nav = useNavigate();
   const [username, setUsername] = useState('');
 
   function onSubmit(e) {
     e.preventDefault();
     if (!username.trim()) return;
-    setUser({ username });
-    nav('/user');
+  register({ username }).then(() => nav('/user'));
   }
 
   return (

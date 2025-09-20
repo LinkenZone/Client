@@ -1,18 +1,19 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import LessonCard from '../../components/LessonCard/LessonCard';
+import { lessonService } from '../../services/api';
 
 export default function UserPage() {
   const { user } = useAuth();
+  const [recentLessons, setRecentLessons] = useState([]);
 
-  // Demo recent lessons - in real app, load from storage or API
-  const recentLessons = useMemo(() => [
-    { title: 'Bài 1', description: 'Gần đây 1', rating: 4.5 },
-    { title: 'Bài 2', description: 'Gần đây 2', rating: 4.0 },
-    { title: 'Bài 3', description: 'Gần đây 3', rating: 5.0 },
-    { title: 'Bài 4', description: 'Gần đây 4', rating: 4.2 },
-    { title: 'Bài 5', description: 'Gần đây 5', rating: 3.9 },
-  ], []);
+  useEffect(() => {
+    let mounted = true;
+    lessonService.getRecentLessons(user).then((list) => {
+      if (mounted) setRecentLessons(list || []);
+    });
+    return () => { mounted = false; };
+  }, [user]);
 
   return (
     <div style={{ maxWidth: 1200, margin: '120px auto', padding: '0 24px' }}>
