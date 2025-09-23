@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { authService } from '../services/api';
+import { authService, setAuthToken } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -7,19 +7,22 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   async function login({ username }) {
-    const u = await authService.login({ username });
-    setUser(u);
-    return u;
+    const data = await authService.login({ username });
+    setAuthToken(data?.token);
+    setUser(data?.user || null);
+    return data;
   }
 
   async function register({ username }) {
-    const u = await authService.register({ username });
-    setUser(u);
-    return u;
+    const data = await authService.register({ username });
+    setAuthToken(data?.token);
+    setUser(data?.user || null);
+    return data;
   }
 
   async function logout() {
     await authService.logout();
+    setAuthToken(null);
     setUser(null);
   }
 
