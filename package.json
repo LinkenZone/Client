@@ -1,8 +1,10 @@
 {
   "name": "linkenzone",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "LinkenZone - Nền tảng học tập trực tuyến",
+  "author": "LinkenZone Team",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

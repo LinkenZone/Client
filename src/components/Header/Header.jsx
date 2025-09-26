@@ -16,12 +16,19 @@ function Header() {
     "Xã hội": "social"
   };
 
+  // Thêm link Admin nếu user là admin
+  if (user && (user.role === 'admin' || user.username === 'admin')) {
+    navMap["Quản trị"] = "admin";
+  }
+
   return (
     <header className={style.header}>
       <div className={style.topBar}>
         <img className={style.logo} src={logo} alt="Logo" />
         <div className={style.userSection}>
-          <div className={style.userName}>Chào mừng bạn đến với LinkenZone</div>
+          <div className={style.userName}>
+            {user ? user.username : 'Khách'}
+          </div>
           <img
             className={style.avatar}
             src={avatar}

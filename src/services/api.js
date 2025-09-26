@@ -1,7 +1,7 @@
 // API service using axios with base URL and auth interceptor
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 let authToken = null; // in-memory token
 
 export function setAuthToken(token) {

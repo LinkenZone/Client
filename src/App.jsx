@@ -9,6 +9,7 @@ import SocialPage from './pages/Social/SocialPage';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import UserPage from './pages/User/User';
+import AdminPage from './pages/Admin/AdminPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 function App() {
@@ -48,9 +49,10 @@ function App() {
               </MainLayout>
             }
           />
-          <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
-          <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/user" element={<RequireAuth><MainLayout><UserPage /></MainLayout></RequireAuth>} />
+          <Route path="/admin" element={<RequireAdmin><MainLayout><AdminPage /></MainLayout></RequireAdmin>} />
           <Route path="/intro" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -64,5 +66,15 @@ export default App;
 function RequireAuth({ children }) {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function RequireAdmin({ children }) {
+  const { user } = useAuth();
+  // Kiểm tra xem user có tồn tại và có phải admin không
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== 'admin' && user.username !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
   return children;
 }
