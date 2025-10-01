@@ -1,27 +1,61 @@
-import React from 'react';
-import './Header.css';
-import logo from '../assets/LinkenZone_Logo.png';
-import avatarDefault from '../assets/avatar_ic.jpg';
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { assets } from "../assets/assets";
+import { useAuth } from "../context/AuthContext";
 
-const Header = () => {
-  // Giả sử chưa đăng nhập, dùng avatar mặc định
-  const avatar = avatarDefault;
+function Header() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const navMap = {
+    "Giới thiệu": "",
+    "Trang chính": "home",
+    "Các bài học": "lesson",
+    "Tự nhiên": "natural",
+    "Xã hội": "social",
+  };
+
+  // Thêm link Admin nếu user là admin
+  if (user && (user.role === "admin" || user.username === "admin")) {
+    navMap["Quản trị"] = "admin";
+  }
+
   return (
-    <header className="header">
-      <div className="logo-area">
-        <img src={logo} alt="LinkenZone Logo" className="logo-img" />
+    <header className="fixed top-0 left-0 z-50 flex w-full flex-col gap-2 bg-[#95B1CE] px-2 pt-2 shadow-md">
+      <div className="flex w-full items-center justify-around">
+        <img className="w-36" src={assets.logo} alt="Logo" />
+        <div className="flex items-center gap-2">
+          <div className="rounded-md bg-[#FDFDFD] p-2 px-3 py-1 text-sm font-semibold text-[#333]">
+            {user ? user.username : "Khách"}
+          </div>
+          <img
+            className="h-20 w-20 cursor-pointer rounded-full border-2 border-white object-cover"
+            src={assets.avatar}
+            alt="Avatar"
+            onClick={() => navigate(user ? "/user" : "/login")}
+          />
+        </div>
       </div>
-      <nav className="nav-contain">
-        <a href="/">Intro</a>
-        <a href="/home">Home</a>
-        <a href="/natural">Tự nhiên</a>
-        <a href="/social">Xã hội</a>
+
+      <nav className="mx-auto flex w-4/5 flex-col items-center justify-center rounded-t-[35px] bg-[#F2F2F2] md:flex-row">
+        {Object.entries(navMap).map(([label, slug]) => {
+          return (
+            <div key={label} className="flex flex-1 justify-center">
+              <NavLink
+                to={`/${slug}`}
+                className={({ isActive }) =>
+                  isActive
+                    ? "w-full rounded-t-[35px] bg-[#4aa4ff] px-3 py-1 text-center text-[18px] whitespace-nowrap text-white transition duration-300"
+                    : "w-full rounded-t-[35px] bg-transparent px-3 py-1 text-center text-[18px] whitespace-nowrap text-black transition duration-300 hover:bg-[#4aa4ff] hover:text-white"
+                }
+              >
+                {label}
+              </NavLink>
+            </div>
+          );
+        })}
       </nav>
-      <div className="avatar-area">
-        <img src={avatar} alt="Avatar" className="avatar-img" />
-      </div>
     </header>
   );
-};
+}
 
 export default Header;

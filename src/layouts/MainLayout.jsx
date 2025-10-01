@@ -1,12 +1,12 @@
-import React from 'react';
-import Header from '../components/Header/Header';
-import Footer from '../components/Footer/Footer';
+import React from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function MainLayout({ children }) {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main className="mt-22 min-h-screen">{children}</main>
       <Footer />
     </>
   );
