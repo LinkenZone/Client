@@ -1,17 +1,23 @@
-import React from "react";
+import React, { use, useEffect } from "react";
 import LessonCard from "../components/LessonCard";
 import noPict from "../assets/no_pic.png";
 import Hero from "../components/Hero";
+import { api } from "../services/api";
 
 const infoImg = null; // Thay bằng đường dẫn ảnh nếu có
 
 export default function Home() {
   const finalImage = infoImg || noPict;
 
+  const fetchData = async () => {
+    const res = await api.get("/document/my-documents");
+    console.log(res.data);
+  };
+  fetchData();
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center bg-[#fdfdfd]">
       <Hero imageUrl={finalImage} />
-
       <div className="box-border w-full max-w-[1252px] p-8">
         <h1>Trang chính LinkenZone</h1>
         <p>

@@ -1,32 +1,44 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import { api } from "../services/api";
 
 export default function Login() {
-  const { login } = useAuth();
-  const nav = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [capsLockOn, setCapsLockOn] = useState(false);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
 
-  function onSubmit(e) {
+  const isValidEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username.trim()) return;
 
-    login({ username, password }).then((data) => {
-      // Nếu là admin, chuyển đến trang admin
-      if (data?.user?.role === "admin") {
-        nav("/admin");
+    if (!isValidEmail(form.email)) {
+      toast.error("Email không hợp lệ. Vui lòng nhập lại!");
+      return;
+    }
+
+    try {
+      const res = await api.post("/auth/login", form);
+      login(res.data);
+      toast.success("Đăng nhập thành công!");
+      if (res.data.data.user.role === "admin") {
+        navigate("/admin");
       } else {
-        nav("/user");
+        navigate("/user");
       }
-    });
-  }
-
-  function handlePasswordKeyPress(e) {
-    const capsLock = e.getModifierState && e.getModifierState("CapsLock");
-    setCapsLockOn(capsLock);
-  }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Đăng nhập thất bại!");
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#95B1CE] to-[#E6F2FF] p-5">
@@ -34,28 +46,21 @@ export default function Login() {
         <h1 className="mb-8 text-center text-3xl font-semibold text-[#333] sm:text-2xl">
           Đăng nhập
         </h1>
-        <form onSubmit={onSubmit} className="mb-6 grid gap-4">
+        <form onSubmit={handleSubmit} className="mb-6 grid gap-4">
           <input
             className="box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Tên người dùng"
+            onChange={handleChange}
+            name="email"
+            placeholder="Email"
           />
           <div className="relative">
             <input
               type="password"
+              name="password"
               className="box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handlePasswordKeyPress}
-              onKeyUp={handlePasswordKeyPress}
+              onChange={handleChange}
               placeholder="Mật khẩu"
             />
-            {capsLockOn && (
-              <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 animate-[fadeIn_0.3s_ease] rounded bg-[#ff6b6b] px-2 py-1 text-xs font-medium whitespace-nowrap text-white">
-                Caps Lock
-              </div>
-            )}
           </div>
           <button
             type="submit"

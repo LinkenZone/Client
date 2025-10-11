@@ -1,13 +1,19 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useLocation } from "react-router-dom";
 
 export default function MainLayout({ children }) {
+  const location = useLocation();
+  const hideLayout = ["/login", "/register"].includes(location.pathname);
+
   return (
     <>
-      <Header />
-      <main className="mt-22 min-h-screen">{children}</main>
-      <Footer />
+      {!hideLayout && <Header />}
+      <main className={`min-h-screen ${!hideLayout ? "mt-22" : ""}`}>
+        {children}
+      </main>
+      {!hideLayout && <Footer />}
     </>
   );
 }

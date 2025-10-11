@@ -1,54 +1,53 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import { api } from "../services/api";
 
 export default function Register() {
-  const { register } = useAuth();
-  const nav = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [capsLockOnPassword, setCapsLockOnPassword] = useState(false);
-  const [capsLockOnConfirm, setCapsLockOnConfirm] = useState(false);
-  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    role: "user",
+  });
 
-  function validateForm() {
-    const newErrors = {};
+  const isValidEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
-    // Kiểm tra độ dài tên người dùng (tối thiểu 3 ký tự)
-    if (username.trim().length < 3) {
-      newErrors.username = "Tên người dùng phải có ít nhất 3 ký tự";
-    }
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-    // Kiểm tra độ dài mật khẩu (tối thiểu 8 ký tự)
-    if (password.length < 8) {
-      newErrors.password = "Mật khẩu phải có ít nhất 8 ký tự";
-    }
-
-    // Kiểm tra xác nhận mật khẩu
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }
-
-  function onSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
-    register({ username, password }).then(() => nav("/user"));
-  }
 
-  function handlePasswordKeyPress(e) {
-    const capsLock = e.getModifierState && e.getModifierState("CapsLock");
-    setCapsLockOnPassword(capsLock);
-  }
+    if (!form.name.trim() || !form.email.trim() || !form.password.trim()) {
+      toast.error("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
 
-  function handleConfirmPasswordKeyPress(e) {
-    const capsLock = e.getModifierState && e.getModifierState("CapsLock");
-    setCapsLockOnConfirm(capsLock);
-  }
+    if (!isValidEmail(form.email)) {
+      toast.error("Email không hợp lệ. Vui lòng nhập lại!");
+      return;
+    }
+
+    if (form.password.length < 6) {
+      toast.error("Mật khẩu phải có ít nhất 6 ký tự!");
+      return;
+    }
+
+    try {
+      await api.post("/auth/register", form);
+      toast.success("Đăng ký thành công!");
+      navigate("/login");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Đăng ký thất bại!");
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#95B1CE] to-[#E6F2FF] p-5">
@@ -56,61 +55,40 @@ export default function Register() {
         <h1 className="mb-8 text-center text-3xl font-semibold text-[#333] sm:text-2xl">
           Đăng ký
         </h1>
-        <form onSubmit={onSubmit} className="mb-6 grid gap-4">
+        <form onSubmit={handleSubmit} className="mb-6 grid gap-4">
           <div className="relative">
             <input
-              className={`border-2 p-3 px-4 ${errors.username ? "border-[#ff4444] shadow-[0_0_0_2px_rgba(255,68,68,0.2)]" : "border-[#E6F2FF]"} box-border w-full rounded-lg text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Tên người dùng"
+              className={`box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
+              onChange={handleChange}
+              name="name"
+              placeholder="Họ và tên"
             />
-            {errors.username && (
-              <div className="absolute top-[calc(100%+5px)] left-0 z-10 rounded-lg border border-[#ff4444] bg-white/95 px-2 py-1 text-xs font-medium whitespace-nowrap text-[#ff4444]">
-                {errors.username}
-              </div>
-            )}
+          </div>
+          <div className="relative">
+            <input
+              className={`box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
+              onChange={handleChange}
+              name="email"
+              placeholder="Email"
+            />
           </div>
           <div className="relative">
             <input
               type="password"
-              className={`border-2 p-3 px-4 ${errors.password ? "border-[#ff4444] shadow-[0_0_0_2px_rgba(255,68,68,0.2)]" : "border-[#E6F2FF]"} box-border w-full rounded-lg text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handlePasswordKeyPress}
-              onKeyUp={handlePasswordKeyPress}
+              className={`box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
+              onChange={handleChange}
+              name="password"
               placeholder="Mật khẩu"
             />
-            {capsLockOnPassword && (
-              <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 animate-[fadeIn_0.3s_ease] rounded bg-[#ff6b6b] px-2 py-1 text-xs font-medium whitespace-nowrap text-white">
-                Caps Lock
-              </div>
-            )}
-            {errors.password && (
-              <div className="absolute top-[calc(100%+5px)] left-0 z-10 rounded-lg border border-[#ff4444] bg-white/95 px-2 py-1 text-xs font-medium whitespace-nowrap text-[#ff4444]">
-                {errors.password}
-              </div>
-            )}
           </div>
           <div className="relative">
             <input
               type="password"
-              className={`border-2 p-3 px-4 ${errors.confirmPassword ? "border-[#ff4444] shadow-[0_0_0_2px_rgba(255,68,68,0.2)]" : "border-[#E6F2FF]"} box-border w-full rounded-lg text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              onKeyDown={handleConfirmPasswordKeyPress}
-              onKeyUp={handleConfirmPasswordKeyPress}
+              className={`box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
+              onChange={handleChange}
+              name="passwordConfirm"
               placeholder="Xác nhận mật khẩu"
             />
-            {capsLockOnConfirm && (
-              <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 animate-[fadeIn_0.3s_ease] rounded bg-[#ff6b6b] px-2 py-1 text-xs font-medium whitespace-nowrap text-white">
-                Caps Lock
-              </div>
-            )}
-            {errors.confirmPassword && (
-              <div className="absolute top-[calc(100%+5px)] left-0 z-10 rounded-lg border border-[#ff4444] bg-white/95 px-2 py-1 text-xs font-medium whitespace-nowrap text-[#ff4444]">
-                {errors.confirmPassword}
-              </div>
-            )}
           </div>
           <button
             type="submit"

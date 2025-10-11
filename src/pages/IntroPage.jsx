@@ -142,76 +142,86 @@ export default function IntroPage() {
       </div>
 
       {/* Student Section */}
-      <div className="relative mx-auto h-[700px] max-w-[1440px] bg-[#e6f2ff] px-10">
-        <div className="font-roboto absolute top-10 left-1/2 w-[600px] -translate-x-1/2 text-center text-4xl font-bold">
+      <div className="relative mx-auto min-h-[700px] max-w-[1440px] bg-[#e6f2ff] px-10 py-16">
+        <div className="font-roboto mx-auto mb-16 max-w-[600px] text-center text-4xl font-bold">
           Học viên có thể làm gì?
         </div>
-        {[
-          {
-            title: "Tìm kiếm tài liệu",
-            description:
-              "Tìm kiếm slide, đề thi, sách theo môn học một cách nhanh chóng và chính xác",
-            position: "left-20 top-[120px]",
-          },
-          {
-            title: "Tham gia lớp học",
-            description:
-              "Truy cập vào các lớp học được tạo bởi giảng viên và tải xuống tài liệu",
-            position: "left-1/2 -translate-x-1/2 top-[120px]",
-          },
-          {
-            title: "Đánh giá chất lượng",
-            description:
-              "Đánh giá tài liệu theo thang 5 sao để giúp cộng đồng có tài liệu tốt hơn",
-            position: "right-20 top-[120px]",
-          },
-          {
-            title: "Chia sẻ tài liệu",
-            description:
-              "Đóng góp slide, bài tập, đề thi cho cộng đồng sau khi được kiểm duyệt",
-            position: "left-20 top-[400px]",
-          },
-          {
-            title: "Lưu trữ cá nhân",
-            description:
-              "Tạo thư mục cá nhân để lưu trữ và quản lý tài liệu yêu thích",
-            position: "left-1/2 -translate-x-1/2 top-[400px]",
-          },
-          {
-            title: "Theo dõi tiến độ",
-            description:
-              "Theo dõi lịch sử học tập và tiến độ hoàn thành các khóa học",
-            position: "right-20 top-[400px]",
-          },
-        ].map((item, i) => (
-          <div
-            key={i}
-            className={`absolute ${item.position} flex w-[280px] flex-col items-center text-center`}
-          >
-            <div className="font-roboto mb-4 text-[22px] font-bold">
-              {item.title}
-            </div>
-            <div className="font-roboto mb-5 max-w-[250px] text-base leading-relaxed">
-              {item.description}
-            </div>
-            <div className="mt-2.5">
-              <svg
-                width="200px"
-                height="120px"
-                fill="none"
-                viewBox="0 0 263 140"
+        <div className="mx-auto max-w-[1200px]">
+          <div className="grid grid-cols-3 gap-x-8 gap-y-20">
+            {[
+              {
+                title: "Tìm kiếm tài liệu",
+                description:
+                  "Tìm kiếm slide, đề thi, sách theo môn học một cách nhanh chóng và chính xác",
+              },
+              {
+                title: "Tham gia lớp học",
+                description:
+                  "Truy cập vào các lớp học được tạo bởi giảng viên và tải xuống tài liệu",
+              },
+              {
+                title: "Đánh giá chất lượng",
+                description:
+                  "Đánh giá tài liệu theo thang 5 sao để giúp cộng đồng có tài liệu tốt hơn",
+              },
+              {
+                title: "Chia sẻ tài liệu",
+                description:
+                  "Đóng góp slide, bài tập, đề thi cho cộng đồng sau khi được kiểm duyệt",
+              },
+              {
+                title: "Lưu trữ cá nhân",
+                description:
+                  "Tạo thư mục cá nhân để lưu trữ và quản lý tài liệu yêu thích",
+              },
+              {
+                title: "Theo dõi tiến độ",
+                description:
+                  "Theo dõi lịch sử học tập và tiến độ hoàn thành các khóa học",
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex w-full flex-col items-center text-center"
               >
-                <g>
-                  <rect fill="#D9D9D9" height="9" width="263" />
-                  <rect fill="#D9D9D9" height="23" width="245" x="9" y="9" />
-                  <path d="M19 32V140H9V32H19Z" fill="#D9D9D9" />
-                  <path d="M254 32V140H244V32H254Z" fill="#D9D9D9" />
-                  <rect fill="black" height="16" width="210" x="27" y="13" />
-                </g>
-              </svg>
-            </div>
+                <div className="font-roboto mb-4 flex h-[66px] items-center justify-center text-2xl font-bold">
+                  {item.title}
+                </div>
+                <div className="font-roboto mb-6 flex h-[72px] max-w-[250px] items-center justify-center text-base leading-relaxed">
+                  {item.description}
+                </div>
+                <div className="mt-2.5">
+                  <svg
+                    width="200px"
+                    height="120px"
+                    fill="none"
+                    viewBox="0 0 263 140"
+                  >
+                    <g>
+                      <rect fill="#D9D9D9" height="9" width="263" />
+                      <rect
+                        fill="#D9D9D9"
+                        height="23"
+                        width="245"
+                        x="9"
+                        y="9"
+                      />
+                      <path d="M19 32V140H9V32H19Z" fill="#D9D9D9" />
+                      <path d="M254 32V140H244V32H254Z" fill="#D9D9D9" />
+                      <rect
+                        fill="black"
+                        height="16"
+                        width="210"
+                        x="27"
+                        y="13"
+                      />
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );

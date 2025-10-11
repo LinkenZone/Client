@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 import LessonCard from "../components/LessonCard";
 import { lessonService } from "../services/api";
 import avatar from "../assets/avatar_ic.jpg";
+import { useNavigate } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
 export default function UserPage() {
-  const { user } = useAuth();
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [recentLessons, setRecentLessons] = useState([]);
   const [favoriteLessons, setFavoriteLessons] = useState([]);
   const [uploadedLessons, setUploadedLessons] = useState([]);
   const [dragActive, setDragActive] = useState(false);
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   // Mock data cho các bài đã đăng tải
   const mockUploadedLessons = [
@@ -62,9 +67,17 @@ export default function UserPage() {
   };
 
   const handleChange = (e) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      handleFiles(e.target.files);
+    // e.preventDefault();
+    // if (e.target.files && e.target.files[0]) {
+    //   handleFiles(e.target.files);
+    // }
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+
+      // Tạo URL tạm thời để hiển thị
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
     }
   };
 
@@ -102,14 +115,14 @@ export default function UserPage() {
   return (
     <div className="mx-auto flex min-h-[calc(100vh-200px)] max-w-[1400px] flex-col gap-6 pt-[120px] lg:flex-row">
       <aside className="h-fit w-full rounded-xl bg-[#f8f9fa] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.1)] lg:sticky lg:top-[180px] lg:w-[280px]">
-        <div className="mb-8 flex items-center gap-4 border-b border-[#e9ecef] pb-6 lg:block lg:text-center">
+        <div className="mb-8 flex items-center justify-center gap-4 border-b border-[#e9ecef] pb-6 lg:block lg:text-center">
           <img
             src={avatar}
             alt="Avatar"
             className="h-20 w-20 rounded-full border-3 border-[#4AA4FF] object-cover lg:mb-3"
           />
           <h3 className="m-0 text-xl font-semibold text-[#333]">
-            {user?.username || "Người dùng"}
+            {user ? user.full_name.split(" ").pop() : "Người dùng"}
           </h3>
         </div>
         <nav>
@@ -125,6 +138,16 @@ export default function UserPage() {
             <li className="flex cursor-pointer items-center rounded-lg px-4 py-3 font-medium text-[#666] transition-all duration-300 hover:bg-[#4AA4FF] hover:text-white">
               <span className="mr-3 text-lg">⚙️</span>
               Cài đặt
+            </li>
+            <li
+              className="flex cursor-pointer items-center rounded-lg px-4 py-3 font-medium text-[#666] transition-all duration-300 hover:bg-[#4AA4FF] hover:text-white"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+            >
+              <LogOut className="mr-3 text-red-500" />
+              Đăng xuất
             </li>
           </ul>
         </nav>
@@ -198,6 +221,27 @@ export default function UserPage() {
                 Hỗ trợ: PDF, DOC, PPT, MP4, ZIP
               </p>
             </label>
+            {file && (
+              <div className="mt-6 rounded-lg bg-gray-100 p-4 text-left">
+                <p className="font-medium">📂 {file.name}</p>
+
+                {/* Nếu là hình hoặc video thì preview luôn */}
+                {file.type.startsWith("image/") && (
+                  <img
+                    src={previewUrl}
+                    alt="preview"
+                    className="mt-2 w-48 rounded-lg"
+                  />
+                )}
+                {file.type.startsWith("video/") && (
+                  <video
+                    src={previewUrl}
+                    controls
+                    className="mt-2 w-64 rounded-lg"
+                  />
+                )}
+              </div>
+            )}
           </div>
         </section>
 

@@ -44,7 +44,7 @@ const AdminPage = () => {
 
   return (
     <div className="mx-auto min-h-screen max-w-[1400px] bg-[#f8f9fa] p-5">
-      <div className="mb-10 rounded-2xl bg-gradient-to-br from-[#4AA4FF] to-[#5A6E7F] py-8 text-center text-white">
+      <div className="mt-22 mb-10 rounded-2xl bg-gradient-to-br from-[#4AA4FF] to-[#5A6E7F] py-8 text-center text-white">
         <h1 className="m-0 mb-2.5 text-4xl font-bold">Quản trị hệ thống</h1>
         <p className="m-0 text-lg opacity-90">
           Quản lý người dùng và duyệt bài học
