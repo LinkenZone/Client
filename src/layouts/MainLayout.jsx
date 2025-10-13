@@ -8,12 +8,15 @@ export default function MainLayout({ children }) {
   const hideLayout = ["/login", "/register"].includes(location.pathname);
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
+      {/* Header - chiều cao tự động */}
       {!hideLayout && <Header />}
-      <main className={`min-h-screen ${!hideLayout ? "mt-22" : ""}`}>
-        {children}
-      </main>
+
+      {/* Main content - chiếm hết không gian còn lại */}
+      <main className={`flex-1 ${!hideLayout ? "mt-22" : ""}`}>{children}</main>
+
+      {/* Footer - tự động xuống dưới cùng */}
       {!hideLayout && <Footer />}
-    </>
+    </div>
   );
 }
