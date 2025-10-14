@@ -1,18 +1,18 @@
-import React, { useContext } from "react";
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import { useContext } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
-import IntroPage from "./pages/IntroPage";
-import Home from "./pages/Home";
-import LessonPage from "./pages/LessonPage";
-import MainLayout from "./layouts/MainLayout";
-import NaturalPage from "./pages/NaturalPage";
-import SocialPage from "./pages/SocialPage";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import UserPage from "./pages/User";
-import AdminPage from "./pages/AdminPage";
-import { ToastContainer } from "react-toastify";
-import { AuthContext } from "./context/AuthContext";
+import { ToastContainer } from 'react-toastify';
+import { AuthContext } from './context/AuthContext';
+import MainLayout from './layouts/MainLayout';
+import AdminPage from './pages/AdminPage';
+import Home from './pages/Home';
+import IntroPage from './pages/IntroPage';
+import LessonPage from './pages/LessonPage';
+import Login from './pages/Login';
+import NaturalPage from './pages/NaturalPage';
+import Register from './pages/Register';
+import SocialPage from './pages/SocialPage';
+import UserPage from './pages/User';
 
 function App() {
   return (

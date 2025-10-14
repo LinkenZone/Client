@@ -1,5 +1,4 @@
-import React from "react";
-import noPict from "../assets/no_pic.png";
+import noPict from '../assets/no_pic.png';
 
 export default function Hero({ infoImg, imageUrl }) {
   const finalImage = infoImg || imageUrl || noPict;

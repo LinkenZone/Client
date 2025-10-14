@@ -1,21 +1,21 @@
-import React, { useState, useMemo } from "react";
+import { useMemo, useState } from 'react';
 
 const AdminPage = () => {
-  const [activeTab, setActiveTab] = useState("lessons");
+  const [activeTab, setActiveTab] = useState('lessons');
   const [deleteModal, setDeleteModal] = useState({ show: false, lesson: null });
-  const [deleteReason, setDeleteReason] = useState("");
+  const [deleteReason, setDeleteReason] = useState('');
 
   // Dữ liệu mẫu - sẽ được thay thế bằng API
   const pendingLessons = useMemo(() => [], []); // Hiện tại chưa có bài giảng cần duyệt
   const users = useMemo(() => [], []); // Hiện tại chưa có người dùng
 
   const handleApproveLesson = (lessonId) => {
-    console.log("Approved lesson:", lessonId);
+    console.log('Approved lesson:', lessonId);
     // TODO: API call để duyệt bài học
   };
 
   const handleRejectLesson = (lessonId) => {
-    console.log("Rejected lesson:", lessonId);
+    console.log('Rejected lesson:', lessonId);
     // TODO: API call để từ chối bài học
   };
 
@@ -25,61 +25,52 @@ const AdminPage = () => {
 
   const confirmDeleteLesson = () => {
     if (deleteReason.trim()) {
-      console.log(
-        "Deleted lesson:",
-        deleteModal.lesson.id,
-        "Reason:",
-        deleteReason,
-      );
+      console.log('Deleted lesson:', deleteModal.lesson.id, 'Reason:', deleteReason);
       // TODO: API call để xóa bài học với lý do
       setDeleteModal({ show: false, lesson: null });
-      setDeleteReason("");
+      setDeleteReason('');
     }
   };
 
   const cancelDelete = () => {
     setDeleteModal({ show: false, lesson: null });
-    setDeleteReason("");
+    setDeleteReason('');
   };
 
   return (
     <div className="mx-auto min-h-screen max-w-[1400px] bg-[#f8f9fa] p-5">
       <div className="mt-22 mb-10 rounded-2xl bg-gradient-to-br from-[#4AA4FF] to-[#5A6E7F] py-8 text-center text-white">
         <h1 className="m-0 mb-2.5 text-4xl font-bold">Quản trị hệ thống</h1>
-        <p className="m-0 text-lg opacity-90">
-          Quản lý người dùng và duyệt bài học
-        </p>
+        <p className="m-0 text-lg opacity-90">Quản lý người dùng và duyệt bài học</p>
       </div>
 
       <div className="mx-auto mb-10 flex max-w-[400px] justify-center rounded-xl bg-white p-2 shadow-[0_2px_12px_rgba(0,0,0,0.1)]">
         <button
           className={`flex-1 cursor-pointer rounded-lg border-none px-5 py-3 text-sm font-medium transition-all duration-300 ${
-            activeTab === "lessons"
-              ? "bg-[#4AA4FF] text-white"
-              : "bg-transparent text-[#666] hover:bg-[#f8f9fa] hover:text-[#333]"
+            activeTab === 'lessons'
+              ? 'bg-[#4AA4FF] text-white'
+              : 'bg-transparent text-[#666] hover:bg-[#f8f9fa] hover:text-[#333]'
           }`}
-          onClick={() => setActiveTab("lessons")}
+          onClick={() => setActiveTab('lessons')}
         >
           📚 Duyệt bài học
         </button>
         <button
           className={`flex-1 cursor-pointer rounded-lg border-none px-5 py-3 text-sm font-medium transition-all duration-300 ${
-            activeTab === "users"
-              ? "bg-[#4AA4FF] text-white"
-              : "bg-transparent text-[#666] hover:bg-[#f8f9fa] hover:text-[#333]"
+            activeTab === 'users'
+              ? 'bg-[#4AA4FF] text-white'
+              : 'bg-transparent text-[#666] hover:bg-[#f8f9fa] hover:text-[#333]'
           }`}
-          onClick={() => setActiveTab("users")}
+          onClick={() => setActiveTab('users')}
         >
           👥 Quản lý người dùng
         </button>
       </div>
 
-      {activeTab === "lessons" && (
+      {activeTab === 'lessons' && (
         <div className="rounded-2xl bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
           <div className="mb-8 flex items-center gap-4 border-b-2 border-[#f0f0f0] pb-4">
-            <h2 className="m-0 text-2xl font-semibold text-[#333]">
-              Bài học chờ duyệt
-            </h2>
+            <h2 className="m-0 text-2xl font-semibold text-[#333]">Bài học chờ duyệt</h2>
             <span className="rounded-full bg-[#4AA4FF] px-3 py-1 text-sm font-semibold text-white">
               {pendingLessons.length}
             </span>
@@ -88,12 +79,9 @@ const AdminPage = () => {
           {pendingLessons.length === 0 ? (
             <div className="px-5 py-20 text-center text-[#666]">
               <div className="mb-5 text-6xl">📝</div>
-              <h3 className="mb-2.5 text-2xl text-[#333]">
-                Hiện tại chưa có bài giảng cần duyệt
-              </h3>
+              <h3 className="mb-2.5 text-2xl text-[#333]">Hiện tại chưa có bài giảng cần duyệt</h3>
               <p className="mx-auto max-w-[400px] text-base leading-relaxed opacity-80">
-                Tất cả bài học đã được xử lý hoặc chưa có bài học mới được gửi
-                lên.
+                Tất cả bài học đã được xử lý hoặc chưa có bài học mới được gửi lên.
               </p>
             </div>
           ) : (
@@ -154,12 +142,10 @@ const AdminPage = () => {
         </div>
       )}
 
-      {activeTab === "users" && (
+      {activeTab === 'users' && (
         <div className="rounded-2xl bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
           <div className="mb-8 flex items-center gap-4 border-b-2 border-[#f0f0f0] pb-4">
-            <h2 className="m-0 text-2xl font-semibold text-[#333]">
-              Danh sách người dùng
-            </h2>
+            <h2 className="m-0 text-2xl font-semibold text-[#333]">Danh sách người dùng</h2>
             <span className="rounded-full bg-[#4AA4FF] px-3 py-1 text-sm font-semibold text-white">
               {users.length}
             </span>
@@ -168,9 +154,7 @@ const AdminPage = () => {
           {users.length === 0 ? (
             <div className="px-5 py-20 text-center text-[#666]">
               <div className="mb-5 text-6xl">👤</div>
-              <h3 className="mb-2.5 text-2xl text-[#333]">
-                Hiện tại chưa có người dùng
-              </h3>
+              <h3 className="mb-2.5 text-2xl text-[#333]">Hiện tại chưa có người dùng</h3>
               <p className="mx-auto max-w-[400px] text-base leading-relaxed opacity-80">
                 Hệ thống chưa có người dùng nào đăng ký.
               </p>
@@ -195,12 +179,12 @@ const AdminPage = () => {
                   <div>
                     <span
                       className={`inline-block rounded-full px-2.5 py-1 text-center text-xs font-semibold ${
-                        user.status === "active"
-                          ? "bg-[#d4edda] text-[#155724]"
-                          : "bg-[#f8d7da] text-[#721c24]"
+                        user.status === 'active'
+                          ? 'bg-[#d4edda] text-[#155724]'
+                          : 'bg-[#f8d7da] text-[#721c24]'
                       }`}
                     >
-                      {user.status === "active" ? "Hoạt động" : "Bị khóa"}
+                      {user.status === 'active' ? 'Hoạt động' : 'Bị khóa'}
                     </span>
                   </div>
                   <div>
@@ -231,14 +215,11 @@ const AdminPage = () => {
 
             <div className="px-8">
               <p className="mb-5 text-base leading-relaxed text-[#555]">
-                Bạn có chắc chắn muốn xóa bài học{" "}
-                <strong>"{deleteModal.lesson?.title}"</strong>?
+                Bạn có chắc chắn muốn xóa bài học <strong>"{deleteModal.lesson?.title}"</strong>?
               </p>
 
               <div className="mb-6">
-                <label className="mb-2 block font-semibold text-[#333]">
-                  Lý do xóa:
-                </label>
+                <label className="mb-2 block font-semibold text-[#333]">Lý do xóa:</label>
                 <textarea
                   value={deleteReason}
                   onChange={(e) => setDeleteReason(e.target.value)}

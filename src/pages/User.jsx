@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import LessonCard from "../components/LessonCard";
-import { lessonService } from "../services/api";
-import avatar from "../assets/avatar_ic.jpg";
-import { useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { LogOut } from 'lucide-react';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import avatar from '../assets/avatar_ic.jpg';
+import LessonCard from '../components/LessonCard';
+import { AuthContext } from '../context/AuthContext';
+import { lessonService } from '../services/api';
 
 export default function UserPage() {
   const { user, logout } = useContext(AuthContext);
@@ -18,18 +18,18 @@ export default function UserPage() {
 
   // Mock data cho các bài đã đăng tải
   const mockUploadedLessons = [
-    { id: 1, name: "Bài học Toán học cơ bản", status: "approved" },
-    { id: 2, name: "Hướng dẫn Vật lý", status: "pending" },
-    { id: 3, name: "Khoa học tự nhiên", status: "rejected" },
-    { id: 4, name: "Sinh học phân tử", status: "approved" },
-    { id: 5, name: "Hóa học hữu cơ", status: "pending" },
-    { id: 6, name: "Địa lý thế giới", status: "approved" },
-    { id: 7, name: "Lịch sử Việt Nam", status: "rejected" },
-    { id: 8, name: "Văn học cổ điển", status: "approved" },
-    { id: 9, name: "Tiếng Anh giao tiếp", status: "pending" },
-    { id: 10, name: "Tin học căn bản", status: "approved" },
-    { id: 11, name: "Toán cao cấp", status: "pending" },
-    { id: 12, name: "Vật lý đại cương", status: "approved" },
+    { id: 1, name: 'Bài học Toán học cơ bản', status: 'approved' },
+    { id: 2, name: 'Hướng dẫn Vật lý', status: 'pending' },
+    { id: 3, name: 'Khoa học tự nhiên', status: 'rejected' },
+    { id: 4, name: 'Sinh học phân tử', status: 'approved' },
+    { id: 5, name: 'Hóa học hữu cơ', status: 'pending' },
+    { id: 6, name: 'Địa lý thế giới', status: 'approved' },
+    { id: 7, name: 'Lịch sử Việt Nam', status: 'rejected' },
+    { id: 8, name: 'Văn học cổ điển', status: 'approved' },
+    { id: 9, name: 'Tiếng Anh giao tiếp', status: 'pending' },
+    { id: 10, name: 'Tin học căn bản', status: 'approved' },
+    { id: 11, name: 'Toán cao cấp', status: 'pending' },
+    { id: 12, name: 'Vật lý đại cương', status: 'approved' },
   ];
 
   useEffect(() => {
@@ -49,9 +49,9 @@ export default function UserPage() {
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
+    if (e.type === 'dragenter' || e.type === 'dragover') {
       setDragActive(true);
-    } else if (e.type === "dragleave") {
+    } else if (e.type === 'dragleave') {
       setDragActive(false);
     }
   };
@@ -82,33 +82,33 @@ export default function UserPage() {
   };
 
   const handleFiles = (files) => {
-    console.log("Files uploaded:", files);
+    console.log('Files uploaded:', files);
     // TODO: Handle file upload
   };
 
   const getStatusText = (status) => {
     switch (status) {
-      case "approved":
-        return "Đã duyệt";
-      case "pending":
-        return "Chờ duyệt";
-      case "rejected":
-        return "Từ chối";
+      case 'approved':
+        return 'Đã duyệt';
+      case 'pending':
+        return 'Chờ duyệt';
+      case 'rejected':
+        return 'Từ chối';
       default:
-        return "Không xác định";
+        return 'Không xác định';
     }
   };
 
   const getStatusClasses = (status) => {
     switch (status) {
-      case "approved":
-        return "bg-[#d4edda] text-[#155724]";
-      case "pending":
-        return "bg-[#fff3cd] text-[#856404]";
-      case "rejected":
-        return "bg-[#f8d7da] text-[#721c24]";
+      case 'approved':
+        return 'bg-[#d4edda] text-[#155724]';
+      case 'pending':
+        return 'bg-[#fff3cd] text-[#856404]';
+      case 'rejected':
+        return 'bg-[#f8d7da] text-[#721c24]';
       default:
-        return "bg-gray-200 text-gray-600";
+        return 'bg-gray-200 text-gray-600';
     }
   };
 
@@ -122,7 +122,7 @@ export default function UserPage() {
             className="h-20 w-20 rounded-full border-3 border-[#4AA4FF] object-cover lg:mb-3"
           />
           <h3 className="m-0 text-xl font-semibold text-[#333]">
-            {user ? user.full_name.split(" ").pop() : "Người dùng"}
+            {user ? user.full_name.split(' ').pop() : 'Người dùng'}
           </h3>
         </div>
         <nav>
@@ -143,7 +143,7 @@ export default function UserPage() {
               className="flex cursor-pointer items-center rounded-lg px-4 py-3 font-medium text-[#666] transition-all duration-300 hover:bg-[#4AA4FF] hover:text-white"
               onClick={() => {
                 logout();
-                navigate("/login");
+                navigate('/login');
               }}
             >
               <LogOut className="mr-3 text-red-500" />
@@ -167,9 +167,7 @@ export default function UserPage() {
                     key={lesson.id}
                     className="flex flex-col justify-between rounded-lg border-l-4 border-[#dee2e6] bg-[#f8f9fa] p-4 transition-all duration-300 hover:translate-x-1 hover:bg-[#e9ecef] md:flex-row md:items-center"
                   >
-                    <span className="flex-1 font-medium text-[#333]">
-                      {lesson.name}
-                    </span>
+                    <span className="flex-1 font-medium text-[#333]">{lesson.name}</span>
                     <span
                       className={`mt-2 rounded-full px-3 py-1 text-sm font-semibold tracking-wider uppercase md:mt-0 ${getStatusClasses(lesson.status)}`}
                     >
@@ -194,8 +192,8 @@ export default function UserPage() {
           <div
             className={`cursor-pointer rounded-xl border-2 border-dashed border-[#dee2e6] bg-[#f8f9fa] p-10 text-center transition-all duration-300 ${
               dragActive
-                ? "border-[#4AA4FF] bg-[#e3f2fd]"
-                : "hover:border-[#4AA4FF] hover:bg-[#e3f2fd]"
+                ? 'border-[#4AA4FF] bg-[#e3f2fd]'
+                : 'hover:border-[#4AA4FF] hover:bg-[#e3f2fd]'
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -212,33 +210,21 @@ export default function UserPage() {
             <label htmlFor="fileUpload" className="block cursor-pointer">
               <div className="mb-4 text-5xl">📁</div>
               <p className="mb-2 text-lg text-[#333]">
-                Kéo thả file vào đây hoặc{" "}
-                <span className="font-semibold text-[#4AA4FF] underline">
-                  chọn file
-                </span>
+                Kéo thả file vào đây hoặc{' '}
+                <span className="font-semibold text-[#4AA4FF] underline">chọn file</span>
               </p>
-              <p className="m-0 text-sm text-[#666]">
-                Hỗ trợ: PDF, DOC, PPT, MP4, ZIP
-              </p>
+              <p className="m-0 text-sm text-[#666]">Hỗ trợ: PDF, DOC, PPT, MP4, ZIP</p>
             </label>
             {file && (
               <div className="mt-6 rounded-lg bg-gray-100 p-4 text-left">
                 <p className="font-medium">📂 {file.name}</p>
 
                 {/* Nếu là hình hoặc video thì preview luôn */}
-                {file.type.startsWith("image/") && (
-                  <img
-                    src={previewUrl}
-                    alt="preview"
-                    className="mt-2 w-48 rounded-lg"
-                  />
+                {file.type.startsWith('image/') && (
+                  <img src={previewUrl} alt="preview" className="mt-2 w-48 rounded-lg" />
                 )}
-                {file.type.startsWith("video/") && (
-                  <video
-                    src={previewUrl}
-                    controls
-                    className="mt-2 w-64 rounded-lg"
-                  />
+                {file.type.startsWith('video/') && (
+                  <video src={previewUrl} controls className="mt-2 w-64 rounded-lg" />
                 )}
               </div>
             )}
