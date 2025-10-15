@@ -1,11 +1,10 @@
-import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 export default function MainLayout({ children }) {
   const location = useLocation();
-  const hideLayout = ["/login", "/register"].includes(location.pathname);
+  const hideLayout = ['/login', '/register'].includes(location.pathname);
 
   return (
     <div className="flex min-h-screen flex-col">

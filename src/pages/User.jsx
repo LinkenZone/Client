@@ -1,3 +1,4 @@
+
 // components/UserPage/index.jsx
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -90,7 +91,6 @@ export default function UserPage() {
           )}
         </div>
       </main>
-
       <UploadModal
         isOpen={showUploadModal}
         onClose={handleCloseModal}

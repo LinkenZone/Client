@@ -1,17 +1,20 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import { api } from "../services/api";
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { api } from '../services/api';
 
 export default function Register() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
-    role: "user",
+    name: '',
+    email: '',
+    password: '',
+    passwordConfirm: '',
+    role: 'user',
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const isValidEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,35 +29,33 @@ export default function Register() {
     e.preventDefault();
 
     if (!form.name.trim() || !form.email.trim() || !form.password.trim()) {
-      toast.error("Vui lòng nhập đầy đủ thông tin!");
+      toast.error('Vui lòng nhập đầy đủ thông tin!');
       return;
     }
 
     if (!isValidEmail(form.email)) {
-      toast.error("Email không hợp lệ. Vui lòng nhập lại!");
+      toast.error('Email không hợp lệ. Vui lòng nhập lại!');
       return;
     }
 
     if (form.password.length < 6) {
-      toast.error("Mật khẩu phải có ít nhất 6 ký tự!");
+      toast.error('Mật khẩu phải có ít nhất 6 ký tự!');
       return;
     }
 
     try {
-      await api.post("/auth/register", form);
-      toast.success("Đăng ký thành công!");
-      navigate("/login");
+      await api.post('/auth/register', form);
+      toast.success('Đăng ký thành công!');
+      navigate('/login');
     } catch (err) {
-      toast.error(err.response?.data?.message || "Đăng ký thất bại!");
+      toast.error(err.response?.data?.message || 'Đăng ký thất bại!');
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#95B1CE] to-[#E6F2FF] p-5">
       <div className="w-full max-w-[480px] rounded-xl bg-white p-10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] sm:p-6">
-        <h1 className="mb-8 text-center text-3xl font-semibold text-[#333] sm:text-2xl">
-          Đăng ký
-        </h1>
+        <h1 className="mb-8 text-center text-3xl font-semibold text-[#333] sm:text-2xl">Đăng ký</h1>
         <form onSubmit={handleSubmit} className="mb-6 grid gap-4">
           <div className="relative">
             <input
@@ -72,23 +73,37 @@ export default function Register() {
               placeholder="Email"
             />
           </div>
-          <div className="relative">
+          <div className="relative flex items-center">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               className={`box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
               onChange={handleChange}
               name="password"
               placeholder="Mật khẩu"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 cursor-pointer text-gray-500 transition-all duration-300 ease-in-out hover:text-gray-700"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
-          <div className="relative">
+          <div className="relative flex items-center">
             <input
-              type="password"
+              type={showConfirm ? 'text' : 'password'}
               className={`box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]`}
               onChange={handleChange}
               name="passwordConfirm"
               placeholder="Xác nhận mật khẩu"
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirm(!showConfirm)}
+              className="absolute right-3 cursor-pointer text-gray-500 transition-all duration-300 ease-in-out hover:text-gray-700"
+            >
+              {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
           <button
             type="submit"
@@ -98,11 +113,8 @@ export default function Register() {
           </button>
         </form>
         <p className="text-center text-sm text-[#666]">
-          Đã có tài khoản?{" "}
-          <Link
-            to="/login"
-            className="font-medium text-[#4AA4FF] no-underline hover:underline"
-          >
+          Đã có tài khoản?{' '}
+          <Link to="/login" className="font-medium text-[#4AA4FF] no-underline hover:underline">
             Đăng nhập
           </Link>
         </p>
