@@ -17,24 +17,32 @@ export default function UserPage() {
 
   const { activeView, setActiveView, viewMode, setViewMode, viewTitle } =
     useFileView();
-  const { file, previewUrl, handleChange, handleUpload, reset } =
+  const { file, previewUrl, uploading, handleChange, handleUpload, reset } =
     useFileUpload();
+
+  // Function để reload danh sách documents
+  const fetchDocuments = async () => {
+    try {
+      const data = await loadFile();
+      if (data) {
+        setUploadedLessons(data);
+      }
+    } catch (error) {
+      console.error("Error loading documents:", error);
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
 
-    const fetchDocuments = async () => {
-      try {
-        const data = await loadFile();
-        if (mounted && data) {
-          setUploadedLessons(data);
-        }
-      } catch (error) {
-        console.error("Error loading documents:", error);
+    const loadData = async () => {
+      const data = await loadFile();
+      if (mounted && data) {
+        setUploadedLessons(data);
       }
     };
 
-    fetchDocuments();
+    loadData();
 
     return () => {
       mounted = false;
@@ -47,8 +55,15 @@ export default function UserPage() {
   };
 
   const handleUploadClick = async () => {
-    await handleUpload();
-    handleCloseModal();
+    try {
+      await handleUpload();
+      handleCloseModal();
+      // Reload danh sách sau khi upload thành công
+      await fetchDocuments();
+    } catch (error) {
+      // Error đã được handle trong handleUpload
+      console.error("Upload failed:", error);
+    }
   };
 
   return (
@@ -83,6 +98,7 @@ export default function UserPage() {
         previewUrl={previewUrl}
         onFileChange={handleChange}
         onUpload={handleUploadClick}
+        uploading={uploading}
       />
     </div>
   );

@@ -9,6 +9,7 @@ export default function UploadModal({
   previewUrl,
   onFileChange,
   onUpload,
+  uploading, // Thêm prop uploading
 }) {
   const [dragActive, setDragActive] = useState(false);
 
@@ -113,16 +114,24 @@ export default function UploadModal({
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
+            disabled={uploading}
+            className="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Hủy
           </button>
           <button
             onClick={onUpload}
-            disabled={!file}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+            disabled={!file || uploading}
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
-            Tải lên
+            {uploading ? (
+              <>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                <span>Đang tải lên...</span>
+              </>
+            ) : (
+              "Tải lên"
+            )}
           </button>
         </div>
       </div>
