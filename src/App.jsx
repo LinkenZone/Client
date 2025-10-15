@@ -53,8 +53,23 @@ function App() {
 export default App;
 
 function ProtectedRoute({ children, role }) {
-  const { user } = useContext(AuthContext);
-  if (!user) return <Navigate to="/login" />;
-  if (role && user.role !== role) return <Navigate to="/" />;
+  const { user, loading } = useContext(AuthContext);
+
+  // Hiển thị loading khi đang restore user từ localStorage
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
+          <p className="mt-4 text-gray-600">Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Sau khi load xong, kiểm tra user
+  if (!user) return <Navigate to="/login" replace />;
+  if (role && user.role !== role) return <Navigate to="/" replace />;
+
   return children;
 }
