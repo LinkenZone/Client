@@ -12,7 +12,7 @@ export default function MainLayout({ children }) {
       {!hideLayout && <Header />}
 
       {/* Main content - chiếm hết không gian còn lại */}
-      <main className={`flex-1 ${!hideLayout ? "mt-22" : ""}`}>{children}</main>
+      <main className={`flex-1 ${!hideLayout ? 'mt-22' : ''}`}>{children}</main>
 
       {/* Footer - tự động xuống dưới cùng */}
       {!hideLayout && <Footer />}
