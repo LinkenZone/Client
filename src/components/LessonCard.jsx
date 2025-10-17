@@ -1,6 +1,4 @@
-import React from "react";
-import noPict from "../assets/no_pic.png";
-import { lessonService } from "../services/api";
+import noPict from '../assets/no_pic.png';
 
 function LessonCard({ lesson }) {
   return (
@@ -9,16 +7,12 @@ function LessonCard({ lesson }) {
         <img
           className="max-h-full max-w-full"
           src={lesson.image || noPict}
-          alt={lesson.image ? lesson.title : "No Image Available"}
+          alt={lesson.image ? lesson.title : 'No Image Available'}
         />
       </div>
       <div className="rounded-b-[35px] border-t border-[#d1fae5] bg-[#ecfdf5] p-3 px-4">
-        <h3 className="font-roboto mb-1.5 text-lg font-bold text-black">
-          {lesson.title}
-        </h3>
-        <p className="font-roboto mb-2.5 text-base text-black">
-          {lesson.description}
-        </p>
+        <h3 className="font-roboto mb-1.5 text-lg font-bold text-black">{lesson.title}</h3>
+        <p className="font-roboto mb-2.5 text-base text-black">{lesson.description}</p>
         <p className="text-sm text-[#333]">⭐: {lesson.rating}/5</p>
       </div>
     </div>

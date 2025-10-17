@@ -1,13 +1,15 @@
-import React, { useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import { toast } from "react-toastify";
-import { api } from "../services/api";
+import { Eye, EyeOff } from 'lucide-react';
+import { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../context/AuthContext';
+import { api } from '../services/api';
 
 export default function Login() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
 
   const isValidEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,21 +24,21 @@ export default function Login() {
     e.preventDefault();
 
     if (!isValidEmail(form.email)) {
-      toast.error("Email không hợp lệ. Vui lòng nhập lại!");
+      toast.error('Email không hợp lệ. Vui lòng nhập lại!');
       return;
     }
 
     try {
-      const res = await api.post("/auth/login", form);
+      const res = await api.post('/auth/login', form);
       login(res.data);
-      toast.success("Đăng nhập thành công!");
-      if (res.data.data.user.role === "admin") {
-        navigate("/admin");
+      toast.success('Đăng nhập thành công!');
+      if (res.data.data.user.role === 'admin') {
+        navigate('/admin');
       } else {
-        navigate("/user");
+        navigate('/user');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Đăng nhập thất bại!");
+      toast.error(err.response?.data?.message || 'Đăng nhập thất bại!');
     }
   };
 
@@ -53,14 +55,21 @@ export default function Login() {
             name="email"
             placeholder="Email"
           />
-          <div className="relative">
+          <div className="relative flex items-center">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               name="password"
               className="box-border w-full rounded-lg border-2 border-[#E6F2FF] p-3 px-4 text-base transition-colors duration-300 outline-none placeholder:text-[#999] focus:border-[#4AA4FF]"
               onChange={handleChange}
               placeholder="Mật khẩu"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 cursor-pointer text-gray-500 transition-all duration-300 ease-in-out hover:text-gray-700"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
           <button
             type="submit"
@@ -70,11 +79,8 @@ export default function Login() {
           </button>
         </form>
         <p className="text-center text-sm text-[#666]">
-          Chưa có tài khoản?{" "}
-          <Link
-            to="/register"
-            className="font-medium text-[#4AA4FF] no-underline hover:underline"
-          >
+          Chưa có tài khoản?{' '}
+          <Link to="/register" className="font-medium text-[#4AA4FF] no-underline hover:underline">
             Đăng ký
           </Link>
         </p>

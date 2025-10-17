@@ -1,4 +1,4 @@
-import { assets } from "../assets/assets";
+import { assets } from '../assets/assets';
 
 export default function IntroPage() {
   return (
@@ -20,10 +20,7 @@ export default function IntroPage() {
               </div>
               <div className="font-roboto absolute top-[220px] left-1/2 w-[520px] -translate-x-1/2 text-center text-lg leading-relaxed">
                 <div>Nền tảng học tập mở</div>
-                <div>
-                  Nơi mọi người có thể chia sẻ, khám phá và kết nối tri thức với
-                  nhau
-                </div>
+                <div>Nơi mọi người có thể chia sẻ, khám phá và kết nối tri thức với nhau</div>
               </div>
               <div className="absolute bottom-[30px] left-1/2 -translate-x-1/2">
                 <div className="relative h-[45px] w-[350px] cursor-pointer rounded-[25px] bg-[#53ccec]" />
@@ -58,9 +55,8 @@ export default function IntroPage() {
             style={{ backgroundImage: `url('${assets.cloud1}')` }}
           >
             <div>
-              LinkenZone là hệ thống Thư viện số tập trung, ra đời nhằm giải
-              quyết tình trạng tài liệu học tập bị phân tán, khó tìm kiếm và
-              thiếu kiểm chứng chất lượng.
+              LinkenZone là hệ thống Thư viện số tập trung, ra đời nhằm giải quyết tình trạng tài
+              liệu học tập bị phân tán, khó tìm kiếm và thiếu kiểm chứng chất lượng.
             </div>
           </div>
         </div>
@@ -73,8 +69,8 @@ export default function IntroPage() {
             style={{ backgroundImage: `url('${assets.cloud2}')` }}
           >
             <div>
-              Website tích hợp công cụ tìm kiếm toàn văn mạnh mẽ, cùng các bộ
-              lọc theo môn học, giảng viên, loại tài liệu.
+              Website tích hợp công cụ tìm kiếm toàn văn mạnh mẽ, cùng các bộ lọc theo môn học,
+              giảng viên, loại tài liệu.
             </div>
           </div>
 
@@ -84,8 +80,8 @@ export default function IntroPage() {
             style={{ backgroundImage: `url('${assets.cloud3}')` }}
           >
             <div>
-              Người dùng có thể đánh giá tài liệu theo thang 5 sao, góp phần xây
-              dựng cộng đồng học thuật chất lượng.
+              Người dùng có thể đánh giá tài liệu theo thang 5 sao, góp phần xây dựng cộng đồng học
+              thuật chất lượng.
             </div>
           </div>
         </div>
@@ -98,32 +94,32 @@ export default function IntroPage() {
         </div>
         {[
           {
-            title: "Khẳng định chuyên môn",
+            title: 'Khẳng định chuyên môn',
             description:
-              "Hồ sơ giảng viên hiển thị tài liệu, lớp học và đánh giá – giúp nâng cao uy tín.",
-            bgColor: "white",
-            position: "right-10 top-[120px]",
+              'Hồ sơ giảng viên hiển thị tài liệu, lớp học và đánh giá – giúp nâng cao uy tín.',
+            bgColor: 'white',
+            position: 'right-10 top-[120px]',
           },
           {
-            title: "Kiểm duyệt tài liệu",
+            title: 'Kiểm duyệt tài liệu',
             description:
-              "Giảng viên có quyền kiểm duyệt nội dung do người dùng đóng góp để đảm bảo chất lượng.",
-            bgColor: "#a7c7e7",
-            position: "left-1/2 -translate-x-1/2 top-[180px]",
+              'Giảng viên có quyền kiểm duyệt nội dung do người dùng đóng góp để đảm bảo chất lượng.',
+            bgColor: '#a7c7e7',
+            position: 'left-1/2 -translate-x-1/2 top-[180px]',
           },
           {
-            title: "Tạo lớp học dễ dàng",
+            title: 'Tạo lớp học dễ dàng',
             description:
-              "Giảng viên có thể tạo lớp học, tải lên slide, đề thi, ebook và chia sẻ với học viên.",
-            bgColor: "#e6f2ff",
-            position: "left-10 top-[280px]",
+              'Giảng viên có thể tạo lớp học, tải lên slide, đề thi, ebook và chia sẻ với học viên.',
+            bgColor: '#e6f2ff',
+            position: 'left-10 top-[280px]',
           },
           {
-            title: "Nhận đánh giá từ học viên",
+            title: 'Nhận đánh giá từ học viên',
             description:
-              "Tài liệu được đánh giá theo thang 5 sao, giúp giảng viên cải thiện nội dung.",
-            bgColor: "#cce3dc",
-            position: "right-10 top-[380px]",
+              'Tài liệu được đánh giá theo thang 5 sao, giúp giảng viên cải thiện nội dung.',
+            bgColor: '#cce3dc',
+            position: 'right-10 top-[380px]',
           },
         ].map((card, i) => (
           <div
@@ -131,12 +127,8 @@ export default function IntroPage() {
             className={`absolute ${card.position} flex w-[280px] flex-col items-center rounded-xl p-4 text-center shadow-[0_2px_8px_rgba(0,0,0,0.1)]`}
             style={{ backgroundColor: card.bgColor }}
           >
-            <div className="font-roboto mb-2.5 text-xl font-bold">
-              {card.title}
-            </div>
-            <div className="font-roboto text-base leading-relaxed">
-              {card.description}
-            </div>
+            <div className="font-roboto mb-2.5 text-xl font-bold">{card.title}</div>
+            <div className="font-roboto text-base leading-relaxed">{card.description}</div>
           </div>
         ))}
       </div>
@@ -150,40 +142,35 @@ export default function IntroPage() {
           <div className="grid grid-cols-3 gap-x-8 gap-y-20">
             {[
               {
-                title: "Tìm kiếm tài liệu",
+                title: 'Tìm kiếm tài liệu',
                 description:
-                  "Tìm kiếm slide, đề thi, sách theo môn học một cách nhanh chóng và chính xác",
+                  'Tìm kiếm slide, đề thi, sách theo môn học một cách nhanh chóng và chính xác',
               },
               {
-                title: "Tham gia lớp học",
+                title: 'Tham gia lớp học',
                 description:
-                  "Truy cập vào các lớp học được tạo bởi giảng viên và tải xuống tài liệu",
+                  'Truy cập vào các lớp học được tạo bởi giảng viên và tải xuống tài liệu',
               },
               {
-                title: "Đánh giá chất lượng",
+                title: 'Đánh giá chất lượng',
                 description:
-                  "Đánh giá tài liệu theo thang 5 sao để giúp cộng đồng có tài liệu tốt hơn",
+                  'Đánh giá tài liệu theo thang 5 sao để giúp cộng đồng có tài liệu tốt hơn',
               },
               {
-                title: "Chia sẻ tài liệu",
+                title: 'Chia sẻ tài liệu',
                 description:
-                  "Đóng góp slide, bài tập, đề thi cho cộng đồng sau khi được kiểm duyệt",
+                  'Đóng góp slide, bài tập, đề thi cho cộng đồng sau khi được kiểm duyệt',
               },
               {
-                title: "Lưu trữ cá nhân",
-                description:
-                  "Tạo thư mục cá nhân để lưu trữ và quản lý tài liệu yêu thích",
+                title: 'Lưu trữ cá nhân',
+                description: 'Tạo thư mục cá nhân để lưu trữ và quản lý tài liệu yêu thích',
               },
               {
-                title: "Theo dõi tiến độ",
-                description:
-                  "Theo dõi lịch sử học tập và tiến độ hoàn thành các khóa học",
+                title: 'Theo dõi tiến độ',
+                description: 'Theo dõi lịch sử học tập và tiến độ hoàn thành các khóa học',
               },
             ].map((item, i) => (
-              <div
-                key={i}
-                className="flex w-full flex-col items-center text-center"
-              >
+              <div key={i} className="flex w-full flex-col items-center text-center">
                 <div className="font-roboto mb-4 flex h-[66px] items-center justify-center text-2xl font-bold">
                   {item.title}
                 </div>
@@ -191,30 +178,13 @@ export default function IntroPage() {
                   {item.description}
                 </div>
                 <div className="mt-2.5">
-                  <svg
-                    width="200px"
-                    height="120px"
-                    fill="none"
-                    viewBox="0 0 263 140"
-                  >
+                  <svg width="200px" height="120px" fill="none" viewBox="0 0 263 140">
                     <g>
                       <rect fill="#D9D9D9" height="9" width="263" />
-                      <rect
-                        fill="#D9D9D9"
-                        height="23"
-                        width="245"
-                        x="9"
-                        y="9"
-                      />
+                      <rect fill="#D9D9D9" height="23" width="245" x="9" y="9" />
                       <path d="M19 32V140H9V32H19Z" fill="#D9D9D9" />
                       <path d="M254 32V140H244V32H254Z" fill="#D9D9D9" />
-                      <rect
-                        fill="black"
-                        height="16"
-                        width="210"
-                        x="27"
-                        y="13"
-                      />
+                      <rect fill="black" height="16" width="210" x="27" y="13" />
                     </g>
                   </svg>
                 </div>

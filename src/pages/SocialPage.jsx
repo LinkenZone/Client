@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import LessonCard from "../components/LessonCard";
+import { useMemo } from 'react';
+import LessonCard from '../components/LessonCard';
 
 export default function SocialPage() {
   const lessons = useMemo(() => [], []); // Hiện tại chưa có bài học

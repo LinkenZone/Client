@@ -1,15 +1,9 @@
 // components/UserPage/Sidebar/index.jsx
-import React from "react";
-import NavigationMenu from "./NavigationMenu";
-import UserInfo from "./UserInfo";
-import { Plus } from "lucide-react";
+import { Plus } from 'lucide-react';
+import NavigationMenu from './NavigationMenu';
+import UserInfo from './UserInfo';
 
-export default function Sidebar({
-  user,
-  activeView,
-  onViewChange,
-  onUploadClick,
-}) {
+export default function Sidebar({ user, activeView, onViewChange, onUploadClick }) {
   return (
     <aside className="flex w-64 flex-col border-r border-gray-200 bg-white p-4">
       <button
