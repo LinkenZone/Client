@@ -4,7 +4,9 @@ import Header from '../components/Header';
 
 export default function MainLayout({ children }) {
   const location = useLocation();
-  const hideLayout = ['/login', '/register'].includes(location.pathname);
+  const hideLayout = ["/login", "/register", "/admin", "/user"].includes(
+    location.pathname,
+  );
 
   return (
     <div className="flex min-h-screen flex-col">
