@@ -1,10 +1,12 @@
 // components/UserResourcePage/Sidebar/UserInfo.jsx
-import React from "react";
-import { Cloud, LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import avatar from "../../../assets/avatar_ic.jpg";
+import { Cloud, LogOut } from 'lucide-react';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import avatar from '../../../assets/avatar_ic.jpg';
+import { AuthContext } from '../../../context/AuthContext';
 
 export default function UserInfo({ user }) {
+  const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   return (
@@ -31,14 +33,15 @@ export default function UserInfo({ user }) {
           />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-gray-800">
-              {user ? user.full_name : "Người dùng"}
+              {user ? user.full_name : 'Người dùng'}
             </p>
             <p className="truncate text-xs text-gray-500">{user?.email}</p>
           </div>
         </div>
         <button
           onClick={() => {
-            navigate("/login");
+            logout();
+            navigate('/login');
           }}
           className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-100"
         >

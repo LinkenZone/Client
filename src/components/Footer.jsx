@@ -1,18 +1,16 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (message.trim()) {
       // TODO: Implement message sending functionality when backend is ready
-      console.log("Message sent:", message);
-      alert(
-        "Cảm ơn bạn đã gửi thắc mắc! Chúng tôi sẽ phản hồi sớm nhất có thể.",
-      );
-      setMessage("");
+      console.log('Message sent:', message);
+      alert('Cảm ơn bạn đã gửi thắc mắc! Chúng tôi sẽ phản hồi sớm nhất có thể.');
+      setMessage('');
     }
   };
 
@@ -22,9 +20,7 @@ const Footer = () => {
         {/* Left side - Navigation and info (1/3) */}
         <div className="max-w-full flex-1 md:max-w-[33.333%]">
           <div className="mb-8">
-            <h3 className="mb-4 text-lg font-semibold text-white">
-              Điều hướng
-            </h3>
+            <h3 className="mb-4 text-lg font-semibold text-white">Điều hướng</h3>
             <ul className="m-0 list-none p-0">
               <li className="mb-2">
                 <Link
@@ -64,7 +60,7 @@ const Footer = () => {
           <div className="mb-8">
             <h3 className="mb-4 text-lg font-semibold text-white">Liên hệ</h3>
             <p className="text-sm text-[#E6F2FF]">
-              Email:{" "}
+              Email:{' '}
               <a
                 href="mailto:contact@linkenzone.com"
                 className="text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"

@@ -1,7 +1,6 @@
-import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 export default function MainLayout({ children }) {
   const location = useLocation();
@@ -15,7 +14,7 @@ export default function MainLayout({ children }) {
       {!hideLayout && <Header />}
 
       {/* Main content - chiếm hết không gian còn lại */}
-      <main className={`flex-1 ${!hideLayout ? "mt-22" : ""}`}>{children}</main>
+      <main className={`flex-1 ${!hideLayout ? 'mt-22' : ''}`}>{children}</main>
 
       {/* Footer - tự động xuống dưới cùng */}
       {!hideLayout && <Footer />}

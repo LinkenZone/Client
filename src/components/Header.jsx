@@ -4,14 +4,15 @@ import { assets } from "../assets/assets";
 import { AuthContext } from "../context/AuthContext";
 import UserDropdown from "./UserDropdown";
 
+
 function Header() {
   const { user } = useContext(AuthContext);
   const navMap = {
-    "Giới thiệu": "",
-    "Trang chính": "home",
-    "Các bài học": "lesson",
-    "Tự nhiên": "natural",
-    "Xã hội": "social",
+    'Giới thiệu': '',
+    'Trang chính': 'home',
+    'Các bài học': 'lesson',
+    'Tự nhiên': 'natural',
+    'Xã hội': 'social',
   };
 
   return (
@@ -20,7 +21,7 @@ function Header() {
         <img className="w-36" src={assets.logo} alt="Logo" />
         <div className="flex items-center gap-2">
           <div className="rounded-md bg-[#FDFDFD] p-2 px-3 py-1 text-sm font-semibold text-[#333]">
-            {user ? user.full_name.split(" ").pop() : "Khách"}
+            {user ? user.full_name.split(' ').pop() : 'Khách'}
           </div>
           <UserDropdown
             avatarSrc={assets.avatar}
@@ -38,8 +39,8 @@ function Header() {
                 to={`/${slug}`}
                 className={({ isActive }) =>
                   isActive
-                    ? "w-full rounded-t-4xl bg-[#4aa4ff] px-3 py-1 text-center text-[18px] whitespace-nowrap text-white transition duration-300"
-                    : "w-full rounded-t-4xl bg-transparent px-3 py-1 text-center text-[18px] whitespace-nowrap text-black transition duration-300 hover:bg-[#4aa4ff] hover:text-white"
+                    ? 'w-full rounded-t-4xl bg-[#4aa4ff] px-3 py-1 text-center text-[18px] whitespace-nowrap text-white transition duration-300'
+                    : 'w-full rounded-t-4xl bg-transparent px-3 py-1 text-center text-[18px] whitespace-nowrap text-black transition duration-300 hover:bg-[#4aa4ff] hover:text-white'
                 }
               >
                 {label}
