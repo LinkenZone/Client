@@ -1,49 +1,17 @@
 // components/AdminDashboard/Sidebar/index.jsx
 import React from "react";
 import {
-  LayoutDashboard,
   Users,
-  FileText,
-  Settings,
-  Calendar,
-  Building,
-  BarChart3,
-  Package,
-  FolderOpen,
-  MessageSquare,
-  Layers,
-  Grid,
-  Map,
-  Palette,
-  Box,
-  PieChart,
+  LayoutDashboardIcon,
+  ListCheckIcon,
+  FoldersIcon,
 } from "lucide-react";
 
 const menuItems = [
-  { icon: Users, label: "User Management", active: false },
-  { icon: FileText, label: "Application", active: false },
-  { icon: FolderOpen, label: "Pages", active: false },
-  { icon: Building, label: "Admins", active: false },
-  { icon: Settings, label: "Role & Permissions", active: false },
-  { icon: MessageSquare, label: "Navs", active: false },
-  { icon: Users, label: "Users", active: false },
-  { icon: Box, label: "Builder", active: false },
-  { icon: FileText, label: "Invoice", active: false },
-  { icon: FileText, label: "forms", active: false },
-  { icon: LayoutDashboard, label: "Board", active: false },
-  { icon: Calendar, label: "Calander", active: false },
-  { icon: Palette, label: "Themes", active: false },
-  { icon: Settings, label: "General", active: false },
-  { icon: Package, label: "Products", active: false },
-  { icon: Grid, label: "Icons", active: false },
-  { icon: Layers, label: "Animations", active: false },
-  { icon: Box, label: "Components", active: false },
-  { icon: Grid, label: "Table", active: false },
-  { icon: Grid, label: "Cards", active: false },
-  { icon: BarChart3, label: "Charts", active: false },
-  { icon: Grid, label: "UI Kits", active: false },
-  { icon: PieChart, label: "Widgets", active: false },
-  { icon: Map, label: "Maps", active: false },
+  { icon: LayoutDashboardIcon, label: "Dashboard", active: false },
+  { icon: ListCheckIcon, label: "Kiểm duyệt tài liệu", active: false },
+  { icon: FoldersIcon, label: "Quản lý danh mục", active: false },
+  { icon: Users, label: "Quản lý người dùng", active: false },
 ];
 
 export default function AdminSidebar({ activeMenu = "Dashboard" }) {
@@ -56,7 +24,7 @@ export default function AdminSidebar({ activeMenu = "Dashboard" }) {
             <span className="text-sm font-bold text-white">M</span>
           </div>
           <span className="text-lg font-semibold text-gray-800">
-            Mege Users
+            Admin Dashboard
           </span>
         </div>
       </div>

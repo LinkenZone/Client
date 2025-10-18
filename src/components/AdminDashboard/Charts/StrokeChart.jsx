@@ -32,7 +32,7 @@ export default function StrokeChart() {
   return (
     <div className="rounded-2xl bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-800">Stroke Details</h3>
+        <h3 className="text-lg font-semibold text-gray-800">Tỉ lệ duyệt bài</h3>
         <select className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600 focus:border-blue-500 focus:outline-none">
           <option>Show By Month</option>
           <option>Show By Week</option>
@@ -40,27 +40,8 @@ export default function StrokeChart() {
         </select>
       </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data} barGap={0}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="#999" />
-          <YAxis tick={{ fontSize: 12 }} stroke="#999" />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "8px",
-            }}
-          />
-          <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="circle" />
-          <Bar dataKey="Desktops" fill="#9b87f5" radius={[8, 8, 0, 0]} />
-          <Bar dataKey="Laptops" fill="#f97316" radius={[8, 8, 0, 0]} />
-          <Bar dataKey="Tablets" fill="#fbbf24" radius={[8, 8, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-
       <div className="mt-6">
-        <ResponsiveContainer width="100%" height={150}>
+        <ResponsiveContainer width="100%" height={250}>
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">

@@ -65,7 +65,8 @@ export default function UserPage() {
   };
 
   return (
-    <div className="mt-16 flex h-screen">
+    <div className="flex" style={{ height: "calc(100vh - 88px)" }}>
+
       <Sidebar
         user={user}
         activeView={activeView}

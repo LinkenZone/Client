@@ -30,7 +30,7 @@ function App() {
           <Route
             path="/user"
             element={
-              <ProtectedRoute role="user">
+              <ProtectedRoute allowedRoles={["user", "admin"]}>
                 <UserPage />
               </ProtectedRoute>
             }
@@ -38,7 +38,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute role="admin">
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <AdminPage />
               </ProtectedRoute>
             }
@@ -52,7 +52,7 @@ function App() {
 
 export default App;
 
-function ProtectedRoute({ children, role }) {
+function ProtectedRoute({ children, allowedRoles }) {
   const { user, loading } = useContext(AuthContext);
 
   // Hiển thị loading khi đang restore user từ localStorage
@@ -69,7 +69,11 @@ function ProtectedRoute({ children, role }) {
 
   // Sau khi load xong, kiểm tra user
   if (!user) return <Navigate to="/login" replace />;
-  if (role && user.role !== role) return <Navigate to="/" replace />;
+
+  // Kiểm tra role nếu có danh sách allowedRoles
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
 
   return children;
 }
