@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { AuthContext } from "../context/AuthContext";
+import UserDropdown from "./UserDropdown";
 
 function Header() {
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
   const navMap = {
     "Giới thiệu": "",
     "Trang chính": "home",
@@ -13,11 +13,6 @@ function Header() {
     "Tự nhiên": "natural",
     "Xã hội": "social",
   };
-
-  // Thêm link Admin nếu user là admin
-  if (user && (user.role === "admin" || user.full_name === "admin")) {
-    navMap["Quản trị"] = "admin";
-  }
 
   return (
     <header className="fixed top-0 left-0 z-50 flex w-full flex-col gap-2 bg-[#95B1CE] px-2 pt-2 shadow-md">
@@ -27,11 +22,10 @@ function Header() {
           <div className="rounded-md bg-[#FDFDFD] p-2 px-3 py-1 text-sm font-semibold text-[#333]">
             {user ? user.full_name.split(" ").pop() : "Khách"}
           </div>
-          <img
-            className="h-20 w-20 cursor-pointer rounded-full border-2 border-white object-cover"
-            src={assets.avatar}
-            alt="Avatar"
-            onClick={() => navigate(user ? "/user" : "/login")}
+          <UserDropdown
+            avatarSrc={assets.avatar}
+            avatarSize="h-20 w-20"
+            showBorder={true}
           />
         </div>
       </div>

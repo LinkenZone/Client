@@ -1,13 +1,7 @@
 // components/AdminDashboard/TopBar/index.jsx
 import React from "react";
-import {
-  Menu,
-  Search,
-  Bell,
-  MessageSquare,
-  Calendar,
-  User,
-} from "lucide-react";
+import { Menu, Search, Bell, MessageSquare, Calendar } from "lucide-react";
+import UserDropdown from "../../UserDropdown";
 
 export default function DashboardTopBar() {
   return (
@@ -50,13 +44,11 @@ export default function DashboardTopBar() {
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-orange-500"></span>
           </button>
 
-          <button className="flex items-center gap-2 rounded-lg p-2 hover:bg-gray-100">
-            <img
-              src="https://i.pravatar.cc/150?img=12"
-              alt="User"
-              className="h-8 w-8 rounded-full"
-            />
-          </button>
+          {/* User Dropdown */}
+          <UserDropdown
+            avatarSrc="https://i.pravatar.cc/150?img=12"
+            avatarSize="h-8 w-8"
+          />
         </div>
       </div>
     </div>

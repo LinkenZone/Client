@@ -67,7 +67,7 @@ export default function UserPage() {
   };
 
   return (
-    <div className="flex h-screen pt-16">
+    <div className="flex" style={{ height: "calc(100vh - 88px)" }}>
       <Sidebar
         user={user}
         activeView={activeView}

@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 
 export default function MainLayout({ children }) {
   const location = useLocation();
-  const hideLayout = ["/login", "/register", "/admin", "/user"].includes(
+  const hideLayout = ["/login", "/register", "/admin"].includes(
     location.pathname,
   );
 
