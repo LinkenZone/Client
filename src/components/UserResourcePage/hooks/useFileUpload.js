@@ -7,6 +7,7 @@ export function useFileUpload() {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -24,6 +25,7 @@ export function useFileUpload() {
     }
 
     setUploading(true);
+    setUploadProgress(0);
 
     try {
       // Tạo FormData để gửi file
@@ -35,11 +37,13 @@ export function useFileUpload() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        // Theo dõi tiến trình upload (optional)
+        timeout: 300000, // 5 phút (300 giây) để upload file lớn
+        // Theo dõi tiến trình upload
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total,
           );
+          setUploadProgress(percentCompleted);
           console.log(`Upload progress: ${percentCompleted}%`);
         },
       });
@@ -63,6 +67,7 @@ export function useFileUpload() {
   const reset = () => {
     setFile(null);
     setPreviewUrl(null);
+    setUploadProgress(0);
     // Cleanup object URL để tránh memory leak
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
@@ -73,6 +78,7 @@ export function useFileUpload() {
     file,
     previewUrl,
     uploading,
+    uploadProgress,
     handleChange,
     handleUpload,
     reset,

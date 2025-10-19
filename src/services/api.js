@@ -6,7 +6,7 @@ const BASE_URL =
 
 export const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 15000,
+  timeout: 30000, // Tăng lên 30 giây cho các request thông thường
   headers: {
     'Content-Type': 'application/json',
   },

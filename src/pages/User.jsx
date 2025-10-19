@@ -5,6 +5,7 @@ import FileList from '../components/UserResourcePage/FileList';
 import Sidebar from '../components/UserResourcePage/Sidebar';
 import TopBar from '../components/UserResourcePage/TopBar';
 import UploadModal from '../components/UserResourcePage/UploadModal';
+import DocumentViewer from '../components/UserResourcePage/DocumentViewer';
 import { useFileUpload } from '../components/UserResourcePage/hooks/useFileUpload';
 import { useFileView } from '../components/UserResourcePage/hooks/useFileView';
 import { loadFile } from '../components/UserResourcePage/utils/loadFiles';
@@ -14,9 +15,10 @@ export default function UserPage() {
   const { user } = useContext(AuthContext);
   const [uploadedLessons, setUploadedLessons] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   const { activeView, setActiveView, viewMode, setViewMode, viewTitle } = useFileView();
-  const { file, previewUrl, uploading, handleChange, handleUpload, reset } = useFileUpload();
+  const { file, previewUrl, uploading, uploadProgress, handleChange, handleUpload, reset } = useFileUpload();
 
   // Function để reload danh sách documents
   const fetchDocuments = async () => {
@@ -64,9 +66,16 @@ export default function UserPage() {
     }
   };
 
-  return (
-    <div className="flex" style={{ height: "calc(100vh - 88px)" }}>
+  const handleFileClick = (document) => {
+    setSelectedDocument(document);
+  };
 
+  const handleCloseViewer = () => {
+    setSelectedDocument(null);
+  };
+
+  return (
+    <div className="flex pt-[88px]" style={{ height: '100vh' }}>
       <Sidebar
         user={user}
         activeView={activeView}
@@ -81,12 +90,13 @@ export default function UserPage() {
           <h1 className="mb-6 text-2xl font-medium text-gray-800">{viewTitle}</h1>
 
           {viewMode === 'grid' ? (
-            <FileGrid files={uploadedLessons} />
+            <FileGrid files={uploadedLessons} onFileClick={handleFileClick} />
           ) : (
-            <FileList files={uploadedLessons} />
+            <FileList files={uploadedLessons} onFileClick={handleFileClick} />
           )}
         </div>
       </main>
+      
       <UploadModal
         isOpen={showUploadModal}
         onClose={handleCloseModal}
@@ -95,7 +105,15 @@ export default function UserPage() {
         onFileChange={handleChange}
         onUpload={handleUploadClick}
         uploading={uploading}
+        uploadProgress={uploadProgress}
       />
+      
+      {selectedDocument && (
+        <DocumentViewer 
+          document={selectedDocument} 
+          onClose={handleCloseViewer} 
+        />
+      )}
     </div>
   );
 }

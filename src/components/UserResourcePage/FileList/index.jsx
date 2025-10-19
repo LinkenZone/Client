@@ -2,7 +2,7 @@
 import React from "react";
 import { Folder, Star, MessageCircle } from "lucide-react";
 
-export default function FileList({ files }) {
+export default function FileList({ files, onFileClick }) {
   const getStatusText = (status) => {
     switch (status) {
       case "approved":
@@ -104,6 +104,7 @@ export default function FileList({ files }) {
         <div
           key={item.id}
           className="grid cursor-pointer grid-cols-12 gap-4 border-b border-gray-100 px-4 py-3 transition-colors last:border-b-0 hover:bg-gray-50"
+          onClick={() => item.type !== "folder" && onFileClick && onFileClick(item)}
         >
           <div className="col-span-5 flex items-center gap-3">
             {item.type === "folder" ? (

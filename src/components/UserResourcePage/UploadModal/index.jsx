@@ -9,7 +9,8 @@ export default function UploadModal({
   previewUrl,
   onFileChange,
   onUpload,
-  uploading, // Thêm prop uploading
+  uploading,
+  uploadProgress = 0, // Thêm prop uploadProgress
 }) {
   const [dragActive, setDragActive] = useState(false);
 
@@ -110,6 +111,22 @@ export default function UploadModal({
             </div>
           )}
         </div>
+
+        {/* Progress Bar */}
+        {uploading && (
+          <div className="mt-4">
+            <div className="mb-2 flex items-center justify-between text-sm">
+              <span className="text-gray-600">Đang tải lên...</span>
+              <span className="font-semibold text-blue-600">{uploadProgress}%</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="h-full bg-blue-600 transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 flex justify-end gap-3">
           <button

@@ -4,7 +4,7 @@ import { Search, Filter, LayoutGrid, List } from "lucide-react";
 
 export default function TopBar({ viewMode, onViewModeChange }) {
   return (
-    <div className="sticky top-0 z-10 border-b border-gray-200 bg-white p-4">
+    <div className="sticky top-0 z-40 border-b border-gray-200 bg-white p-4">
       <div className="flex items-center justify-between">
         {/* Search Bar */}
         <div className="max-w-2xl flex-1">
