@@ -1,6 +1,6 @@
 // components/UserResourcePage/Sidebar/UserInfo.jsx
 import { Cloud } from "lucide-react";
-import avatar from "../../../assets/avatar_ic.jpg";
+import avatar from "../../../assets/avatar_ic.png";
 
 export default function UserInfo({ user }) {
 

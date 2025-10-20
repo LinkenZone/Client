@@ -2,7 +2,7 @@
 import React from "react";
 import { Folder, File, MoreVertical, Star, MessageCircle } from "lucide-react";
 
-export default function FileGrid({ files, onFileClick }) {
+export default function FileGrid({ files, onFileClick, onContextMenu, onMoreClick }) {
   const getStatusText = (status) => {
     switch (status) {
       case "approved":
@@ -95,6 +95,12 @@ export default function FileGrid({ files, onFileClick }) {
           key={item.id}
           className="group cursor-pointer rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
           onClick={() => item.type !== "folder" && onFileClick && onFileClick(item)}
+          onContextMenu={(e) => {
+            if (item.type !== "folder") {
+              e.preventDefault();
+              onContextMenu && onContextMenu(e, item);
+            }
+          }}
         >
           <div className="mb-3 flex items-start justify-between">
             {item.type === "folder" ? (
@@ -102,9 +108,17 @@ export default function FileGrid({ files, onFileClick }) {
             ) : (
               <div className="text-3xl">{getFileIcon(item.file_type)}</div>
             )}
-            <button className="opacity-0 transition-opacity group-hover:opacity-100">
-              <MoreVertical className="h-4 w-4 text-gray-500" />
-            </button>
+            {item.type !== "folder" && (
+              <button 
+                className="opacity-0 transition-opacity group-hover:opacity-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMoreClick && onMoreClick(e, item);
+                }}
+              >
+                <MoreVertical className="h-4 w-4 text-gray-500" />
+              </button>
+            )}
           </div>
 
           <p

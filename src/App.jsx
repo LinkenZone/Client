@@ -13,6 +13,7 @@ import NaturalPage from './pages/NaturalPage';
 import Register from './pages/Register';
 import SocialPage from './pages/SocialPage';
 import UserPage from './pages/User';
+import TrashPage from './pages/TrashPage';
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["user", "admin"]}>
                 <UserPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trash"
+            element={
+              <ProtectedRoute allowedRoles={["user", "admin"]}>
+                <TrashPage />
               </ProtectedRoute>
             }
           />

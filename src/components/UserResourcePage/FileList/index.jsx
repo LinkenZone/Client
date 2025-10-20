@@ -1,8 +1,8 @@
 // components/UserResourcePage/FileList/index.jsx
 import React from "react";
-import { Folder, Star, MessageCircle } from "lucide-react";
+import { Folder, Star, MessageCircle, MoreVertical } from "lucide-react";
 
-export default function FileList({ files, onFileClick }) {
+export default function FileList({ files, onFileClick, onContextMenu, onMoreClick }) {
   const getStatusText = (status) => {
     switch (status) {
       case "approved":
@@ -105,6 +105,12 @@ export default function FileList({ files, onFileClick }) {
           key={item.id}
           className="grid cursor-pointer grid-cols-12 gap-4 border-b border-gray-100 px-4 py-3 transition-colors last:border-b-0 hover:bg-gray-50"
           onClick={() => item.type !== "folder" && onFileClick && onFileClick(item)}
+          onContextMenu={(e) => {
+            if (item.type !== "folder") {
+              e.preventDefault();
+              onContextMenu && onContextMenu(e, item);
+            }
+          }}
         >
           <div className="col-span-5 flex items-center gap-3">
             {item.type === "folder" ? (
@@ -117,6 +123,17 @@ export default function FileList({ files, onFileClick }) {
             <span className="truncate text-sm text-gray-800" title={item.name}>
               {item.name}
             </span>
+            {item.type !== "folder" && (
+              <button
+                className="ml-auto opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMoreClick && onMoreClick(e, item);
+                }}
+              >
+                <MoreVertical className="h-4 w-4 text-gray-500" />
+              </button>
+            )}
           </div>
 
           <div className="col-span-2 flex items-center">

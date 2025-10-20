@@ -1,4 +1,4 @@
-import avatar from './avatar_ic.jpg';
+import avatar from './avatar_ic.png';
 import cloud0 from './cloud0.png';
 import cloud1 from './cloud1.png';
 import cloud2 from './cloud2.png';
