@@ -1,0 +1,368 @@
+import { AlertCircle, Calendar, Check, FileText, User, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+const DocumentModerationTable = () => {
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedDoc, setSelectedDoc] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [filter, setFilter] = useState('pending'); // pending, all
+
+  // TODO: Fetch từ API
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        setLoading(true);
+        // const response = await api.get('/admin/documents/pending');
+        // setDocuments(response.data);
+
+        // Dữ liệu mẫu
+        const mockData = [
+          {
+            id: 1,
+            title: 'Giáo trình Toán học cao cấp A1',
+            fileName: 'toan_cao_cap_a1.pdf',
+            uploadedBy: {
+              name: 'Nguyễn Văn A',
+              email: 'nguyenvana@example.com',
+            },
+            category: 'Toán học',
+            uploadDate: '2025-10-19T08:30:00',
+            fileSize: '2.5 MB',
+            status: 'pending',
+            description: 'Giáo trình dành cho sinh viên năm nhất',
+          },
+          {
+            id: 2,
+            title: 'Lập trình C++ cơ bản',
+            fileName: 'lap_trinh_cpp.pdf',
+            uploadedBy: {
+              name: 'Trần Thị B',
+              email: 'tranthib@example.com',
+            },
+            category: 'Lập trình',
+            uploadDate: '2025-10-19T09:15:00',
+            fileSize: '3.8 MB',
+            status: 'pending',
+            description: 'Tài liệu hướng dẫn lập trình C++ từ cơ bản đến nâng cao',
+          },
+          {
+            id: 3,
+            title: 'Vật lý đại cương - Chương 1',
+            fileName: 'vat_ly_dai_cuong_c1.pdf',
+            uploadedBy: {
+              name: 'Lê Văn C',
+              email: 'levanc@example.com',
+            },
+            category: 'Vật lý',
+            uploadDate: '2025-10-19T10:00:00',
+            fileSize: '1.2 MB',
+            status: 'pending',
+            description: 'Chương 1: Cơ học chất điểm',
+          },
+          {
+            id: 4,
+            title: 'Hóa hữu cơ - Bài tập',
+            fileName: 'hoa_huu_co_bai_tap.pdf',
+            uploadedBy: {
+              name: 'Phạm Thị D',
+              email: 'phamthid@example.com',
+            },
+            category: 'Hóa học',
+            uploadDate: '2025-10-18T14:20:00',
+            fileSize: '4.5 MB',
+            status: 'pending',
+            description: 'Tổng hợp bài tập hóa hữu cơ có lời giải',
+          },
+        ];
+        setDocuments(mockData);
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocuments();
+  }, [filter]);
+
+  const handleApprove = async (docId) => {
+    try {
+      // TODO: Call API
+      // await api.post(`/admin/documents/${docId}/approve`);
+
+      setDocuments((prev) =>
+        prev.map((doc) => (doc.id === docId ? { ...doc, status: 'approved' } : doc)),
+      );
+      toast.success('Đã phê duyệt tài liệu!');
+    } catch (error) {
+      console.error('Error approving document:', error);
+      toast.error('Có lỗi xảy ra khi phê duyệt tài liệu!');
+    }
+  };
+
+  const handleReject = async (docId) => {
+    if (!rejectionReason.trim()) {
+      alert('Vui lòng nhập lý do từ chối!');
+      return;
+    }
+
+    try {
+      // TODO: Call API
+      // await api.post(`/admin/documents/${docId}/reject`, { reason: rejectionReason });
+
+      setDocuments((prev) =>
+        prev.map((doc) =>
+          doc.id === docId ? { ...doc, status: 'rejected', rejectionReason } : doc,
+        ),
+      );
+      setShowModal(false);
+      setSelectedDoc(null);
+      setRejectionReason('');
+      toast.success('Đã từ chối tài liệu!');
+    } catch (error) {
+      console.error('Error rejecting document:', error);
+      toast.error('Có lỗi xảy ra khi từ chối tài liệu!');
+    }
+  };
+
+  const openRejectModal = (doc) => {
+    setSelectedDoc(doc);
+    setShowModal(true);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const filteredDocuments =
+    filter === 'pending' ? documents.filter((doc) => doc.status === 'pending') : documents;
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-orange-500"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-xl bg-white p-6 shadow-sm">
+      {/* Header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">Kiểm duyệt tài liệu</h2>
+          <p className="mt-1 text-sm text-gray-500">Danh sách tài liệu cần được phê duyệt</p>
+        </div>
+
+        {/* Filter */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setFilter('pending')}
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              filter === 'pending'
+                ? 'bg-orange-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Chờ duyệt ({documents.filter((d) => d.status === 'pending').length})
+          </button>
+          <button
+            onClick={() => setFilter('all')}
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              filter === 'all'
+                ? 'bg-orange-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Tất cả
+          </button>
+        </div>
+      </div>
+
+      {/* Table */}
+      {filteredDocuments.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+          <FileText className="mb-3 h-12 w-12 text-gray-300" />
+          <p className="text-lg font-medium">Không có tài liệu nào</p>
+          <p className="text-sm">
+            {filter === 'pending' ? 'Không có tài liệu chờ duyệt' : 'Danh sách trống'}
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
+                <th className="pr-4 pb-3">Tài liệu</th>
+                <th className="pr-4 pb-3">Người tải lên</th>
+                <th className="pr-4 pb-3">Danh mục</th>
+                <th className="pr-4 pb-3">Ngày tải</th>
+                <th className="pr-4 pb-3">Trạng thái</th>
+                <th className="pb-3 text-right">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {filteredDocuments.map((doc) => (
+                <tr key={doc.id} className="text-sm transition-colors hover:bg-gray-50">
+                  {/* Document Info */}
+                  <td className="py-4 pr-4">
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-50">
+                        <FileText className="h-5 w-5 text-orange-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">{doc.title}</p>
+                        <p className="text-xs text-gray-500">
+                          {doc.fileName} • {doc.fileSize}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Uploader */}
+                  <td className="py-4 pr-4">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-gray-400" />
+                      <div>
+                        <p className="font-medium text-gray-900">{doc.uploadedBy.name}</p>
+                        <p className="text-xs text-gray-500">{doc.uploadedBy.email}</p>
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Category */}
+                  <td className="py-4 pr-4">
+                    <span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+                      {doc.category}
+                    </span>
+                  </td>
+
+                  {/* Date */}
+                  <td className="py-4 pr-4">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <Calendar className="h-4 w-4" />
+                      <span>{formatDate(doc.uploadDate)}</span>
+                    </div>
+                  </td>
+
+                  {/* Status */}
+                  <td className="py-4 pr-4">
+                    {doc.status === 'pending' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2.5 py-1 text-xs font-medium text-yellow-700">
+                        <AlertCircle className="h-3 w-3" />
+                        Chờ duyệt
+                      </span>
+                    )}
+                    {doc.status === 'approved' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700">
+                        <Check className="h-3 w-3" />
+                        Đã duyệt
+                      </span>
+                    )}
+                    {doc.status === 'rejected' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700">
+                        <X className="h-3 w-3" />
+                        Đã từ chối
+                      </span>
+                    )}
+                  </td>
+
+                  {/* Actions */}
+                  <td className="py-4 text-right">
+                    {doc.status === 'pending' && (
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleApprove(doc.id)}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-600"
+                          title="Phê duyệt"
+                        >
+                          <Check className="h-3.5 w-3.5" />
+                          Duyệt
+                        </button>
+                        <button
+                          onClick={() => openRejectModal(doc)}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-red-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-600"
+                          title="Từ chối"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                          Từ chối
+                        </button>
+                      </div>
+                    )}
+                    {doc.status !== 'pending' && (
+                      <span className="text-xs text-gray-400">Đã xử lý</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Rejection Modal */}
+      {showModal && selectedDoc && (
+        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-start gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
+                <X className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Từ chối tài liệu</h3>
+                <p className="mt-1 text-sm text-gray-600">
+                  Bạn có chắc chắn muốn từ chối tài liệu "
+                  <span className="font-medium">{selectedDoc.title}</span>"?
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Lý do từ chối <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                rows={4}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none"
+                placeholder="Nhập lý do từ chối tài liệu..."
+              />
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  setSelectedDoc(null);
+                  setRejectionReason('');
+                }}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => handleReject(selectedDoc.id)}
+                className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
+              >
+                Xác nhận từ chối
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DocumentModerationTable;
