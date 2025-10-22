@@ -31,37 +31,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-// Document moderation service
-export const documentModerationService = {
-  // Lấy danh sách tài liệu chờ duyệt
-  async getPendingDocuments() {
-    const { data } = await api.get('/admin/documents/pending');
-    return data;
-  },
-
-  // Lấy tất cả tài liệu (đã duyệt, chờ duyệt, từ chối)
-  async getAllDocuments(params) {
-    const { data } = await api.get('/admin/documents', { params });
-    return data;
-  },
-
-  // Phê duyệt tài liệu
-  async approveDocument(documentId) {
-    const { data } = await api.post(`/admin/documents/${documentId}/approve`);
-    return data;
-  },
-
-  // Từ chối tài liệu
-  async rejectDocument(documentId, reason) {
-    const { data } = await api.post(`/admin/documents/${documentId}/reject`, {
-      reason,
-    });
-    return data;
-  },
-
-  // Lấy thông tin chi tiết một tài liệu
-  async getDocumentDetail(documentId) {
-    const { data } = await api.get(`/admin/documents/${documentId}`);
-    return data;
-  },
-};

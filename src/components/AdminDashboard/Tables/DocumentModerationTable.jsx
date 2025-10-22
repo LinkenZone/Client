@@ -1,6 +1,7 @@
 import { AlertCircle, Calendar, Check, FileText, User, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { api } from '../../../services/api';
 
 const DocumentModerationTable = () => {
   const [documents, setDocuments] = useState([]);
@@ -8,76 +9,14 @@ const DocumentModerationTable = () => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
-  const [filter, setFilter] = useState('pending'); // pending, all
+  const [filter, setFilter] = useState('pending');
 
-  // TODO: Fetch từ API
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
         setLoading(true);
-        // const response = await api.get('/admin/documents/pending');
-        // setDocuments(response.data);
-
-        // Dữ liệu mẫu
-        const mockData = [
-          {
-            id: 1,
-            title: 'Giáo trình Toán học cao cấp A1',
-            fileName: 'toan_cao_cap_a1.pdf',
-            uploadedBy: {
-              name: 'Nguyễn Văn A',
-              email: 'nguyenvana@example.com',
-            },
-            category: 'Toán học',
-            uploadDate: '2025-10-19T08:30:00',
-            fileSize: '2.5 MB',
-            status: 'pending',
-            description: 'Giáo trình dành cho sinh viên năm nhất',
-          },
-          {
-            id: 2,
-            title: 'Lập trình C++ cơ bản',
-            fileName: 'lap_trinh_cpp.pdf',
-            uploadedBy: {
-              name: 'Trần Thị B',
-              email: 'tranthib@example.com',
-            },
-            category: 'Lập trình',
-            uploadDate: '2025-10-19T09:15:00',
-            fileSize: '3.8 MB',
-            status: 'pending',
-            description: 'Tài liệu hướng dẫn lập trình C++ từ cơ bản đến nâng cao',
-          },
-          {
-            id: 3,
-            title: 'Vật lý đại cương - Chương 1',
-            fileName: 'vat_ly_dai_cuong_c1.pdf',
-            uploadedBy: {
-              name: 'Lê Văn C',
-              email: 'levanc@example.com',
-            },
-            category: 'Vật lý',
-            uploadDate: '2025-10-19T10:00:00',
-            fileSize: '1.2 MB',
-            status: 'pending',
-            description: 'Chương 1: Cơ học chất điểm',
-          },
-          {
-            id: 4,
-            title: 'Hóa hữu cơ - Bài tập',
-            fileName: 'hoa_huu_co_bai_tap.pdf',
-            uploadedBy: {
-              name: 'Phạm Thị D',
-              email: 'phamthid@example.com',
-            },
-            category: 'Hóa học',
-            uploadDate: '2025-10-18T14:20:00',
-            fileSize: '4.5 MB',
-            status: 'pending',
-            description: 'Tổng hợp bài tập hóa hữu cơ có lời giải',
-          },
-        ];
-        setDocuments(mockData);
+        const res = await api.get('/document/all-documents');
+        setDocuments(res.data.data.allDocuments);
       } catch (error) {
         console.error('Error fetching documents:', error);
       } finally {
@@ -90,11 +29,10 @@ const DocumentModerationTable = () => {
 
   const handleApprove = async (docId) => {
     try {
-      // TODO: Call API
-      // await api.post(`/admin/documents/${docId}/approve`);
+      await api.patch(`/document/${docId}/approve`);
 
       setDocuments((prev) =>
-        prev.map((doc) => (doc.id === docId ? { ...doc, status: 'approved' } : doc)),
+        prev.map((doc) => (doc.document_id === docId ? { ...doc, status: 'approved' } : doc)),
       );
       toast.success('Đã phê duyệt tài liệu!');
     } catch (error) {
@@ -105,17 +43,16 @@ const DocumentModerationTable = () => {
 
   const handleReject = async (docId) => {
     if (!rejectionReason.trim()) {
-      alert('Vui lòng nhập lý do từ chối!');
+      toast.error('Vui lòng nhập lý do từ chối!');
       return;
     }
 
     try {
-      // TODO: Call API
-      // await api.post(`/admin/documents/${docId}/reject`, { reason: rejectionReason });
+      await api.patch(`/document/${docId}/reject`, { reason: rejectionReason });
 
       setDocuments((prev) =>
         prev.map((doc) =>
-          doc.id === docId ? { ...doc, status: 'rejected', rejectionReason } : doc,
+          doc.document_id === docId ? { ...doc, status: 'rejected', rejectionReason } : doc,
         ),
       );
       setShowModal(false);
@@ -213,17 +150,19 @@ const DocumentModerationTable = () => {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredDocuments.map((doc) => (
-                <tr key={doc.id} className="text-sm transition-colors hover:bg-gray-50">
+                <tr key={doc.document_id} className="text-sm transition-colors hover:bg-gray-50">
                   {/* Document Info */}
-                  <td className="py-4 pr-4">
+                  <td className="max-w-xs py-4 pr-4">
                     <div className="flex items-start gap-3">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-50">
                         <FileText className="h-5 w-5 text-orange-500" />
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{doc.title}</p>
+                      <div className="max-w-[200px] min-w-0">
+                        <p className="truncate font-medium text-gray-900" title={doc.title}>
+                          {doc.title}
+                        </p>
                         <p className="text-xs text-gray-500">
-                          {doc.fileName} • {doc.fileSize}
+                          {/* {doc.fileName} • {doc.fileSize} */}
                         </p>
                       </div>
                     </div>
@@ -234,8 +173,8 @@ const DocumentModerationTable = () => {
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-gray-400" />
                       <div>
-                        <p className="font-medium text-gray-900">{doc.uploadedBy.name}</p>
-                        <p className="text-xs text-gray-500">{doc.uploadedBy.email}</p>
+                        <p className="font-medium text-gray-900">{doc.uploader.full_name}</p>
+                        <p className="text-xs text-gray-500">{doc.uploader.email}</p>
                       </div>
                     </div>
                   </td>
@@ -243,7 +182,7 @@ const DocumentModerationTable = () => {
                   {/* Category */}
                   <td className="py-4 pr-4">
                     <span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-                      {doc.category}
+                      {/* {doc.category} */}
                     </span>
                   </td>
 
@@ -251,7 +190,7 @@ const DocumentModerationTable = () => {
                   <td className="py-4 pr-4">
                     <div className="flex items-center gap-2 text-gray-600">
                       <Calendar className="h-4 w-4" />
-                      <span>{formatDate(doc.uploadDate)}</span>
+                      <span>{formatDate(doc.uploaded_at)}</span>
                     </div>
                   </td>
 
@@ -282,7 +221,7 @@ const DocumentModerationTable = () => {
                     {doc.status === 'pending' && (
                       <div className="flex justify-end gap-2">
                         <button
-                          onClick={() => handleApprove(doc.id)}
+                          onClick={() => handleApprove(doc.document_id)}
                           className="inline-flex items-center gap-1.5 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-600"
                           title="Phê duyệt"
                         >
@@ -352,7 +291,7 @@ const DocumentModerationTable = () => {
                 Hủy
               </button>
               <button
-                onClick={() => handleReject(selectedDoc.id)}
+                onClick={() => handleReject(selectedDoc.document_id)}
                 className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
               >
                 Xác nhận từ chối
