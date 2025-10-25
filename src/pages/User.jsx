@@ -13,7 +13,7 @@ import DeleteConfirmModal from '../components/UserResourcePage/DeleteConfirmModa
 import { useFileUpload } from '../components/UserResourcePage/hooks/useFileUpload';
 import { useFileView } from '../components/UserResourcePage/hooks/useFileView';
 import { loadFile } from '../components/UserResourcePage/utils/loadFiles';
-import { deleteFile,updateFileInformation } from '../components/UserResourcePage/utils/fileHelpers';
+import { deleteFile, updateFileInformation, downloadFile } from '../components/UserResourcePage/utils/fileHelpers';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
@@ -125,17 +125,14 @@ export default function UserPage() {
     toast.success(`${msg}`);
   }
 
-  const handleDownload = (document) => {
-    // Create a temporary link and trigger download
-    const link = window.document.createElement('a');
-    link.href = document.file_url || document.url;
-    link.download = document.name;
-    link.target = '_blank';
-    window.document.body.appendChild(link);
-    link.click();
-    window.document.body.removeChild(link);
-    
-    toast.success('Đang tải xuống tài liệu...');
+  const handleDownload = async (document) => {
+    try {
+      const message = await downloadFile(document.id, document.name);
+      toast.success(message);
+    } catch (error) {
+      console.error('Download error:', error);
+      // Error is already handled in downloadFile function
+    }
   };
 
   const handleDeleteConfirm = async (document) => {

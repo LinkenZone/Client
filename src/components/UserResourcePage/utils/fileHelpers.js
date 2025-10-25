@@ -20,6 +20,27 @@ export const getStatusClasses = (status) => {
   return classMap[status] || "bg-gray-200 text-gray-600";
 };
 
+export const downloadFile = async (documentId, fileName) => {
+  try {
+    // Tạo URL để download
+    const downloadUrl = `${import.meta.env.VITE_API_URL}/document/${documentId}/download`;
+    
+    // Tạo thẻ <a> để download
+    const link = window.document.createElement('a');
+    link.href = downloadUrl;
+    link.download = fileName || 'download';
+    link.target = '_blank';
+    window.document.body.appendChild(link);
+    link.click();
+    window.document.body.removeChild(link);
+
+    return "Đang tải xuống tài liệu...";
+  } catch (err) {
+    toast.error("Không thể tải xuống tài liệu!");
+    throw err;
+  }
+};
+
 export const restoreFile = async (id) => {
   try {
     const res = await api.patch("/document/restore",{"document_id":id});
@@ -57,7 +78,7 @@ export const permanentDeleteFile = async (id) => {
 
 export const deleteFile = async (id) => {
   try {
-    const res = await api.delete(`/document/:${id}`);
+    const res = await api.delete(`/document/${id}`);
     const message = res.data.message;
     
     return message;

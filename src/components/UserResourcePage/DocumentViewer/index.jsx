@@ -1,8 +1,29 @@
 // components/UserResourcePage/DocumentViewer/index.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { X, Download, ExternalLink } from "lucide-react";
 
 export default function DocumentViewer({ document, onClose }) {
+  // Handle ESC key to close
+  useEffect(() => {
+    if (!document) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.document.addEventListener('keydown', handleKeyDown);
+    
+    // Prevent body scroll
+    window.document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.document.removeEventListener('keydown', handleKeyDown);
+      window.document.body.style.overflow = 'unset';
+    };
+  }, [document, onClose]);
+
   if (!document) return null;
 
   const getFileType = (fileType) => {
@@ -24,11 +45,13 @@ export default function DocumentViewer({ document, onClose }) {
   const renderContent = () => {
     switch (fileType) {
       case "pdf":
+        // Sử dụng Google Docs Viewer cho PDF để tránh lỗi CORS
         return (
           <iframe
-            src={fileUrl}
-            className="h-full w-full rounded-lg"
+            src={`https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+            className="h-full w-full"
             title={document.name}
+            frameBorder="0"
           />
         );
 
@@ -73,27 +96,14 @@ export default function DocumentViewer({ document, onClose }) {
       case "document":
       case "spreadsheet":
       case "presentation":
+        // Xóa icon và tên file, chỉ hiển thị iframe toàn màn hình
         return (
-          <div className="flex h-full flex-col items-center justify-center gap-4 p-8">
-            <div className="text-center">
-              <div className="mb-4 text-6xl">
-                {fileType === "document" && "📘"}
-                {fileType === "spreadsheet" && "📊"}
-                {fileType === "presentation" && "📙"}
-              </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-800">
-                {document.name}
-              </h3>
-              <p className="mb-6 text-gray-600">
-                Sử dụng Google Docs Viewer để xem tài liệu này
-              </p>
-            </div>
-            <iframe
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`}
-              className="h-full w-full rounded-lg border border-gray-300"
-              title={document.name}
-            />
-          </div>
+          <iframe
+            src={`https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+            className="h-full w-full"
+            title={document.name}
+            frameBorder="0"
+          />
         );
 
       default:
@@ -123,20 +133,20 @@ export default function DocumentViewer({ document, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
-      <div className="relative flex h-[90vh] w-[90vw] flex-col rounded-lg bg-white shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 p-4">
-          <div className="flex-1">
-            <h2 className="text-lg font-semibold text-gray-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
+      <div className="relative flex h-screen w-screen flex-col bg-white">
+        {/* Header - Compact */}
+        <div className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3 shadow-sm">
+          <div className="flex-1 min-w-0">
+            <h2 className="truncate text-base font-semibold text-gray-800">
               {document.name}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs text-gray-500">
               {document.file_type || "Không rõ loại file"}
             </p>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-4">
             <a
               href={fileUrl}
               download
@@ -156,16 +166,16 @@ export default function DocumentViewer({ document, onClose }) {
             </a>
             <button
               onClick={onClose}
-              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100"
-              title="Đóng"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600"
+              title="Đóng (ESC)"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-hidden p-4">
+        {/* Content - Full height */}
+        <div className="flex-1 overflow-hidden bg-gray-50">
           {renderContent()}
         </div>
       </div>
