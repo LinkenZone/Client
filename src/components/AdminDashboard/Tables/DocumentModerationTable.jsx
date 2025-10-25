@@ -137,22 +137,22 @@ const DocumentModerationTable = () => {
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full table-fixed border-collapse">
             <thead>
               <tr className="border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
-                <th className="pr-4 pb-3">Tài liệu</th>
-                <th className="pr-4 pb-3">Người tải lên</th>
-                <th className="pr-4 pb-3">Danh mục</th>
-                <th className="pr-4 pb-3">Ngày tải</th>
-                <th className="pr-4 pb-3">Trạng thái</th>
-                <th className="pb-3 text-right">Thao tác</th>
+                <th className="w-[25%] pr-4 pb-3">Tài liệu</th>
+                <th className="w-[25%] pr-4 pb-3">Người tải lên</th>
+                {/* <th className="w-[10%] pr-4 pb-3">Danh mục</th> */}
+                <th className="w-[17.5%] pr-4 pb-3">Ngày tải</th>
+                <th className="w-[12.5%] pr-4 pb-3">Trạng thái</th>
+                <th className="w-[20%] pb-3 text-right">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredDocuments.map((doc) => (
                 <tr key={doc.document_id} className="text-sm transition-colors hover:bg-gray-50">
                   {/* Document Info */}
-                  <td className="max-w-xs py-4 pr-4">
+                  <td className="py-4 pr-4">
                     <div className="flex items-start gap-3">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-50">
                         <FileText className="h-5 w-5 text-orange-500" />
@@ -162,6 +162,7 @@ const DocumentModerationTable = () => {
                           {doc.title}
                         </p>
                         <p className="text-xs text-gray-500">
+                          {doc.file_type}
                           {/* {doc.fileName} • {doc.fileSize} */}
                         </p>
                       </div>
@@ -180,11 +181,11 @@ const DocumentModerationTable = () => {
                   </td>
 
                   {/* Category */}
-                  <td className="py-4 pr-4">
-                    <span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-                      {/* {doc.category} */}
-                    </span>
-                  </td>
+                  {/* <td className="py-4 pr-4">
+                    <span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700"> */}
+                  {/* {doc.category} */}
+                  {/* </span>
+                  </td> */}
 
                   {/* Date */}
                   <td className="py-4 pr-4">
