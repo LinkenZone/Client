@@ -1,7 +1,8 @@
-import { AlertCircle, Calendar, Check, FileText, User, X } from 'lucide-react';
+import { AlertCircle, Calendar, Check, Eye, FileText, User, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '../../../services/api';
+import DocumentViewer from '../../UserResourcePage/DocumentViewer';
 
 const DocumentModerationTable = () => {
   const [documents, setDocuments] = useState([]);
@@ -10,6 +11,7 @@ const DocumentModerationTable = () => {
   const [showModal, setShowModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const [filter, setFilter] = useState('pending');
+  const [viewingDocument, setViewingDocument] = useState(null);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -68,6 +70,22 @@ const DocumentModerationTable = () => {
   const openRejectModal = (doc) => {
     setSelectedDoc(doc);
     setShowModal(true);
+  };
+
+  const handleViewDocument = (doc) => {
+    // Format document để phù hợp với DocumentViewer
+    const formattedDoc = {
+      id: doc.document_id,
+      name: doc.title,
+      file_type: doc.file_type,
+      file_url: doc.file_url,
+      description: doc.description,
+    };
+    setViewingDocument(formattedDoc);
+  };
+
+  const closeDocumentViewer = () => {
+    setViewingDocument(null);
   };
 
   const formatDate = (dateString) => {
@@ -218,29 +236,39 @@ const DocumentModerationTable = () => {
 
                   {/* Actions */}
                   <td className="py-4 text-right">
-                    {doc.status === 'pending' && (
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => handleApprove(doc.document_id)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-600"
-                          title="Phê duyệt"
-                        >
-                          <Check className="h-3.5 w-3.5" />
-                          Duyệt
-                        </button>
-                        <button
-                          onClick={() => openRejectModal(doc)}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-red-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-600"
-                          title="Từ chối"
-                        >
-                          <X className="h-3.5 w-3.5" />
-                          Từ chối
-                        </button>
-                      </div>
-                    )}
-                    {doc.status !== 'pending' && (
-                      <span className="text-xs text-gray-400">Đã xử lý</span>
-                    )}
+                    <div className="flex justify-end gap-2">
+                      {/* Nút Xem - Luôn hiển thị */}
+                      <button
+                        onClick={() => handleViewDocument(doc)}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-600"
+                        title="Xem tài liệu"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        Xem
+                      </button>
+
+                      {/* Nút Duyệt và Từ chối - Chỉ hiện khi pending */}
+                      {doc.status === 'pending' && (
+                        <>
+                          <button
+                            onClick={() => handleApprove(doc.document_id)}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-green-600"
+                            title="Phê duyệt"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                            Duyệt
+                          </button>
+                          <button
+                            onClick={() => openRejectModal(doc)}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-red-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-600"
+                            title="Từ chối"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                            Từ chối
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -299,6 +327,14 @@ const DocumentModerationTable = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Document Viewer */}
+      {viewingDocument && (
+        <DocumentViewer 
+          document={viewingDocument} 
+          onClose={closeDocumentViewer} 
+        />
       )}
     </div>
   );

@@ -12,7 +12,7 @@ import { useFileView } from '../components/UserResourcePage/hooks/useFileView';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import  {loadDeletedFile} from './../components/UserResourcePage/utils/loadFiles';
-import { restoreFile, permanentDeleteFile } from './../components/UserResourcePage/utils/fileHelpers';
+import { restoreFile, permanentDeleteFile, downloadFile } from './../components/UserResourcePage/utils/fileHelpers';
 
 export default function TrashPage() {
   const { user } = useContext(AuthContext);
@@ -94,16 +94,14 @@ export default function TrashPage() {
     }
   };
 
-  const handleDownload = (document) => {
-    const link = window.document.createElement('a');
-    link.href = document.file_url || document.url;
-    link.download = document.name;
-    link.target = '_blank';
-    window.document.body.appendChild(link);
-    link.click();
-    window.document.body.removeChild(link);
-    
-    toast.success('Đang tải xuống tài liệu...');
+  const handleDownload = async (document) => {
+    try {
+      const message = await downloadFile(document.id, document.name);
+      toast.success(message);
+    } catch (error) {
+      console.error('Download error:', error);
+      // Error is already handled in downloadFile function
+    }
   };
 
   const handleViewChange = (viewId) => {
