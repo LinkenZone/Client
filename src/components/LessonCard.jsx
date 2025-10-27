@@ -20,7 +20,9 @@ function LessonCard({ lesson }) {
         </div>
         <div className="rounded-b-[35px] border-t border-[#d1fae5] bg-[#ecfdf5] p-3 px-4">
           <h3 className="font-roboto mb-1.5 text-lg font-bold text-black">{lesson.title}</h3>
-          <p className="font-roboto mb-2.5 text-base text-black">{lesson.description}</p>
+          <p className="font-roboto mb-2.5 h-12 text-base leading-6 text-black line-clamp-2">
+            {lesson.description}
+          </p>
           <p className="text-sm text-[#333]">⭐: {lesson.rating}/5</p>
         </div>
       </div>
