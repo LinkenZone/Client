@@ -158,12 +158,12 @@ const DocumentModerationTable = () => {
           <table className="w-full table-fixed border-collapse">
             <thead>
               <tr className="border-b border-gray-200 text-left text-sm font-semibold text-gray-700">
-                <th className="w-[25%] pr-4 pb-3">Tài liệu</th>
-                <th className="w-[25%] pr-4 pb-3">Người tải lên</th>
+                <th className="w-[23.75%] pr-4 pb-3">Tài liệu</th>
+                <th className="w-[23.75%] pr-4 pb-3">Người tải lên</th>
                 {/* <th className="w-[10%] pr-4 pb-3">Danh mục</th> */}
-                <th className="w-[17.5%] pr-4 pb-3">Ngày tải</th>
+                <th className="w-[12.5%] pr-4 pb-3">Ngày tải</th>
                 <th className="w-[12.5%] pr-4 pb-3">Trạng thái</th>
-                <th className="w-[20%] pb-3 text-right">Thao tác</th>
+                <th className="w-[27.5%] pb-3 text-right">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -332,10 +332,7 @@ const DocumentModerationTable = () => {
 
       {/* Document Viewer */}
       {viewingDocument && (
-        <DocumentViewer 
-          document={viewingDocument} 
-          onClose={closeDocumentViewer} 
-        />
+        <DocumentViewer document={viewingDocument} onClose={closeDocumentViewer} />
       )}
     </div>
   );

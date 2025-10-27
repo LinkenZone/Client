@@ -44,9 +44,9 @@ const UserManagementTable = () => {
 
   const handleDeactivateUser = async (userId) => {
     try {
-      await api.patch(`/users/${userId}/deactivate`);
+      await api.patch(`/users/${userId}/ban`);
       setUsers((prev) =>
-        prev.map((user) => (user.user_id === userId ? { ...user, is_active: false } : user)),
+        prev.map((user) => (user.user_id === userId ? { ...user, is_banned: true } : user)),
       );
       toast.success('Đã vô hiệu hóa tài khoản!');
       closeModal();
@@ -58,9 +58,9 @@ const UserManagementTable = () => {
 
   const handleActivateUser = async (userId) => {
     try {
-      await api.patch(`/users/${userId}/activate`);
+      await api.patch(`/users/${userId}/unban`);
       setUsers((prev) =>
-        prev.map((user) => (user.user_id === userId ? { ...user, is_active: true } : user)),
+        prev.map((user) => (user.user_id === userId ? { ...user, is_banned: false } : user)),
       );
       toast.success('Đã kích hoạt tài khoản!');
       closeModal();
@@ -119,12 +119,11 @@ const UserManagementTable = () => {
     .filter((user) => {
       const matchesSearch =
         user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.username?.toLowerCase().includes(searchTerm.toLowerCase());
+        user.email?.toLowerCase().includes(searchTerm.toLowerCase());
 
       if (filter === 'all') return matchesSearch;
-      if (filter === 'active') return matchesSearch && user.is_active;
-      if (filter === 'inactive') return matchesSearch && !user.is_active;
+      if (filter === 'active') return matchesSearch && !user.is_banned;
+      if (filter === 'inactive') return matchesSearch && user.is_banned;
       if (filter === 'admin') return matchesSearch && user.role === 'admin';
 
       return matchesSearch;
@@ -156,7 +155,7 @@ const UserManagementTable = () => {
           <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Tìm kiếm theo tên, email, username..."
+            placeholder="Tìm kiếm theo tên, email, ..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full rounded-lg border border-gray-300 py-2 pr-4 pl-10 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none"
@@ -183,7 +182,7 @@ const UserManagementTable = () => {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Hoạt động ({users.filter((u) => u.is_active).length})
+            Hoạt động ({users.filter((u) => !u.is_banned).length})
           </button>
           <button
             onClick={() => setFilter('inactive')}
@@ -193,7 +192,7 @@ const UserManagementTable = () => {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Vô hiệu ({users.filter((u) => !u.is_active).length})
+            Vô hiệu ({users.filter((u) => u.is_banned).length})
           </button>
           <button
             onClick={() => setFilter('admin')}
@@ -239,7 +238,6 @@ const UserManagementTable = () => {
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">{user.full_name || 'N/A'}</p>
-                        <p className="text-xs text-gray-500">@{user.username}</p>
                       </div>
                     </div>
                   </td>
@@ -277,7 +275,7 @@ const UserManagementTable = () => {
 
                   {/* Status */}
                   <td className="py-4 pr-4">
-                    {user.is_active ? (
+                    {!user.is_banned ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700">
                         <CheckCircle className="h-3 w-3" />
                         Hoạt động
@@ -307,7 +305,7 @@ const UserManagementTable = () => {
                       >
                         <Edit2 className="h-4 w-4" />
                       </button>
-                      {user.is_active ? (
+                      {!user.is_banned ? (
                         <button
                           onClick={() => openModal('deactivate', user)}
                           className="rounded-lg p-2 text-red-600 transition-colors hover:bg-red-50"
@@ -340,7 +338,7 @@ const UserManagementTable = () => {
             {/* User Details Modal */}
             {modalType === 'details' && (
               <>
-                <div className="mb-4 flex items-start gap-3">
+                <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-500 text-lg font-semibold text-white">
                     {selectedUser.full_name?.charAt(0).toUpperCase() || 'U'}
                   </div>
@@ -348,7 +346,6 @@ const UserManagementTable = () => {
                     <h3 className="text-lg font-semibold text-gray-900">
                       {selectedUser.full_name}
                     </h3>
-                    <p className="text-sm text-gray-600">@{selectedUser.username}</p>
                   </div>
                 </div>
 
@@ -370,15 +367,15 @@ const UserManagementTable = () => {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    {selectedUser.is_active ? (
+                    {!selectedUser.is_banned ? (
                       <CheckCircle className="h-4 w-4 text-green-500" />
                     ) : (
                       <XCircle className="h-4 w-4 text-red-500" />
                     )}
                     <span className="text-gray-600">
                       Trạng thái:{' '}
-                      <span className={selectedUser.is_active ? 'text-green-600' : 'text-red-600'}>
-                        {selectedUser.is_active ? 'Hoạt động' : 'Vô hiệu'}
+                      <span className={!selectedUser.is_banned ? 'text-green-600' : 'text-red-600'}>
+                        {!selectedUser.is_banned ? 'Hoạt động' : 'Vô hiệu'}
                       </span>
                     </span>
                   </div>
