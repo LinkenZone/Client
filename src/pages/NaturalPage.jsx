@@ -2,34 +2,151 @@ import { useMemo } from 'react';
 import LessonCard from '../components/LessonCard';
 
 export default function NaturalPage() {
-  const lessons = useMemo(() => [], []); // Hiện tại chưa có bài học
+  // Dữ liệu bài học Tự nhiên (Toán, Lý, Hóa, Sinh)
+  const allLessons = useMemo(
+    () => [
+      {
+        id: 1,
+        title: 'Toán lớp 1',
+        description: 'Học toán cơ bản cho học sinh lớp 1',
+        rating: 4.5,
+        image: null,
+        category: 'natural',
+        subject: 'toán',
+      },
+      {
+        id: 2,
+        title: 'Toán lớp 2',
+        description: 'Các bài toán nâng cao cho lớp 2',
+        rating: 4.8,
+        image: null,
+        category: 'natural',
+        subject: 'toán',
+      },
+      {
+        id: 3,
+        title: 'Toán cao cấp',
+        description: 'Toán học đại học và cao học',
+        rating: 4.9,
+        image: null,
+        category: 'natural',
+        subject: 'toán',
+      },
+      {
+        id: 4,
+        title: 'Vật lý đại cương',
+        description: 'Kiến thức vật lý cơ bản',
+        rating: 4.7,
+        image: null,
+        category: 'natural',
+        subject: 'lý',
+      },
+      {
+        id: 5,
+        title: 'Cơ học Newton',
+        description: 'Nghiên cứu chuyển động và lực',
+        rating: 4.6,
+        image: null,
+        category: 'natural',
+        subject: 'lý',
+      },
+      {
+        id: 6,
+        title: 'Hóa học hữu cơ',
+        description: 'Tìm hiểu về hợp chất hữu cơ',
+        rating: 4.4,
+        image: null,
+        category: 'natural',
+        subject: 'hóa',
+      },
+      {
+        id: 7,
+        title: 'Hóa học phân tích',
+        description: 'Phương pháp phân tích hóa học',
+        rating: 4.5,
+        image: null,
+        category: 'natural',
+        subject: 'hóa',
+      },
+      {
+        id: 8,
+        title: 'Sinh học tế bào',
+        description: 'Nghiên cứu cấu trúc tế bào',
+        rating: 4.8,
+        image: null,
+        category: 'natural',
+        subject: 'sinh',
+      },
+    ],
+    []
+  );
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-[1200px] flex-col items-center bg-gradient-to-b from-[#e6f2ff] to-[#fdfdfd] p-5">
-      <div className="mt-0 w-full py-16 pb-10 text-center md:py-[60px] md:pb-10">
-        <h1 className="font-roboto mb-8 text-4xl font-bold text-[#1e3a8a] md:text-[2.5rem]">
-          Tự nhiên
-        </h1>
-        <div className="mx-auto mb-10 flex w-full max-w-[600px] items-center justify-center">
-          <input
-            type="text"
-            placeholder="Tìm kiếm bài học Tự nhiên..."
-            className="w-full max-w-[480px] rounded-[32px] border-2 border-[#53ccec] bg-[#fdfdfd] p-4 px-7 text-lg text-[#1e3a8a] shadow-[0_4px_12px_rgba(83,204,236,0.15)] transition-all duration-300 outline-none placeholder:text-center placeholder:text-[#999] focus:border-[#4AA4FF] focus:shadow-[0_6px_20px_rgba(74,164,255,0.25)] md:p-[18px] md:px-7 md:text-[1.1rem]"
-          />
+    <div className="relative mx-auto flex min-h-screen flex-col items-center overflow-hidden bg-gradient-to-br from-[#e0f2f1] via-[#f0f9ff] to-[#e8f5e9] px-4 py-8 md:px-8">
+      {/* Decorative Math/Science Elements - Left Side */}
+      <div className="pointer-events-none absolute left-0 top-20 hidden opacity-20 lg:block">
+        <div className="space-y-8 text-6xl text-[#1e88e5]">
+          <div className="rotate-12">∑</div>
+          <div className="-rotate-6">π</div>
+          <div className="rotate-6">√</div>
+          <div className="-rotate-12">∫</div>
+          <div className="rotate-12">α</div>
         </div>
       </div>
 
-      {lessons.length === 0 ? (
-        <p className="font-roboto mt-40 rounded-2xl border-2 border-dashed border-[#ccc] bg-white/60 p-10 text-center text-xl text-[#888]">
-          Hiện tại chưa có bài học
-        </p>
-      ) : (
-        <div className="grid w-full max-w-[1000px] grid-cols-1 gap-8 md:grid-cols-[repeat(auto-fit,minmax(340px,1fr))]">
-          {lessons.map((l, idx) => (
-            <LessonCard key={idx} lesson={l} />
+      {/* Decorative Chemistry Elements - Right Side */}
+      <div className="pointer-events-none absolute right-0 top-40 hidden opacity-20 lg:block">
+        <div className="space-y-8 text-5xl text-[#43a047]">
+          <div className="-rotate-12">H₂O</div>
+          <div className="rotate-6">CO₂</div>
+          <div className="-rotate-6">E=mc²</div>
+          <div className="rotate-12">⚛️</div>
+          <div className="-rotate-12">🧪</div>
+        </div>
+      </div>
+
+      {/* Ruler decoration - Bottom */}
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 hidden h-8 border-t-4 border-[#1e88e5] opacity-30 md:block">
+        <div className="flex h-full items-end justify-around">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="w-0.5 bg-[#1e88e5]"
+              style={{ height: i % 5 === 0 ? '100%' : '50%' }}
+            />
           ))}
         </div>
-      )}
+      </div>
+
+      {/* Header Section */}
+      <div className="relative z-10 w-full py-8 text-center md:py-12">
+        <div className="mb-4 flex items-center justify-center gap-3">
+          <span className="text-5xl">🔬</span>
+          <h1 className="font-roboto text-4xl font-bold text-[#1e88e5] md:text-5xl">
+            Khoa học Tự nhiên
+          </h1>
+          <span className="text-5xl">🧬</span>
+        </div>
+        <p className="font-roboto mb-6 text-lg text-[#2e7d32] md:text-xl">
+          Khám phá thế giới Toán - Lý - Hóa - Sinh
+        </p>
+      </div>
+
+      {/* Results Section */}
+      <div className="relative z-10 w-full max-w-7xl">
+        <div className="mb-6 text-left">
+          <p className="font-roboto text-lg text-[#2e7d32]">
+            Có <span className="font-bold text-[#1e88e5]">{allLessons.length}</span> bài học
+          </p>
+        </div>
+
+        {/* Lesson Grid */}
+        <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+          {allLessons.map((lesson) => (
+            <LessonCard key={lesson.id} lesson={lesson} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

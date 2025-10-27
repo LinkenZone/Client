@@ -2,197 +2,240 @@ import { assets } from '../assets/assets';
 
 export default function IntroPage() {
   return (
-    <div>
-      {/* Hero Section */}
-      <div className="relative mx-auto flex max-w-[1440px] items-center justify-center">
-        <div className="h-[800px] w-full bg-gradient-to-b from-[#fdfdfd] via-[#e6f2ff] via-[93%] to-[#fdfdfd]" />
-        <div className="absolute top-[180px] left-1/2 h-[520px] w-[750px] -translate-x-1/2">
-          <div className="absolute top-0 left-1/2 h-[470px] w-[650px] -translate-x-1/2">
-            <div className="absolute z-10 h-[470px] w-[650px] rounded-[30px] bg-gradient-to-br from-[#666666] to-[#555555] p-[15px]" />
-            <div className="absolute top-[15px] left-[15px] z-20 h-[440px] w-[620px] rounded-[20px] bg-black" />
-            <div className="absolute top-[25px] left-1/2 z-20 h-[420px] w-[600px] -translate-x-1/2 rounded-t-[25px] rounded-b-[4px] bg-white">
-              <div
-                className="absolute top-10 left-1/2 h-[100px] w-[130px] -translate-x-1/2 bg-contain bg-center bg-no-repeat"
-                style={{ backgroundImage: `url('${assets.logo}')` }}
-              />
-              <div className="font-roboto absolute top-40 left-1/2 w-[520px] -translate-x-1/2 text-center text-[28px] font-bold text-[#1e3a8a]">
-                Chào mừng bạn đến với LinkenZone
-              </div>
-              <div className="font-roboto absolute top-[220px] left-1/2 w-[520px] -translate-x-1/2 text-center text-lg leading-relaxed">
-                <div>Nền tảng học tập mở</div>
-                <div>Nơi mọi người có thể chia sẻ, khám phá và kết nối tri thức với nhau</div>
-              </div>
-              <div className="absolute bottom-[30px] left-1/2 -translate-x-1/2">
-                <div className="relative h-[45px] w-[350px] cursor-pointer rounded-[25px] bg-[#53ccec]" />
-                <div className="font-roboto absolute top-1/2 left-1/2 flex w-[350px] -translate-x-1/2 -translate-y-1/2 items-center justify-center text-center text-lg">
-                  Khám phá tri thức cùng LinkenZone
-                </div>
-              </div>
+    <div className="overflow-hidden bg-white">
+      {/* Hero Section - Modern & Animated */}
+      <section className="relative min-h-screen bg-gradient-to-br from-[#4AA4FF] via-[#5A9EE8] to-[#6B8DD1] px-4 py-20">
+        {/* Animated Background Elements */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute left-[10%] top-[20%] h-64 w-64 animate-pulse rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute right-[15%] top-[40%] h-96 w-96 animate-pulse rounded-full bg-white/10 blur-3xl delay-700" />
+          <div className="absolute bottom-[20%] left-[30%] h-80 w-80 animate-pulse rounded-full bg-white/10 blur-3xl delay-1000" />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-7xl">
+          <div className="flex flex-col items-center justify-center text-center">
+            {/* Logo Animation */}
+            <div className="mb-8 animate-bounce">
+              <img src={assets.logo} alt="LinkenZone Logo" className="h-32 w-auto drop-shadow-2xl" />
             </div>
-            <div className="absolute top-2 left-1/2 z-30 h-3 w-[60px] -translate-x-1/2 rounded-b-lg bg-black" />
-            <div className="absolute top-3 left-1/2 z-40 h-1 w-1 -translate-x-1/2 rounded-full bg-[#333]" />
-          </div>
-          <div className="absolute top-[470px] left-1/2 z-10 h-[35px] w-[750px] -translate-x-1/2 rounded-b-[15px] bg-gradient-to-r from-[#ababab] via-[#888888] to-[#ababab]" />
-        </div>
-      </div>
 
-      {/* Intro Section */}
-      <div className="relative mx-auto min-h-[800px] max-w-[1440px] bg-[#fdfdfd] px-10 py-[50px]">
-        {/* Cloud Title */}
-        <div className="relative">
-          <div
-            className="font-roboto absolute right-[15%] flex h-[180px] w-[400px] items-center justify-center bg-contain bg-center bg-no-repeat text-center text-[32px] font-bold"
-            style={{ backgroundImage: `url('${assets.cloud0}')` }}
-          >
-            <div>LinkenZone là gì?</div>
-          </div>
-        </div>
+            {/* Main Title */}
+            <h1 className="mb-6 text-5xl font-bold text-white drop-shadow-lg md:text-7xl">
+              Chào mừng đến với{' '}
+              <span className="bg-gradient-to-r from-[#FFD700] to-[#FFA500] bg-clip-text text-transparent">
+                LinkenZone
+              </span>
+            </h1>
 
-        {/* Main Description Cloud */}
-        <div className="relative mt-[100px]">
-          <div
-            className="font-roboto absolute left-[15%] flex h-[250px] w-[500px] items-center justify-center bg-contain bg-center bg-no-repeat p-[30px] text-center text-base leading-relaxed"
-            style={{ backgroundImage: `url('${assets.cloud1}')` }}
-          >
-            <div>
-              LinkenZone là hệ thống Thư viện số tập trung, ra đời nhằm giải quyết tình trạng tài
-              liệu học tập bị phân tán, khó tìm kiếm và thiếu kiểm chứng chất lượng.
+            {/* Subtitle */}
+            <p className="mb-4 max-w-3xl text-xl text-white/90 drop-shadow md:text-2xl">
+              Nền tảng học tập mở
+            </p>
+            <p className="mb-12 max-w-3xl text-lg text-white/80 drop-shadow">
+              Nơi mọi người có thể chia sẻ, khám phá và kết nối tri thức với nhau
+            </p>
+
+            {/* CTA Button */}
+            <button className="group relative overflow-hidden rounded-full bg-white px-12 py-5 text-lg font-semibold text-[#4AA4FF] shadow-2xl transition-all hover:scale-105 hover:shadow-3xl">
+              <span className="relative z-10">Khám phá tri thức cùng LinkenZone</span>
+              <div className="absolute inset-0 -z-0 bg-gradient-to-r from-[#FFD700] to-[#FFA500] opacity-0 transition-opacity group-hover:opacity-100" />
+            </button>
+
+            {/* Scroll Indicator */}
+            <div className="mt-20 animate-bounce">
+              <div className="text-4xl text-white/80">↓</div>
+              <p className="mt-2 text-sm text-white/60">Cuộn xuống để tìm hiểu thêm</p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Clouds */}
-        <div className="relative mt-[300px]">
-          {/* Right Cloud */}
-          <div
-            className="font-roboto absolute right-[5%] flex h-[220px] w-[380px] items-center justify-center bg-contain bg-center bg-no-repeat p-[25px] text-center text-base leading-relaxed"
-            style={{ backgroundImage: `url('${assets.cloud2}')` }}
-          >
-            <div>
-              Website tích hợp công cụ tìm kiếm toàn văn mạnh mẽ, cùng các bộ lọc theo môn học,
-              giảng viên, loại tài liệu.
+        {/* Wave Decoration */}
+        <div className="absolute bottom-0 left-0 w-full">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z"
+              fill="white"
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* What is LinkenZone Section */}
+      <section className="bg-gradient-to-b from-white to-[#f0f9ff] px-4 py-20">
+        <div className="mx-auto max-w-7xl">
+          <h2 className="mb-16 text-center text-5xl font-bold text-[#1e3a8a]">
+            LinkenZone là gì? 🤔
+          </h2>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {/* Card 1 */}
+            <div className="group rounded-3xl bg-white p-8 shadow-lg transition-all hover:scale-105 hover:shadow-2xl">
+              <div className="mb-6 text-6xl">📚</div>
+              <h3 className="mb-4 text-2xl font-bold text-[#4AA4FF]">Thư viện số tập trung</h3>
+              <p className="leading-relaxed text-gray-700">
+                Giải quyết tình trạng tài liệu học tập bị phân tán, khó tìm kiếm và thiếu kiểm chứng chất lượng
+              </p>
+            </div>
+
+            {/* Card 2 */}
+            <div className="group rounded-3xl bg-white p-8 shadow-lg transition-all hover:scale-105 hover:shadow-2xl">
+              <div className="mb-6 text-6xl">🔍</div>
+              <h3 className="mb-4 text-2xl font-bold text-[#4AA4FF]">Tìm kiếm mạnh mẽ</h3>
+              <p className="leading-relaxed text-gray-700">
+                Công cụ tìm kiếm toàn văn với bộ lọc theo môn học, giảng viên, loại tài liệu
+              </p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="group rounded-3xl bg-white p-8 shadow-lg transition-all hover:scale-105 hover:shadow-2xl">
+              <div className="mb-6 text-6xl">⭐</div>
+              <h3 className="mb-4 text-2xl font-bold text-[#4AA4FF]">Đánh giá chất lượng</h3>
+              <p className="leading-relaxed text-gray-700">
+                Người dùng đánh giá tài liệu theo thang 5 sao, góp phần xây dựng cộng đồng học thuật
+              </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Left Cloud */}
-          <div
-            className="font-roboto absolute left-[5%] flex h-[220px] w-[380px] -translate-y-[-50%] items-center justify-center bg-contain bg-center bg-no-repeat p-[25px] text-center text-base leading-relaxed"
-            style={{ backgroundImage: `url('${assets.cloud3}')` }}
-          >
-            <div>
-              Người dùng có thể đánh giá tài liệu theo thang 5 sao, góp phần xây dựng cộng đồng học
-              thuật chất lượng.
-            </div>
+      {/* Teacher Features Section */}
+      <section className="bg-gradient-to-br from-[#e0f2f1] to-[#b2dfdb] px-4 py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-16 text-center">
+            <div className="mb-4 text-6xl">👨‍🏫</div>
+            <h2 className="text-5xl font-bold text-[#1e88e5]">
+              Người dạy có thể làm những gì?
+            </h2>
           </div>
-        </div>
-      </div>
 
-      {/* Teacher Section */}
-      <div className="relative mx-auto h-[600px] max-w-[1440px] bg-[#d0ebe9] px-10">
-        <div className="font-roboto absolute top-10 left-1/2 w-[600px] -translate-x-1/2 text-center text-4xl font-bold">
-          Người dạy có thể làm những gì?
-        </div>
-        {[
-          {
-            title: 'Khẳng định chuyên môn',
-            description:
-              'Hồ sơ giảng viên hiển thị tài liệu, lớp học và đánh giá – giúp nâng cao uy tín.',
-            bgColor: 'white',
-            position: 'right-10 top-[120px]',
-          },
-          {
-            title: 'Kiểm duyệt tài liệu',
-            description:
-              'Giảng viên có quyền kiểm duyệt nội dung do người dùng đóng góp để đảm bảo chất lượng.',
-            bgColor: '#a7c7e7',
-            position: 'left-1/2 -translate-x-1/2 top-[180px]',
-          },
-          {
-            title: 'Tạo lớp học dễ dàng',
-            description:
-              'Giảng viên có thể tạo lớp học, tải lên slide, đề thi, ebook và chia sẻ với học viên.',
-            bgColor: '#e6f2ff',
-            position: 'left-10 top-[280px]',
-          },
-          {
-            title: 'Nhận đánh giá từ học viên',
-            description:
-              'Tài liệu được đánh giá theo thang 5 sao, giúp giảng viên cải thiện nội dung.',
-            bgColor: '#cce3dc',
-            position: 'right-10 top-[380px]',
-          },
-        ].map((card, i) => (
-          <div
-            key={i}
-            className={`absolute ${card.position} flex w-[280px] flex-col items-center rounded-xl p-4 text-center shadow-[0_2px_8px_rgba(0,0,0,0.1)]`}
-            style={{ backgroundColor: card.bgColor }}
-          >
-            <div className="font-roboto mb-2.5 text-xl font-bold">{card.title}</div>
-            <div className="font-roboto text-base leading-relaxed">{card.description}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Student Section */}
-      <div className="relative mx-auto min-h-[700px] max-w-[1440px] bg-[#e6f2ff] px-10 py-16">
-        <div className="font-roboto mx-auto mb-16 max-w-[600px] text-center text-4xl font-bold">
-          Học viên có thể làm gì?
-        </div>
-        <div className="mx-auto max-w-[1200px]">
-          <div className="grid grid-cols-3 gap-x-8 gap-y-20">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {[
               {
-                title: 'Tìm kiếm tài liệu',
-                description:
-                  'Tìm kiếm slide, đề thi, sách theo môn học một cách nhanh chóng và chính xác',
+                icon: '🎓',
+                title: 'Khẳng định chuyên môn',
+                description: 'Hồ sơ giảng viên hiển thị tài liệu, lớp học và đánh giá – giúp nâng cao uy tín',
+                gradient: 'from-[#4AA4FF] to-[#5A9EE8]',
               },
               {
-                title: 'Tham gia lớp học',
-                description:
-                  'Truy cập vào các lớp học được tạo bởi giảng viên và tải xuống tài liệu',
+                icon: '✅',
+                title: 'Kiểm duyệt tài liệu',
+                description: 'Có quyền kiểm duyệt nội dung do người dùng đóng góp để đảm bảo chất lượng',
+                gradient: 'from-[#5A9EE8] to-[#6B8DD1]',
               },
               {
-                title: 'Đánh giá chất lượng',
-                description:
-                  'Đánh giá tài liệu theo thang 5 sao để giúp cộng đồng có tài liệu tốt hơn',
+                icon: '📝',
+                title: 'Tạo lớp học dễ dàng',
+                description: 'Tạo lớp học, tải lên slide, đề thi, ebook và chia sẻ với học viên',
+                gradient: 'from-[#6B8DD1] to-[#7B7DC0]',
               },
               {
-                title: 'Chia sẻ tài liệu',
-                description:
-                  'Đóng góp slide, bài tập, đề thi cho cộng đồng sau khi được kiểm duyệt',
+                icon: '⭐',
+                title: 'Nhận đánh giá',
+                description: 'Tài liệu được đánh giá theo thang 5 sao, giúp cải thiện nội dung',
+                gradient: 'from-[#7B7DC0] to-[#8B6DB0]',
               },
-              {
-                title: 'Lưu trữ cá nhân',
-                description: 'Tạo thư mục cá nhân để lưu trữ và quản lý tài liệu yêu thích',
-              },
-              {
-                title: 'Theo dõi tiến độ',
-                description: 'Theo dõi lịch sử học tập và tiến độ hoàn thành các khóa học',
-              },
-            ].map((item, i) => (
-              <div key={i} className="flex w-full flex-col items-center text-center">
-                <div className="font-roboto mb-4 flex h-[66px] items-center justify-center text-2xl font-bold">
-                  {item.title}
+            ].map((feature, i) => (
+              <div
+                key={i}
+                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${feature.gradient} p-6 text-white shadow-lg transition-all hover:scale-105 hover:shadow-2xl`}
+              >
+                <div className="relative z-10">
+                  <div className="mb-4 text-5xl">{feature.icon}</div>
+                  <h3 className="mb-3 text-xl font-bold">{feature.title}</h3>
+                  <p className="leading-relaxed text-white/90">{feature.description}</p>
                 </div>
-                <div className="font-roboto mb-6 flex h-[72px] max-w-[250px] items-center justify-center text-base leading-relaxed">
-                  {item.description}
-                </div>
-                <div className="mt-2.5">
-                  <svg width="200px" height="120px" fill="none" viewBox="0 0 263 140">
-                    <g>
-                      <rect fill="#D9D9D9" height="9" width="263" />
-                      <rect fill="#D9D9D9" height="23" width="245" x="9" y="9" />
-                      <path d="M19 32V140H9V32H19Z" fill="#D9D9D9" />
-                      <path d="M254 32V140H244V32H254Z" fill="#D9D9D9" />
-                      <rect fill="black" height="16" width="210" x="27" y="13" />
-                    </g>
-                  </svg>
-                </div>
+                <div className="absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-white/10 transition-all group-hover:scale-150" />
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Student Features Section */}
+      <section className="bg-gradient-to-b from-[#fff3e0] to-[#ffe0b2] px-4 py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-16 text-center">
+            <div className="mb-4 text-6xl">👨‍🎓</div>
+            <h2 className="text-5xl font-bold text-[#d84315]">
+              Học viên có thể làm gì?
+            </h2>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                icon: '🔍',
+                title: 'Tìm kiếm tài liệu',
+                description: 'Tìm kiếm slide, đề thi, sách theo môn học một cách nhanh chóng và chính xác',
+              },
+              {
+                icon: '🎯',
+                title: 'Tham gia lớp học',
+                description: 'Truy cập vào các lớp học được tạo bởi giảng viên và tải xuống tài liệu',
+              },
+              {
+                icon: '⭐',
+                title: 'Đánh giá chất lượng',
+                description: 'Đánh giá tài liệu theo thang 5 sao để giúp cộng đồng có tài liệu tốt hơn',
+              },
+              {
+                icon: '📤',
+                title: 'Chia sẻ tài liệu',
+                description: 'Đóng góp slide, bài tập, đề thi cho cộng đồng sau khi được kiểm duyệt',
+              },
+              {
+                icon: '💾',
+                title: 'Lưu trữ cá nhân',
+                description: 'Tạo thư mục cá nhân để lưu trữ và quản lý tài liệu yêu thích',
+              },
+              {
+                icon: '📊',
+                title: 'Theo dõi tiến độ',
+                description: 'Theo dõi lịch sử học tập và tiến độ hoàn thành các khóa học',
+              },
+            ].map((feature, i) => (
+              <div
+                key={i}
+                className="group rounded-2xl bg-white p-8 shadow-lg transition-all hover:scale-105 hover:shadow-2xl"
+              >
+                <div className="mb-4 flex items-center justify-center">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#d84315] to-[#ff8a65] text-4xl shadow-lg">
+                    {feature.icon}
+                  </div>
+                </div>
+                <h3 className="mb-3 text-center text-xl font-bold text-[#d84315]">
+                  {feature.title}
+                </h3>
+                <p className="text-center leading-relaxed text-gray-700">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-gradient-to-r from-[#4AA4FF] to-[#6B8DD1] px-4 py-20 text-white">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mb-6 text-5xl font-bold">Sẵn sàng bắt đầu? 🚀</h2>
+          <p className="mb-10 text-xl text-white/90">
+            Tham gia LinkenZone ngay hôm nay và trải nghiệm cách học tập hiện đại!
+          </p>
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a
+              href="/register"
+              className="rounded-full bg-white px-10 py-4 font-semibold text-[#4AA4FF] shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+            >
+              Đăng ký ngay
+            </a>
+            <a
+              href="/login"
+              className="rounded-full border-2 border-white bg-transparent px-10 py-4 font-semibold text-white transition-all hover:bg-white hover:text-[#4AA4FF]"
+            >
+              Đăng nhập
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
