@@ -5,7 +5,7 @@ function LessonCard({ lesson }) {
     <div className="flex w-[306px] cursor-pointer flex-col overflow-hidden rounded-[35px] border border-[#e5e5e5] bg-white shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
       <div className="flex h-[133px] w-full items-center justify-center overflow-hidden rounded-t-[35px] bg-[#f0f0f0]">
         <img
-          className="max-h-full max-w-full"
+          className="h-full w-full object-cover"
           src={lesson.image || noPict}
           alt={lesson.image ? lesson.title : 'No Image Available'}
         />

@@ -16,7 +16,7 @@ function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 z-50 flex w-full flex-col gap-2 bg-[#95B1CE] px-2 pt-2 shadow-md">
+    <header className="fixed top-0 left-0 z-50 flex w-full flex-col gap-2 bg-[#95B1CE] px-3 pt-1.2 shadow-md">
       <div className="flex w-full items-center justify-between">
         <img className="w-36" src={assets.logo} alt="Logo" />
         <div className="flex items-center gap-2">

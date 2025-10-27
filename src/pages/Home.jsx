@@ -18,9 +18,7 @@ export default function Home() {
     <div className="flex min-h-screen w-full flex-col items-center bg-[#fdfdfd]">
       <Hero imageUrl={finalImage} />
       <div className="box-border w-full max-w-[1252px] p-8">
-        <h1>Trang chính LinkenZone</h1>
-        <p>Chào mừng bạn đến với trang chính của hệ thống học tập LinkenZone!</p>
-
+        
         <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <LessonCard
             lesson={{
