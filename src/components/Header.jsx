@@ -10,7 +10,7 @@ function Header() {
   const navMap = {
     'Giới thiệu': '',
     'Trang chính': 'home',
-    'Các bài học': 'lesson',
+    'Tìm bài học': 'lesson',
     'Tự nhiên': 'natural',
     'Xã hội': 'social',
   };

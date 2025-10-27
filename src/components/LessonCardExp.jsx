@@ -53,7 +53,7 @@ function LessonCardExp({ lesson, onClose }) {
         </div>
 
         {/* Content */}
-        <div className="flex flex-col gap-4 p-6">
+        <div className="flex flex-col gap-4 p-6 bg-[#ecfdf5] border-[#d1fae5] border-t">
           <h2 className="font-roboto text-3xl font-bold text-black">{lesson.title}</h2>
           <p className="font-roboto text-lg text-gray-700">{lesson.description}</p>
           <div className="flex items-center gap-2">

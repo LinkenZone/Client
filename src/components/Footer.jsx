@@ -24,7 +24,7 @@ const Footer = () => {
             <ul className="m-0 list-none p-0">
               <li className="mb-2">
                 <Link
-                  to="/"
+                  to="/Home"
                   className="text-sm text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"
                 >
                   Trang chủ
@@ -32,7 +32,7 @@ const Footer = () => {
               </li>
               <li className="mb-2">
                 <Link
-                  to="/lessons"
+                  to="/LessonPage"
                   className="text-sm text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"
                 >
                   Bài học
