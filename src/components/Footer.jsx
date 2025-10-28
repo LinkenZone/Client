@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube, Send } from 'lucide-react';
 
 const Footer = () => {
   const [message, setMessage] = useState('');
@@ -15,92 +16,188 @@ const Footer = () => {
   };
 
   return (
-    <footer className="mt-auto bg-[#5A6E7F] py-10 text-white">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-5 md:flex-row">
-        {/* Left side - Navigation and info (1/3) */}
-        <div className="max-w-full flex-1 md:max-w-[33.333%]">
-          <div className="mb-8">
-            <h3 className="mb-4 text-lg font-semibold text-white">Điều hướng</h3>
-            <ul className="m-0 list-none p-0">
-              <li className="mb-2">
-                <Link
-                  to="/Home"
-                  className="text-sm text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"
+    <footer className="mt-auto bg-gradient-to-br from-[#2C3E50] via-[#34495E] to-[#2C3E50] text-white">
+      {/* Main Footer Content */}
+      <div className="mx-auto max-w-[1400px] px-6 py-12">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {/* Company Info */}
+          <div className="space-y-4">
+            <h3 className="mb-4 text-2xl font-bold text-white">LinkenZone</h3>
+            <p className="text-sm leading-relaxed text-gray-300">
+              Nền tảng học tập trực tuyến hàng đầu, mang đến trải nghiệm học tập chất lượng cao với 
+              hàng ngàn bài giảng từ các giảng viên uy tín.
+            </p>
+            
+            {/* Contact Info */}
+            <div className="space-y-3 pt-4">
+              <div className="flex items-center gap-3 text-sm text-gray-300 transition-colors hover:text-white">
+                <Mail size={18} className="text-[#4AA4FF]" />
+                <a href="mailto:contact@linkenzone.com" className="hover:underline">
+                  contact@linkenzone.com
+                </a>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-gray-300 transition-colors hover:text-white">
+                <Phone size={18} className="text-[#4AA4FF]" />
+                <span>1900 xxxx (8:00 - 22:00)</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-gray-300 transition-colors hover:text-white">
+                <MapPin size={18} className="text-[#4AA4FF]" />
+                <span>123 Đường ABC, Quận XYZ, TP.HCM</span>
+              </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="pt-4">
+              <h4 className="mb-3 text-sm font-semibold text-white">Kết nối với chúng tôi</h4>
+              <div className="flex gap-3">
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white backdrop-blur-md transition-all hover:bg-[#4AA4FF] hover:scale-110"
                 >
-                  Trang chủ
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link
-                  to="/LessonPage"
-                  className="text-sm text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"
+                  <Facebook size={20} />
+                </a>
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white backdrop-blur-md transition-all hover:bg-[#4AA4FF] hover:scale-110"
                 >
-                  Bài học
+                  <Twitter size={20} />
+                </a>
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white backdrop-blur-md transition-all hover:bg-[#4AA4FF] hover:scale-110"
+                >
+                  <Instagram size={20} />
+                </a>
+                <a
+                  href="#"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white backdrop-blur-md transition-all hover:bg-[#4AA4FF] hover:scale-110"
+                >
+                  <Youtube size={20} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="space-y-4">
+            <h3 className="mb-4 text-xl font-bold text-white">Khám phá</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
+                <Link
+                  to="/home"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
+                >
+                  → Trang chủ
                 </Link>
-              </li>
-              <li className="mb-2">
+                <Link
+                  to="/lesson"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
+                >
+                  → Bài học
+                </Link>
+                <Link
+                  to="/natural"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
+                >
+                  → Khoa học tự nhiên
+                </Link>
+                <Link
+                  to="/social"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
+                >
+                  → Khoa học xã hội
+                </Link>
+              </div>
+              <div className="space-y-3">
                 <Link
                   to="/user"
-                  className="text-sm text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
                 >
-                  Tài khoản
+                  → Tài khoản
                 </Link>
-              </li>
-              <li className="mb-2">
                 <Link
-                  to="/about"
-                  className="text-sm text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"
+                  to="/"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
                 >
-                  Giới thiệu
+                  → Giới thiệu
                 </Link>
-              </li>
-            </ul>
+                <Link
+                  to="/login"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
+                >
+                  → Đăng nhập
+                </Link>
+                <Link
+                  to="/register"
+                  className="block text-sm text-gray-300 transition-all hover:translate-x-1 hover:text-[#4AA4FF]"
+                >
+                  → Đăng ký
+                </Link>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="mt-6 grid grid-cols-2 gap-3 rounded-xl bg-white/5 p-4 backdrop-blur-md">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-[#4AA4FF]">100+</p>
+                <p className="text-xs text-gray-400">Bài học</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-[#4AA4FF]">50K+</p>
+                <p className="text-xs text-gray-400">Học viên</p>
+              </div>
+            </div>
           </div>
 
-          <div className="mb-8">
-            <h3 className="mb-4 text-lg font-semibold text-white">Liên hệ</h3>
-            <p className="text-sm text-[#E6F2FF]">
-              Email:{' '}
-              <a
-                href="mailto:contact@linkenzone.com"
-                className="text-[#E6F2FF] transition-colors duration-300 hover:text-white hover:underline"
-              >
-                contact@linkenzone.com
-              </a>
-            </p>
-          </div>
-
-          <div className="mb-8">
-            <p className="border-t border-[#6B7F91] pt-5 text-xs text-[#B8C5D1]">
-              © 2025 LinkenZone. Tất cả quyền được bảo lưu.
-            </p>
-          </div>
-        </div>
-
-        {/* Right side - Message box (2/3) */}
-        <div className="max-w-full flex-2 md:max-w-[66.666%]">
-          <div className="rounded-xl border border-white/10 bg-white/5 p-6 sm:p-8">
-            <h3 className="mb-4 text-lg font-semibold text-white">
-              Có thắc mắc? Hãy nhắn cho chúng tôi!
-            </h3>
-            <form onSubmit={handleSendMessage} className="mt-4">
-              <div className="flex flex-col gap-4">
+          {/* Message Box */}
+          <div className="space-y-4">
+            <h3 className="mb-4 text-xl font-bold text-white">Liên hệ với chúng tôi</h3>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
+              <p className="mb-4 text-sm text-gray-300">
+                Có câu hỏi hoặc góp ý? Gửi tin nhắn cho chúng tôi!
+              </p>
+              <form onSubmit={handleSendMessage} className="space-y-3">
                 <textarea
-                  className="min-h-[100px] w-full resize-y rounded-lg border-none bg-white p-4 text-sm text-[#333] outline-none placeholder:text-[#999] focus:ring-2 focus:ring-white/30"
+                  className="w-full resize-none rounded-xl border border-white/20 bg-white/10 p-3 text-sm text-white outline-none backdrop-blur-md transition-all placeholder:text-gray-400 focus:border-[#4AA4FF] focus:bg-white/15 focus:ring-2 focus:ring-[#4AA4FF]/20"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Nhập câu hỏi hoặc thắc mắc của bạn tại đây..."
+                  placeholder="Nhập câu hỏi hoặc thắc mắc của bạn..."
                   rows={4}
                 />
                 <button
                   type="submit"
-                  className="min-w-[80px] self-end rounded-lg bg-[#5A6E7F] px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-[1px] hover:bg-[#4A5D6E] active:translate-y-0 disabled:cursor-not-allowed disabled:bg-[#7A8B99] disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#4AA4FF] to-[#6B8DD1] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
                   disabled={!message.trim()}
                 >
-                  Gửi
+                  <Send size={18} />
+                  Gửi tin nhắn
                 </button>
-              </div>
-            </form>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-white/10 bg-black/20 py-6">
+        <div className="mx-auto max-w-[1400px] px-6">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p className="text-sm text-gray-400">
+              © 2025 <span className="font-semibold text-white">LinkenZone</span>. Tất cả quyền được bảo lưu.
+            </p>
+            <div className="flex flex-wrap items-center gap-6 text-sm">
+              <a href="#" className="text-gray-400 transition-colors hover:text-white">
+                Điều khoản sử dụng
+              </a>
+              <span className="text-gray-600">•</span>
+              <a href="#" className="text-gray-400 transition-colors hover:text-white">
+                Chính sách bảo mật
+              </a>
+              <span className="text-gray-600">•</span>
+              <a href="#" className="text-gray-400 transition-colors hover:text-white">
+                Hỗ trợ
+              </a>
+            </div>
           </div>
         </div>
       </div>
