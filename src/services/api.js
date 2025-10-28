@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  import.meta.env.REACT_APP_API_URL || // fallback nếu có
-  'http://localhost:3000/api/v1';
-
-console.log('🔍 BASE_URL:', BASE_URL);
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -13,7 +8,6 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {

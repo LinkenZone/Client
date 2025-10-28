@@ -8,6 +8,7 @@ import AdminPage from './pages/AdminPage';
 import Home from './pages/Home';
 import IntroPage from './pages/IntroPage';
 import LessonPage from './pages/LessonPage';
+import LessonDetail from './pages/LessonDetail';
 import Login from './pages/Login';
 import NaturalPage from './pages/NaturalPage';
 import Register from './pages/Register';
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<IntroPage />} />
           <Route path="/home" element={<Home />} />
           <Route path="/lesson" element={<LessonPage />} />
+          <Route path="/lesson/:id" element={<LessonDetail />} />
           <Route path="/natural" element={<NaturalPage />} />
           <Route path="/social" element={<SocialPage />} />
           <Route path="/login" element={<Login />} />

@@ -1,7 +1,9 @@
-import { use, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import noPict from '../assets/no_pic.png';
 
 function LessonCardExp({ lesson, onClose }) {
+    const navigate = useNavigate();
 
     //Ngăn chặn cuộn trang khi mở LessonCardExp
     useEffect(() => {
@@ -24,6 +26,10 @@ function LessonCardExp({ lesson, onClose }) {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [onClose]);
+
+    const handleStartLearning = () => {
+        navigate(`/lesson/${lesson._id}`);
+    };
 
     return (
     <div
@@ -65,7 +71,10 @@ function LessonCardExp({ lesson, onClose }) {
 
           {/* Action buttons */}
           <div className="mt-4 flex gap-3">
-            <button className="flex-1 rounded-full border-2 border-[#4AA4FF] bg-white px-6 py-3 font-roboto font-semibold text-[#4AA4FF] transition-all hover:bg-[#4AA4FF] hover:text-white">
+            <button 
+              onClick={handleStartLearning}
+              className="flex-1 rounded-full border-2 border-[#4AA4FF] bg-white px-6 py-3 font-roboto font-semibold text-[#4AA4FF] transition-all hover:bg-[#4AA4FF] hover:text-white"
+            >
               Bắt đầu học
             </button>
             <button className="flex-1 rounded-full border-2 border-[#4AA4FF] bg-white px-6 py-3 font-roboto font-semibold text-[#4AA4FF] transition-all hover:bg-[#4AA4FF] hover:text-white">
