@@ -1,10 +1,26 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import LessonCard from '../components/LessonCard';
+import { getLessonsByCategory } from '../services/lessonService';
 
 export default function NaturalPage() {
-  // Dữ liệu bài học Tự nhiên (Toán, Lý, Hóa, Sinh)
+  const [lessons, setLessons] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch lessons từ API
+  useEffect(() => {
+    const fetchLessons = async () => {
+      setLoading(true);
+      const data = await getLessonsByCategory('natural');
+      setLessons(data);
+      setLoading(false);
+    };
+
+    fetchLessons();
+  }, []);
+
+  // Dữ liệu bài học Tự nhiên (Toán, Lý, Hóa, Sinh) - chỉ dùng khi API không có dữ liệu
   const allLessons = useMemo(
-    () => [
+    () => lessons.length > 0 ? lessons : [
       {
         id: 1,
         title: 'Toán lớp 1',
@@ -78,7 +94,7 @@ export default function NaturalPage() {
         subject: 'sinh',
       },
     ],
-    []
+    [lessons]
   );
 
   return (
@@ -134,18 +150,27 @@ export default function NaturalPage() {
 
       {/* Results Section */}
       <div className="relative z-10 w-full max-w-7xl">
-        <div className="mb-6 text-left">
-          <p className="font-roboto text-lg text-[#2e7d32]">
-            Có <span className="font-bold text-[#1e88e5]">{allLessons.length}</span> bài học
-          </p>
-        </div>
+        {loading ? (
+          <div className="mt-12 text-center">
+            <div className="mx-auto mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-[#1e88e5] border-r-transparent"></div>
+            <p className="text-xl text-[#2e7d32]">Đang tải bài học...</p>
+          </div>
+        ) : (
+          <>
+            <div className="mb-6 text-left">
+              <p className="font-roboto text-lg text-[#2e7d32]">
+                Có <span className="font-bold text-[#1e88e5]">{allLessons.length}</span> bài học
+              </p>
+            </div>
 
-        {/* Lesson Grid */}
-        <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-          {allLessons.map((lesson) => (
-            <LessonCard key={lesson.id} lesson={lesson} />
-          ))}
-        </div>
+            {/* Lesson Grid */}
+            <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+              {allLessons.map((lesson) => (
+                <LessonCard key={lesson.id} lesson={lesson} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

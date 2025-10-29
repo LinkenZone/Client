@@ -1,15 +1,30 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import LessonCard from '../components/LessonCard';
+import { getAllLessons } from '../services/lessonService';
 
 export default function LessonPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [lessons, setLessons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const searchRef = useRef(null);
 
-  // Dữ liệu mẫu - sau này sẽ lấy từ API
+  // Fetch lessons từ API
+  useEffect(() => {
+    const fetchLessons = async () => {
+      setLoading(true);
+      const data = await getAllLessons();
+      setLessons(data);
+      setLoading(false);
+    };
+
+    fetchLessons();
+  }, []);
+
+  // Dữ liệu mẫu - chỉ dùng khi API không có dữ liệu
   const allLessons = useMemo(
-    () => [
+    () => lessons.length > 0 ? lessons : [
       {
         id: 1,
         title: 'Toán lớp 1',
@@ -101,7 +116,7 @@ export default function LessonPage() {
         subject: 'anh',
       },
     ],
-    []
+    [lessons]
   );
 
   // Lọc bài học theo category và từ khóa
@@ -264,7 +279,12 @@ export default function LessonPage() {
         </div>
 
         {/* Results Section */}
-        {filteredLessons.length === 0 ? (
+        {loading ? (
+          <div className="mt-20 text-center">
+            <div className="mx-auto mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-[#4AA4FF] border-r-transparent"></div>
+            <p className="font-roboto text-xl text-gray-600">Đang tải bài học...</p>
+          </div>
+        ) : filteredLessons.length === 0 ? (
           <div className="mt-20 text-center">
             <div className="mx-auto mb-6 text-8xl">�</div>
             <h3 className="font-roboto mb-4 text-2xl font-bold text-gray-700">

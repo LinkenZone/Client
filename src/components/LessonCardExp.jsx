@@ -5,11 +5,21 @@ import noPict from '../assets/no_pic.png';
 function LessonCardExp({ lesson, onClose }) {
     const navigate = useNavigate();
 
-    //Ngăn chặn cuộn trang khi mở LessonCardExp
+    //Ngăn chặn cuộn trang khi mở LessonCardExp và ẩn header
     useEffect(() => {
         document.body.style.overflow = 'hidden';
+        // Ẩn header khi modal mở
+        const header = document.querySelector('header');
+        if (header) {
+            header.style.zIndex = '0';
+        }
+        
         return () => {
             document.body.style.overflow = 'unset';
+            // Khôi phục header khi modal đóng
+            if (header) {
+                header.style.zIndex = '50';
+            }
         }
     }, []);
 
@@ -33,7 +43,7 @@ function LessonCardExp({ lesson, onClose }) {
 
     return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div

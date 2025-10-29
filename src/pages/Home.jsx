@@ -1,10 +1,26 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import LessonCard from '../components/LessonCard';
+import { getFeaturedLessons } from '../services/lessonService';
 
 export default function Home() {
-  // Dữ liệu bài học nổi bật
+  const [lessons, setLessons] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch featured lessons từ API
+  useEffect(() => {
+    const fetchLessons = async () => {
+      setLoading(true);
+      const data = await getFeaturedLessons(8);
+      setLessons(data);
+      setLoading(false);
+    };
+
+    fetchLessons();
+  }, []);
+
+  // Dữ liệu bài học nổi bật - chỉ dùng khi API không có dữ liệu
   const featuredLessons = useMemo(
-    () => [
+    () => lessons.length > 0 ? lessons : [
       {
         id: 1,
         title: 'Toán cao cấp',
@@ -62,7 +78,7 @@ export default function Home() {
         image: null,
       },
     ],
-    []
+    [lessons]
   );
 
   return (
@@ -149,11 +165,18 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-            {featuredLessons.map((lesson) => (
-              <LessonCard key={lesson.id} lesson={lesson} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="mt-12 text-center">
+              <div className="mx-auto mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-[#4AA4FF] border-r-transparent"></div>
+              <p className="text-xl text-gray-600">Đang tải bài học...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+              {featuredLessons.map((lesson) => (
+                <LessonCard key={lesson.id} lesson={lesson} />
+              ))}
+            </div>
+          )}
 
           {/* View All Button */}
           <div className="mt-12 text-center">
