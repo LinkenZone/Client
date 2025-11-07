@@ -42,6 +42,18 @@ export default function DocumentViewer({ document, onClose }) {
   const fileType = getFileType(document.file_type);
   const fileUrl = document.file_url || document.url;
 
+  const formatFileSize = (size) => {
+    if (!size || size === "N/A") return "N/A";
+    if (typeof size === "string" && size.includes("MB")) return size;
+
+    const bytes = parseInt(size);
+    if (isNaN(bytes)) return "N/A";
+
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  };
+
   const renderContent = () => {
     switch (fileType) {
       case "pdf":
@@ -143,6 +155,9 @@ export default function DocumentViewer({ document, onClose }) {
             </h2>
             <p className="text-xs text-gray-500">
               {document.file_type || "Không rõ loại file"}
+              {document.size && document.size !== "N/A" && (
+                <span className="ml-2">• {formatFileSize(document.size)}</span>
+              )}
             </p>
           </div>
           

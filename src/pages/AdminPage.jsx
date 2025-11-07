@@ -1,5 +1,7 @@
 import { Activity, FileText, Upload, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { api } from '../services/api';
 import StrokeChart from '../components/AdminDashboard/Charts/StrokeChart';
 import TopDocuments from '../components/AdminDashboard/Charts/TopDocument';
 import AdminSidebar from '../components/AdminDashboard/Sidebar';
@@ -11,8 +13,9 @@ import DashboardTopBar from '../components/AdminDashboard/TopBar';
 
 const AdminPage = () => {
   const [activeMenu, setActiveMenu] = useState('Dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // State cho các metrics - Sẽ fetch từ API
+  // State cho các metrics - Fetch từ API
   const [metrics, setMetrics] = useState({
     pendingDocs: 0,
     todayUploads: 0,
@@ -20,29 +23,27 @@ const AdminPage = () => {
     totalVisits: 0,
   });
 
-  // TODO: Fetch metrics từ API
+  // Fetch metrics từ API
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        // const response = await api.get('/admin/summary');
-        // setMetrics(response.data);
-
-        // Dữ liệu mẫu cho demo
+        const response = await api.get('/reports/');
+        const data = response.data.data;
+        
+        // Map dữ liệu từ API vào state
         setMetrics({
-          pendingDocs: 12,
-          todayUploads: 45,
-          newUsers: 28,
-          totalVisits: 1234,
+          pendingDocs: data.pendingDocs || 0,
+          todayUploads: data.today_upload || 0,
+          newUsers: data.today_new_user || 0,
+          totalVisits: data.weekly_access || 0,
         });
       } catch (error) {
         console.error('Error fetching metrics:', error);
+        toast.error('Không thể tải dữ liệu dashboard!');
       }
     };
 
     fetchMetrics();
-    // Refresh mỗi 30 giây
-    const interval = setInterval(fetchMetrics, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   // Render content dựa trên menu được chọn
@@ -169,12 +170,25 @@ const AdminPage = () => {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
       {/* Sidebar */}
-      <AdminSidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} />
+      <AdminSidebar 
+        activeMenu={activeMenu} 
+        onMenuChange={setActiveMenu}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
+      {/* Overlay for mobile only when sidebar is open */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Top Bar */}
-        <DashboardTopBar />
+        <DashboardTopBar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
         {/* Dashboard Content */}
         <main className="flex-1 overflow-y-auto p-6">{renderContent()}</main>

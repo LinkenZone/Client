@@ -113,7 +113,7 @@ export default function TrashPage() {
   };
 
   return (
-    <div className="flex pt-[88px]" style={{ height: '100vh' }}>
+    <div className="flex pt-[20px]" style={{ height: '100vh' }}>
       <Sidebar
         user={user}
         activeView="trash"

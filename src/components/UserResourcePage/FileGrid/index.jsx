@@ -2,7 +2,7 @@
 import React from "react";
 import { Folder, File, MoreVertical, Star, MessageCircle } from "lucide-react";
 
-export default function FileGrid({ files, onFileClick, onContextMenu, onMoreClick }) {
+export default function FileGrid({ files, onFileClick, onContextMenu, onMoreClick, onToggleStar }) {
   const getStatusText = (status) => {
     switch (status) {
       case "approved":
@@ -109,15 +109,33 @@ export default function FileGrid({ files, onFileClick, onContextMenu, onMoreClic
               <div className="text-3xl">{getFileIcon(item.file_type)}</div>
             )}
             {item.type !== "folder" && (
-              <button 
-                className="opacity-0 transition-opacity group-hover:opacity-100"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMoreClick && onMoreClick(e, item);
-                }}
-              >
-                <MoreVertical className="h-4 w-4 text-gray-500" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button 
+                  className="rounded p-1 opacity-0 transition-all hover:bg-gray-100 group-hover:opacity-100"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMoreClick && onMoreClick(e, item);
+                  }}
+                >
+                  <MoreVertical className="h-4 w-4 text-gray-500" />
+                </button>
+                <button 
+                  className="rounded p-1 opacity-0 transition-all hover:bg-gray-100 group-hover:opacity-100"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleStar && onToggleStar(item);
+                  }}
+                  title={item.isStarred ? "Bỏ đánh dấu sao" : "Đánh dấu sao"}
+                >
+                  <Star 
+                    className={`h-5 w-5 transition-colors ${
+                      item.isStarred 
+                        ? 'fill-yellow-400 text-yellow-400' 
+                        : 'text-gray-400 hover:text-yellow-400'
+                    }`} 
+                  />
+                </button>
+              </div>
             )}
           </div>
 

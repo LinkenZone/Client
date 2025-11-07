@@ -80,6 +80,7 @@ const DocumentModerationTable = () => {
       file_type: doc.file_type,
       file_url: doc.file_url,
       description: doc.description,
+      size: doc.file_size,
     };
     setViewingDocument(formattedDoc);
   };

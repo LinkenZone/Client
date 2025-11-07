@@ -1,6 +1,6 @@
 // components/UserResourcePage/ContextMenu/index.jsx
 import React, { useEffect, useRef } from "react";
-import { Download, Edit2, Trash2, RotateCcw } from "lucide-react";
+import { Download, Edit2, Trash2, RotateCcw, Star } from "lucide-react";
 
 export default function ContextMenu({ x, y, onClose, onRename, onDownload, onDelete, onRestore, isTrash = false }) {
   const menuRef = useRef(null);
@@ -18,12 +18,12 @@ export default function ContextMenu({ x, y, onClose, onRename, onDownload, onDel
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
+    window.document.addEventListener("mousedown", handleClickOutside);
+    window.document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
+      window.document.removeEventListener("mousedown", handleClickOutside);
+      window.document.removeEventListener("keydown", handleEscape);
     };
   }, [onClose]);
 

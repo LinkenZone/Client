@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { ToastContainer } from 'react-toastify';
@@ -10,13 +10,17 @@ import IntroPage from './pages/IntroPage';
 import LessonPage from './pages/LessonPage';
 import LessonDetail from './pages/LessonDetail';
 import Login from './pages/Login';
-import NaturalPage from './pages/NaturalPage';
 import Register from './pages/Register';
-import SocialPage from './pages/SocialPage';
 import UserPage from './pages/User';
 import TrashPage from './pages/TrashPage';
+import { recordVisit } from './services/visitorService';
 
 function App() {
+  // Ghi nhận lượt truy cập khi app load lần đầu (1 lần mỗi session)
+  useEffect(() => {
+    recordVisit();
+  }, []);
+
   return (
     <BrowserRouter>
       <MainLayout>
@@ -26,8 +30,6 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/lesson" element={<LessonPage />} />
           <Route path="/lesson/:id" element={<LessonDetail />} />
-          <Route path="/natural" element={<NaturalPage />} />
-          <Route path="/social" element={<SocialPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

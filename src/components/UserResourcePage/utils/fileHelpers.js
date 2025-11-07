@@ -22,21 +22,30 @@ export const getStatusClasses = (status) => {
 
 export const downloadFile = async (documentId, fileName) => {
   try {
-    // Tạo URL để download
-    const downloadUrl = `${import.meta.env.VITE_API_URL}/document/${documentId}/download`;
+    // Gọi API để lấy download URL từ Cloudinary
+    const response = await api.get(`/document/${documentId}/download`);
     
-    // Tạo thẻ <a> để download
+    // Lấy downloadUrl từ response
+    const { downloadUrl, fileName: serverFileName } = response.data.data;
+    
+    // Sử dụng fileName từ server nếu không có fileName được truyền vào
+    const finalFileName = fileName || serverFileName || 'download';
+    
+    // Tạo thẻ <a> để download từ Cloudinary URL
     const link = window.document.createElement('a');
     link.href = downloadUrl;
-    link.download = fileName || 'download';
+    link.download = finalFileName;
     link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     window.document.body.appendChild(link);
     link.click();
     window.document.body.removeChild(link);
 
-    return "Đang tải xuống tài liệu...";
+    return response.data.message || "Đang tải xuống tài liệu...";
   } catch (err) {
-    toast.error("Không thể tải xuống tài liệu!");
+    toast.error(
+      err.response?.data?.message || "Không thể tải xuống tài liệu!"
+    );
     throw err;
   }
 };
@@ -104,4 +113,14 @@ export const updateFileInformation = async(id, title) => {
     );
     throw err; 
   }
-}
+};
+
+export const toggleStar = async (documentId) => {
+  try {
+    const response = await api.patch(`/document/${documentId}/star`);
+    return response.data.message;
+  } catch (err) {
+    const errorMessage = err.response?.data?.message || 'Không thể đánh dấu/bỏ đánh dấu sao';
+    throw new Error(errorMessage);
+  }
+};

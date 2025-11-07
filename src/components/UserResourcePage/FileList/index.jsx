@@ -2,7 +2,7 @@
 import React from "react";
 import { Folder, Star, MessageCircle, MoreVertical } from "lucide-react";
 
-export default function FileList({ files, onFileClick, onContextMenu, onMoreClick }) {
+export default function FileList({ files, onFileClick, onContextMenu, onMoreClick, onToggleStar }) {
   const getStatusText = (status) => {
     switch (status) {
       case "approved":
@@ -103,7 +103,7 @@ export default function FileList({ files, onFileClick, onContextMenu, onMoreClic
       {files.map((item) => (
         <div
           key={item.id}
-          className="grid cursor-pointer grid-cols-12 gap-4 border-b border-gray-100 px-4 py-3 transition-colors last:border-b-0 hover:bg-gray-50"
+          className="group grid cursor-pointer grid-cols-12 gap-4 border-b border-gray-100 px-4 py-3 transition-colors last:border-b-0 hover:bg-gray-50"
           onClick={() => item.type !== "folder" && onFileClick && onFileClick(item)}
           onContextMenu={(e) => {
             if (item.type !== "folder") {
@@ -124,15 +124,33 @@ export default function FileList({ files, onFileClick, onContextMenu, onMoreClic
               {item.name}
             </span>
             {item.type !== "folder" && (
-              <button
-                className="ml-auto opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-100"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMoreClick && onMoreClick(e, item);
-                }}
-              >
-                <MoreVertical className="h-4 w-4 text-gray-500" />
-              </button>
+              <div className="ml-auto flex items-center gap-1">
+                <button
+                  className="rounded p-1 opacity-0 transition-all hover:bg-gray-100 group-hover:opacity-100"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMoreClick && onMoreClick(e, item);
+                  }}
+                >
+                  <MoreVertical className="h-4 w-4 text-gray-500" />
+                </button>
+                <button
+                  className="rounded p-1 opacity-0 transition-all hover:bg-gray-100 group-hover:opacity-100"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleStar && onToggleStar(item);
+                  }}
+                  title={item.isStarred ? "Bỏ đánh dấu sao" : "Đánh dấu sao"}
+                >
+                  <Star 
+                    className={`h-4 w-4 transition-colors ${
+                      item.isStarred 
+                        ? 'fill-yellow-400 text-yellow-400' 
+                        : 'text-gray-400 hover:text-yellow-400'
+                    }`} 
+                  />
+                </button>
+              </div>
             )}
           </div>
 

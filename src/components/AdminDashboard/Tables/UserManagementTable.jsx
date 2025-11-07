@@ -33,6 +33,7 @@ const UserManagementTable = () => {
     try {
       setLoading(true);
       const res = await api.get('/users');
+      console.log(res);
       setUsers(res.data.data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);

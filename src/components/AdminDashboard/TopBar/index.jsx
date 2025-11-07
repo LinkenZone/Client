@@ -3,14 +3,18 @@ import React from "react";
 import { Menu, Search, Bell, MessageSquare, Calendar } from "lucide-react";
 import UserDropdown from "../../UserDropdown";
 
-export default function DashboardTopBar() {
+export default function DashboardTopBar({ onToggleSidebar }) {
   return (
     <div className="sticky top-0 z-30 border-b border-gray-200 bg-white px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Left side - Menu and Search */}
         <div className="flex items-center gap-4">
-          <button className="rounded-lg p-2 hover:bg-gray-100">
-            <Menu className="h-5 w-5 text-gray-600" />
+          <button 
+            onClick={onToggleSidebar}
+            className="rounded-lg p-2 hover:bg-gray-100 transition-colors"
+            aria-label="Toggle Sidebar"
+          >
+            <Menu className="h-7 w-5 text-gray-600" />
           </button>
 
           <div className="relative">

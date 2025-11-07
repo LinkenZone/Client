@@ -12,8 +12,8 @@ import RenameModal from '../components/UserResourcePage/RenameModal';
 import DeleteConfirmModal from '../components/UserResourcePage/DeleteConfirmModal';
 import { useFileUpload } from '../components/UserResourcePage/hooks/useFileUpload';
 import { useFileView } from '../components/UserResourcePage/hooks/useFileView';
-import { loadFile } from '../components/UserResourcePage/utils/loadFiles';
-import { deleteFile, updateFileInformation, downloadFile } from '../components/UserResourcePage/utils/fileHelpers';
+import { loadFile, loadStarredFiles, loadRecentFiles, loadSharedFiles } from '../components/UserResourcePage/utils/loadFiles';
+import { deleteFile, updateFileInformation, downloadFile, toggleStar } from '../components/UserResourcePage/utils/fileHelpers';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
@@ -42,7 +42,22 @@ export default function UserPage() {
   // Function để reload danh sách documents
   const fetchDocuments = async () => {
     try {
-      const data = await loadFile();
+      let data;
+      switch (activeView) {
+        case 'starred':
+          data = await loadStarredFiles();
+          break;
+        case 'recent':
+          data = await loadRecentFiles();
+          break;
+        case 'shared':
+          data = await loadSharedFiles();
+          break;
+        case 'my-zone':
+        default:
+          data = await loadFile();
+          break;
+      }
       if (data) {
         setUploadedLessons(data);
       }
@@ -55,7 +70,22 @@ export default function UserPage() {
     let mounted = true;
 
     const loadData = async () => {
-      const data = await loadFile();
+      let data;
+      switch (activeView) {
+        case 'starred':
+          data = await loadStarredFiles();
+          break;
+        case 'recent':
+          data = await loadRecentFiles();
+          break;
+        case 'shared':
+          data = await loadSharedFiles();
+          break;
+        case 'my-zone':
+        default:
+          data = await loadFile();
+          break;
+      }
       if (mounted && data) {
         setUploadedLessons(data);
       }
@@ -66,7 +96,7 @@ export default function UserPage() {
     return () => {
       mounted = false;
     };
-  }, [user]);
+  }, [user, activeView]);
 
   const handleCloseModal = () => {
     setShowUploadModal(false);
@@ -149,6 +179,24 @@ export default function UserPage() {
     }
   };
 
+  const handleToggleStar = async (document) => {
+    try {
+      const message = await toggleStar(document.id);
+      
+      // Update local state
+      setUploadedLessons(prev =>
+        prev.map(doc =>
+          doc.id === document.id ? { ...doc, isStarred: !doc.isStarred } : doc
+        )
+      );
+      
+      toast.success(message);
+    } catch (err) {
+      console.error('Error toggling star:', err);
+      toast.error(err.message);
+    }
+  };
+
   const handleViewChange = (viewId) => {
     if (viewId === 'trash') {
       navigate('/trash');
@@ -158,7 +206,7 @@ export default function UserPage() {
   };
 
   return (
-    <div className="flex pt-[88px]" style={{ height: '100vh' }}>
+    <div className="flex pt-[20px]" style={{ height: '100vh' }}>
       <Sidebar
         user={user}
         activeView={activeView}
@@ -178,6 +226,7 @@ export default function UserPage() {
               onFileClick={handleFileClick}
               onContextMenu={handleContextMenu}
               onMoreClick={handleMoreClick}
+              onToggleStar={handleToggleStar}
             />
           ) : (
             <FileList 
@@ -185,6 +234,7 @@ export default function UserPage() {
               onFileClick={handleFileClick}
               onContextMenu={handleContextMenu}
               onMoreClick={handleMoreClick}
+              onToggleStar={handleToggleStar}
             />
           )}
         </div>
@@ -212,6 +262,7 @@ export default function UserPage() {
         <ContextMenu
           x={contextMenu.x}
           y={contextMenu.y}
+          document={contextMenu.document}
           onClose={handleCloseContextMenu}
           onRename={() => {
             setRenameModal({ isOpen: true, document: contextMenu.document });
