@@ -181,8 +181,7 @@ const DocumentModerationTable = () => {
                           {doc.title}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {doc.file_type}
-                          {/* {doc.fileName} • {doc.fileSize} */}
+                          {(doc.file_size / (1024 * 1024)).toFixed(2)} MB
                         </p>
                       </div>
                     </div>

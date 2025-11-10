@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import LessonCard from '../components/LessonCard';
-import { getFeaturedLessons } from '../services/lessonService';
+import { api } from '../services/api';
 
 export default function Home() {
   const [lessons, setLessons] = useState([]);
@@ -10,87 +10,29 @@ export default function Home() {
   useEffect(() => {
     const fetchLessons = async () => {
       setLoading(true);
-      const data = await getFeaturedLessons(8);
-      setLessons(data);
-      setLoading(false);
+      try {
+        const res = await api.get(`/document/approved-documents`);
+        setLessons(res.data.data.documents || []);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchLessons();
   }, []);
-
-  // Dữ liệu bài học nổi bật - chỉ dùng khi API không có dữ liệu
-  const featuredLessons = useMemo(
-    () => lessons.length > 0 ? lessons : [
-      {
-        id: 1,
-        title: 'Toán cao cấp',
-        description: 'Khóa học toán cao cấp dành cho sinh viên đại học',
-        rating: 4.9,
-        image: null,
-      },
-      {
-        id: 2,
-        title: 'Vật lý đại cương',
-        description: 'Tìm hiểu các nguyên lý cơ bản của vật lý',
-        rating: 4.7,
-        image: null,
-      },
-      {
-        id: 3,
-        title: 'Văn học Việt Nam',
-        description: 'Khám phá nền văn học phong phú của Việt Nam',
-        rating: 4.8,
-        image: null,
-      },
-      {
-        id: 4,
-        title: 'Lịch sử thế giới',
-        description: 'Các sự kiện lịch sử quan trọng nhất thế giới',
-        rating: 4.6,
-        image: null,
-      },
-      {
-        id: 5,
-        title: 'Hóa học hữu cơ',
-        description: 'Nghiên cứu về các hợp chất carbon',
-        rating: 4.5,
-        image: null,
-      },
-      {
-        id: 6,
-        title: 'Tiếng Anh giao tiếp',
-        description: 'Học tiếng Anh cho người mới bắt đầu',
-        rating: 4.9,
-        image: null,
-      },
-      {
-        id: 7,
-        title: 'Địa lý Việt Nam',
-        description: 'Tìm hiểu về đất nước và con người Việt Nam',
-        rating: 4.7,
-        image: null,
-      },
-      {
-        id: 8,
-        title: 'Sinh học tế bào',
-        description: 'Khám phá thế giới vi mô của tế bào',
-        rating: 4.8,
-        image: null,
-      },
-    ],
-    [lessons]
-  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#e6f7ff] via-[#f0f9ff] to-[#ffffff]">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#4AA4FF] via-[#5A9EE8] to-[#6B8DD1] px-4 py-16 md:py-24">
         {/* Decorative Elements */}
-        <div className="pointer-events-none absolute left-0 top-0 h-full w-full opacity-10">
-          <div className="absolute left-10 top-20 text-9xl">📚</div>
-          <div className="absolute right-20 top-40 text-8xl">🎓</div>
+        <div className="pointer-events-none absolute top-0 left-0 h-full w-full opacity-10">
+          <div className="absolute top-20 left-10 text-9xl">📚</div>
+          <div className="absolute top-40 right-20 text-8xl">🎓</div>
           <div className="absolute bottom-20 left-1/4 text-7xl">✏️</div>
-          <div className="absolute bottom-10 right-1/3 text-6xl">💡</div>
+          <div className="absolute right-1/3 bottom-10 text-6xl">💡</div>
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl text-center">
@@ -172,8 +114,8 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-              {featuredLessons.map((lesson) => (
-                <LessonCard key={lesson.id} lesson={lesson} />
+              {lessons.map((lesson) => (
+                <LessonCard key={lesson.document_id} lesson={lesson} />
               ))}
             </div>
           )}
@@ -196,7 +138,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl font-bold text-[#1e3a8a] md:text-4xl">
-              Khám phá theo lĩnh vực 
+              Khám phá theo lĩnh vực
             </h2>
             <p className="text-lg text-gray-600">Chọn lĩnh vực bạn quan tâm</p>
           </div>
@@ -216,7 +158,7 @@ export default function Home() {
                   <span className="transition-transform group-hover:translate-x-2">→</span>
                 </div>
               </div>
-              <div className="pointer-events-none absolute bottom-0 right-0 text-9xl opacity-10">
+              <div className="pointer-events-none absolute right-0 bottom-0 text-9xl opacity-10">
                 🧬
               </div>
             </a>
@@ -235,7 +177,7 @@ export default function Home() {
                   <span className="transition-transform group-hover:translate-x-2">→</span>
                 </div>
               </div>
-              <div className="pointer-events-none absolute bottom-0 right-0 text-9xl opacity-10">
+              <div className="pointer-events-none absolute right-0 bottom-0 text-9xl opacity-10">
                 🌏
               </div>
             </a>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import LessonCard from '../components/LessonCard';
 import { getLessonsByCategory } from '../services/lessonService';
 
@@ -20,87 +20,90 @@ export default function NaturalPage() {
 
   // Dữ liệu bài học Tự nhiên (Toán, Lý, Hóa, Sinh) - chỉ dùng khi API không có dữ liệu
   const allLessons = useMemo(
-    () => lessons.length > 0 ? lessons : [
-      {
-        id: 1,
-        title: 'Toán lớp 1',
-        description: 'Học toán cơ bản cho học sinh lớp 1',
-        rating: 4.5,
-        image: null,
-        category: 'natural',
-        subject: 'toán',
-      },
-      {
-        id: 2,
-        title: 'Toán lớp 2',
-        description: 'Các bài toán nâng cao cho lớp 2',
-        rating: 4.8,
-        image: null,
-        category: 'natural',
-        subject: 'toán',
-      },
-      {
-        id: 3,
-        title: 'Toán cao cấp',
-        description: 'Toán học đại học và cao học',
-        rating: 4.9,
-        image: null,
-        category: 'natural',
-        subject: 'toán',
-      },
-      {
-        id: 4,
-        title: 'Vật lý đại cương',
-        description: 'Kiến thức vật lý cơ bản',
-        rating: 4.7,
-        image: null,
-        category: 'natural',
-        subject: 'lý',
-      },
-      {
-        id: 5,
-        title: 'Cơ học Newton',
-        description: 'Nghiên cứu chuyển động và lực',
-        rating: 4.6,
-        image: null,
-        category: 'natural',
-        subject: 'lý',
-      },
-      {
-        id: 6,
-        title: 'Hóa học hữu cơ',
-        description: 'Tìm hiểu về hợp chất hữu cơ',
-        rating: 4.4,
-        image: null,
-        category: 'natural',
-        subject: 'hóa',
-      },
-      {
-        id: 7,
-        title: 'Hóa học phân tích',
-        description: 'Phương pháp phân tích hóa học',
-        rating: 4.5,
-        image: null,
-        category: 'natural',
-        subject: 'hóa',
-      },
-      {
-        id: 8,
-        title: 'Sinh học tế bào',
-        description: 'Nghiên cứu cấu trúc tế bào',
-        rating: 4.8,
-        image: null,
-        category: 'natural',
-        subject: 'sinh',
-      },
-    ],
-    [lessons]
+    () =>
+      lessons.length > 0
+        ? lessons
+        : [
+            {
+              id: 1,
+              title: 'Toán lớp 1',
+              description: 'Học toán cơ bản cho học sinh lớp 1',
+              rating: 4.5,
+              image: null,
+              category: 'natural',
+              subject: 'toán',
+            },
+            {
+              id: 2,
+              title: 'Toán lớp 2',
+              description: 'Các bài toán nâng cao cho lớp 2',
+              rating: 4.8,
+              image: null,
+              category: 'natural',
+              subject: 'toán',
+            },
+            {
+              id: 3,
+              title: 'Toán cao cấp',
+              description: 'Toán học đại học và cao học',
+              rating: 4.9,
+              image: null,
+              category: 'natural',
+              subject: 'toán',
+            },
+            {
+              id: 4,
+              title: 'Vật lý đại cương',
+              description: 'Kiến thức vật lý cơ bản',
+              rating: 4.7,
+              image: null,
+              category: 'natural',
+              subject: 'lý',
+            },
+            {
+              id: 5,
+              title: 'Cơ học Newton',
+              description: 'Nghiên cứu chuyển động và lực',
+              rating: 4.6,
+              image: null,
+              category: 'natural',
+              subject: 'lý',
+            },
+            {
+              id: 6,
+              title: 'Hóa học hữu cơ',
+              description: 'Tìm hiểu về hợp chất hữu cơ',
+              rating: 4.4,
+              image: null,
+              category: 'natural',
+              subject: 'hóa',
+            },
+            {
+              id: 7,
+              title: 'Hóa học phân tích',
+              description: 'Phương pháp phân tích hóa học',
+              rating: 4.5,
+              image: null,
+              category: 'natural',
+              subject: 'hóa',
+            },
+            {
+              id: 8,
+              title: 'Sinh học tế bào',
+              description: 'Nghiên cứu cấu trúc tế bào',
+              rating: 4.8,
+              image: null,
+              category: 'natural',
+              subject: 'sinh',
+            },
+          ],
+    [lessons],
   );
 
   return (
     <div className="relative mx-auto flex min-h-screen flex-col items-center overflow-hidden bg-gradient-to-br from-[#e0f2f1] via-[#f0f9ff] to-[#e8f5e9] px-4 py-8 md:px-8">
       {/* Decorative Math/Science Elements - Left Side */}
-      <div className="pointer-events-none absolute left-0 top-20 hidden opacity-20 lg:block">
+      <div className="pointer-events-none absolute top-20 left-0 hidden opacity-20 lg:block">
         <div className="space-y-8 text-6xl text-[#1e88e5]">
           <div className="rotate-12">∑</div>
           <div className="-rotate-6">π</div>
@@ -111,7 +114,7 @@ export default function NaturalPage() {
       </div>
 
       {/* Decorative Chemistry Elements - Right Side */}
-      <div className="pointer-events-none absolute right-0 top-40 hidden opacity-20 lg:block">
+      <div className="pointer-events-none absolute top-40 right-0 hidden opacity-20 lg:block">
         <div className="space-y-8 text-5xl text-[#43a047]">
           <div className="-rotate-12">H₂O</div>
           <div className="rotate-6">CO₂</div>
@@ -122,7 +125,7 @@ export default function NaturalPage() {
       </div>
 
       {/* Ruler decoration - Bottom */}
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 hidden h-8 border-t-4 border-[#1e88e5] opacity-30 md:block">
+      <div className="pointer-events-none absolute right-0 bottom-0 left-0 hidden h-8 border-t-4 border-[#1e88e5] opacity-30 md:block">
         <div className="flex h-full items-end justify-around">
           {[...Array(20)].map((_, i) => (
             <div

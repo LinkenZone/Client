@@ -1,21 +1,31 @@
 // components/UserPage/index.jsx
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import ContextMenu from '../components/UserResourcePage/ContextMenu';
+import DeleteConfirmModal from '../components/UserResourcePage/DeleteConfirmModal';
+import DocumentViewer from '../components/UserResourcePage/DocumentViewer';
 import FileGrid from '../components/UserResourcePage/FileGrid';
 import FileList from '../components/UserResourcePage/FileList';
+import { useFileUpload } from '../components/UserResourcePage/hooks/useFileUpload';
+import { useFileView } from '../components/UserResourcePage/hooks/useFileView';
+import RenameModal from '../components/UserResourcePage/RenameModal';
 import Sidebar from '../components/UserResourcePage/Sidebar';
 import TopBar from '../components/UserResourcePage/TopBar';
 import UploadModal from '../components/UserResourcePage/UploadModal';
-import DocumentViewer from '../components/UserResourcePage/DocumentViewer';
-import ContextMenu from '../components/UserResourcePage/ContextMenu';
-import RenameModal from '../components/UserResourcePage/RenameModal';
-import DeleteConfirmModal from '../components/UserResourcePage/DeleteConfirmModal';
-import { useFileUpload } from '../components/UserResourcePage/hooks/useFileUpload';
-import { useFileView } from '../components/UserResourcePage/hooks/useFileView';
-import { loadFile, loadStarredFiles, loadRecentFiles, loadSharedFiles } from '../components/UserResourcePage/utils/loadFiles';
-import { deleteFile, updateFileInformation, downloadFile, toggleStar } from '../components/UserResourcePage/utils/fileHelpers';
+import {
+  deleteFile,
+  downloadFile,
+  toggleStar,
+  updateFileInformation,
+} from '../components/UserResourcePage/utils/fileHelpers';
+import {
+  loadFile,
+  loadRecentFiles,
+  loadSharedFiles,
+  loadStarredFiles,
+} from '../components/UserResourcePage/utils/loadFiles';
 import { AuthContext } from '../context/AuthContext';
-import { toast } from 'react-toastify';
 
 export default function UserPage() {
   const { user } = useContext(AuthContext);
@@ -27,9 +37,11 @@ export default function UserPage() {
   const [contextMenu, setContextMenu] = useState(null);
   const [renameModal, setRenameModal] = useState({ isOpen: false, document: null });
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, document: null });
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { activeView, setActiveView, viewMode, setViewMode, viewTitle } = useFileView();
-  const { file, previewUrl, uploading, uploadProgress, handleChange, handleUpload, reset } = useFileUpload();
+  const { file, previewUrl, uploading, uploadProgress, handleChange, handleUpload, reset } =
+    useFileUpload();
 
   // Check URL params and set active view
   useEffect(() => {
@@ -145,15 +157,13 @@ export default function UserPage() {
   };
 
   const handleRename = async (documentId, newName) => {
-    const msg = await updateFileInformation(documentId, newName)
-    setUploadedLessons(prev =>
-      prev.map(doc =>
-        doc.id === documentId ? { ...doc, name: newName } : doc
-      )
+    const msg = await updateFileInformation(documentId, newName);
+    setUploadedLessons((prev) =>
+      prev.map((doc) => (doc.id === documentId ? { ...doc, name: newName } : doc)),
     );
-    
+
     toast.success(`${msg}`);
-  }
+  };
 
   const handleDownload = async (document) => {
     try {
@@ -168,10 +178,10 @@ export default function UserPage() {
   const handleDeleteConfirm = async (document) => {
     try {
       const message = await deleteFile(document.id);
-      
+
       // Remove from current list after successful delete
-      setUploadedLessons(prev => prev.filter(file => file.id !== document.id));
-      
+      setUploadedLessons((prev) => prev.filter((file) => file.id !== document.id));
+
       toast.success(`${message}`);
     } catch (err) {
       // Error is already handled in deleteFile function
@@ -182,14 +192,12 @@ export default function UserPage() {
   const handleToggleStar = async (document) => {
     try {
       const message = await toggleStar(document.id);
-      
+
       // Update local state
-      setUploadedLessons(prev =>
-        prev.map(doc =>
-          doc.id === document.id ? { ...doc, isStarred: !doc.isStarred } : doc
-        )
+      setUploadedLessons((prev) =>
+        prev.map((doc) => (doc.id === document.id ? { ...doc, isStarred: !doc.isStarred } : doc)),
       );
-      
+
       toast.success(message);
     } catch (err) {
       console.error('Error toggling star:', err);
@@ -205,6 +213,21 @@ export default function UserPage() {
     }
   };
 
+  const handleSearchChange = (term) => {
+    setSearchTerm(term);
+  };
+
+  // Filter files based on search term
+  const filteredLessons = uploadedLessons.filter((lesson) => {
+    if (!searchTerm.trim()) return true;
+
+    const searchLower = searchTerm.toLowerCase();
+    const nameLower = lesson.name?.toLowerCase() || '';
+    const titleLower = lesson.title?.toLowerCase() || '';
+
+    return nameLower.includes(searchLower) || titleLower.includes(searchLower);
+  });
+
   return (
     <div className="flex pt-[20px]" style={{ height: '100vh' }}>
       <Sidebar
@@ -215,31 +238,61 @@ export default function UserPage() {
       />
 
       <main className="flex-1 overflow-auto bg-gray-50">
-        <TopBar viewMode={viewMode} onViewModeChange={setViewMode} />
+        <TopBar
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onSearchChange={handleSearchChange}
+          searchTerm={searchTerm}
+        />
 
         <div className="p-6">
-          <h1 className="mb-6 text-2xl font-medium text-gray-800">{viewTitle}</h1>
+          <div className="mb-6 flex items-center justify-between">
+            <h1 className="text-2xl font-medium text-gray-800">{viewTitle}</h1>
+            {searchTerm && (
+              <div className="text-sm text-gray-600">
+                Tìm thấy{' '}
+                <span className="font-semibold text-blue-600">{filteredLessons.length}</span> kết
+                quả
+              </div>
+            )}
+          </div>
 
-          {viewMode === 'grid' ? (
-            <FileGrid 
-              files={uploadedLessons} 
-              onFileClick={handleFileClick}
-              onContextMenu={handleContextMenu}
-              onMoreClick={handleMoreClick}
-              onToggleStar={handleToggleStar}
-            />
+          {filteredLessons.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="mb-4 text-6xl">🔍</div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-700">
+                {searchTerm ? 'Không tìm thấy kết quả' : 'Chưa có tài liệu nào'}
+              </h3>
+              <p className="max-w-md text-center text-gray-500">
+                {searchTerm
+                  ? `Không tìm thấy tài liệu nào với từ khóa "${searchTerm}"`
+                  : 'Hãy tải lên tài liệu đầu tiên của bạn để bắt đầu'}
+              </p>
+            </div>
           ) : (
-            <FileList 
-              files={uploadedLessons} 
-              onFileClick={handleFileClick}
-              onContextMenu={handleContextMenu}
-              onMoreClick={handleMoreClick}
-              onToggleStar={handleToggleStar}
-            />
+            <>
+              {viewMode === 'grid' ? (
+                <FileGrid
+                  files={filteredLessons}
+                  onFileClick={handleFileClick}
+                  onContextMenu={handleContextMenu}
+                  onMoreClick={handleMoreClick}
+                  onToggleStar={handleToggleStar}
+                />
+              ) : (
+                <FileList
+                  files={filteredLessons}
+                  onFileClick={handleFileClick}
+                  onContextMenu={handleContextMenu}
+                  onMoreClick={handleMoreClick}
+                  onToggleStar={handleToggleStar}
+                />
+              )}
+            </>
           )}
         </div>
       </main>
-      
+
       <UploadModal
         isOpen={showUploadModal}
         onClose={handleCloseModal}
@@ -250,12 +303,9 @@ export default function UserPage() {
         uploading={uploading}
         uploadProgress={uploadProgress}
       />
-      
+
       {selectedDocument && (
-        <DocumentViewer 
-          document={selectedDocument} 
-          onClose={handleCloseViewer} 
-        />
+        <DocumentViewer document={selectedDocument} onClose={handleCloseViewer} />
       )}
 
       {contextMenu && (
