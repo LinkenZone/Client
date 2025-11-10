@@ -20,13 +20,70 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // // Quick fill tài khoản tester
+  // const fillTesterAccount = (type) => {
+  //   if (type === 'user') {
+  //     setForm({ email: 'tester@linkenzone.com', password: 'tester123' });
+  //   } else {
+  //     setForm({ email: 'admin@linkenzone.com', password: 'admin123' });
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log('Form submitted:', form); // Debug log
 
     if (!isValidEmail(form.email)) {
       toast.error('Email không hợp lệ. Vui lòng nhập lại!');
       return;
     }
+
+    console.log('Email valid, checking tester accounts...'); // Debug log
+
+    // // Tài khoản tester cho frontend (không gọi backend)
+    // if (form.email === 'tester@linkenzone.com' && form.password === 'tester123') {
+    //   console.log('Logging in as tester user...'); // Debug log
+    //   const mockUser = {
+    //     token: 'mock-token-for-testing',
+    //     data: {
+    //       user: {
+    //         _id: 'tester-id-123',
+    //         full_name: 'Tester Frontend',
+    //         email: 'tester@linkenzone.com',
+    //         role: 'user',
+    //       },
+    //     },
+    //   };
+      
+    //   login(mockUser);
+    //   toast.success('🎨 Đăng nhập với tài khoản tester thành công!');
+    //   navigate('/user');
+    //   return;
+    // }
+
+    // // Tài khoản admin tester
+    // if (form.email === 'admin@linkenzone.com' && form.password === 'admin123') {
+    //   console.log('Logging in as admin tester...'); // Debug log
+    //   const mockAdmin = {
+    //     token: 'mock-admin-token-for-testing',
+    //     data: {
+    //       user: {
+    //         _id: 'admin-id-123',
+    //         full_name: 'Admin Tester',
+    //         email: 'admin@linkenzone.com',
+    //         role: 'admin',
+    //       },
+    //     },
+    //   };
+      
+    //   login(mockAdmin);
+    //   toast.success('🎨 Đăng nhập với tài khoản admin tester thành công!');
+    //   navigate('/admin');
+    //   return;
+    // }
+
+    console.log('Not a tester account, calling backend API...'); // Debug log
 
     try {
       const res = await api.post('/auth/login', form);
@@ -105,7 +162,9 @@ export default function Login() {
               <input
                 className="box-border w-full rounded-xl border-2 border-[#e0e7ff] bg-[#f8f9ff] p-4 pl-12 text-base transition-all duration-300 outline-none placeholder:text-[#999] focus:border-[#667eea] focus:bg-white focus:shadow-lg"
                 onChange={handleChange}
+                value={form.email}
                 name="email"
+                type="email"
                 placeholder="Email của bạn"
               />
             </div>
@@ -115,6 +174,7 @@ export default function Login() {
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
+                value={form.password}
                 className="box-border w-full rounded-xl border-2 border-[#e0e7ff] bg-[#f8f9ff] p-4 pl-12 pr-12 text-base transition-all duration-300 outline-none placeholder:text-[#999] focus:border-[#667eea] focus:bg-white focus:shadow-lg"
                 onChange={handleChange}
                 placeholder="Mật khẩu"
@@ -149,6 +209,51 @@ export default function Login() {
               <span className="bg-white px-4 text-gray-500">hoặc</span>
             </div>
           </div>
+
+          {/* Tester Account Info
+          <div className="mb-6 rounded-2xl border-2 border-dashed border-[#667eea]/30 bg-gradient-to-r from-[#f0f4ff] to-[#fef3f8] p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="text-xl">🎨</span>
+              <h3 className="text-sm font-bold text-[#667eea]">Tài khoản Test Frontend</h3>
+            </div>
+            <div className="space-y-2 text-xs text-gray-600">
+              <div className="flex items-center justify-between rounded-lg bg-white/80 p-2">
+                <span className="font-semibold">👤 User:</span>
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <div className="font-mono text-[#667eea]">tester@linkenzone.com</div>
+                    <div className="font-mono text-[#764ba2]">tester123</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fillTesterAccount('user')}
+                    className="rounded-lg bg-[#667eea] px-3 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#764ba2] hover:scale-105"
+                  >
+                    Điền
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-white/80 p-2">
+                <span className="font-semibold">👑 Admin:</span>
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <div className="font-mono text-[#667eea]">admin@linkenzone.com</div>
+                    <div className="font-mono text-[#764ba2]">admin123</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fillTesterAccount('admin')}
+                    className="rounded-lg bg-[#667eea] px-3 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#764ba2] hover:scale-105"
+                  >
+                    Điền
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p className="mt-2 text-center text-xs italic text-gray-500">
+              * Không ảnh hưởng đến backend
+            </p>
+          </div> */}
 
           <p className="text-center text-base text-[#666]">
             Chưa có tài khoản?{' '}

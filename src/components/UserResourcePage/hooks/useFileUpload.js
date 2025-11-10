@@ -15,12 +15,26 @@ export function useFileUpload() {
       setFile(selectedFile);
       const url = URL.createObjectURL(selectedFile);
       setPreviewUrl(url);
+    } else {
+      // Clear file when no file selected
+      setFile(null);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
     }
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      toast.warning("Vui lòng chọn file để tải lên!");
+  const handleUpload = async (lessonData) => {
+    // Validate: phải có title và description
+    if (!lessonData || !lessonData.title || !lessonData.description) {
+      toast.error("Vui lòng điền đầy đủ tiêu đề và giới thiệu!");
+      return;
+    }
+
+    // Validate: phải có ít nhất content hoặc file
+    if (!lessonData.content && !file) {
+      toast.error("Vui lòng nhập nội dung bài học hoặc tải lên file!");
       return;
     }
 
@@ -28,9 +42,18 @@ export function useFileUpload() {
     setUploadProgress(0);
 
     try {
-      // Tạo FormData để gửi file
+      // Tạo FormData để gửi file và data
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("title", lessonData.title);
+      formData.append("description", lessonData.description);
+      
+      if (lessonData.content) {
+        formData.append("content", lessonData.content);
+      }
+      
+      if (file) {
+        formData.append("file", file);
+      }
 
       // Gửi request với Content-Type: multipart/form-data
       const res = await api.post("/document/", formData, {
@@ -48,15 +71,15 @@ export function useFileUpload() {
         },
       });
 
-      toast.success("Tải file lên thành công!");
+      toast.success("Đăng bài học thành công!");
       console.log("Upload response:", res.data);
 
       return res.data; // Return data để component cha có thể sử dụng
     } catch (err) {
-      console.error("Error uploading file:", err);
+      console.error("Error uploading lesson:", err);
       toast.error(
         err.response?.data?.message ||
-          "Không thể tải file lên. Vui lòng thử lại!",
+          "Không thể đăng bài học. Vui lòng thử lại!",
       );
       throw err; // Throw error để component cha có thể handle
     } finally {
