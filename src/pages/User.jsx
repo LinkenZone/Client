@@ -26,6 +26,7 @@ import {
   loadStarredFiles,
 } from '../components/UserResourcePage/utils/loadFiles';
 import { AuthContext } from '../context/AuthContext';
+import { useDebounce } from '../hooks/useDebounce';
 
 export default function UserPage() {
   const { user } = useContext(AuthContext);
@@ -38,6 +39,7 @@ export default function UserPage() {
   const [renameModal, setRenameModal] = useState({ isOpen: false, document: null });
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, document: null });
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const { activeView, setActiveView, viewMode, setViewMode, viewTitle } = useFileView();
   const { file, previewUrl, uploading, uploadProgress, handleChange, handleUpload, reset } =
@@ -52,22 +54,22 @@ export default function UserPage() {
   }, [searchParams, setActiveView]);
 
   // Function để reload danh sách documents
-  const fetchDocuments = async () => {
+  const fetchDocuments = async (query = '', user) => {
     try {
       let data;
       switch (activeView) {
         case 'starred':
-          data = await loadStarredFiles();
+          data = await loadStarredFiles(query, user);
           break;
         case 'recent':
-          data = await loadRecentFiles();
+          data = await loadRecentFiles(query, user);
           break;
         case 'shared':
-          data = await loadSharedFiles();
+          data = await loadSharedFiles(query, user);
           break;
         case 'my-zone':
         default:
-          data = await loadFile();
+          data = await loadFile(query, user);
           break;
       }
       if (data) {
@@ -81,21 +83,21 @@ export default function UserPage() {
   useEffect(() => {
     let mounted = true;
 
-    const loadData = async () => {
+    const loadData = async (query = '', user) => {
       let data;
       switch (activeView) {
         case 'starred':
-          data = await loadStarredFiles();
+          data = await loadStarredFiles(query, user);
           break;
         case 'recent':
-          data = await loadRecentFiles();
+          data = await loadRecentFiles(query, user);
           break;
         case 'shared':
-          data = await loadSharedFiles();
+          data = await loadSharedFiles(query, user);
           break;
         case 'my-zone':
         default:
-          data = await loadFile();
+          data = await loadFile(query, user);
           break;
       }
       if (mounted && data) {
@@ -103,12 +105,12 @@ export default function UserPage() {
       }
     };
 
-    loadData();
+    loadData(debouncedSearchTerm, user);
 
     return () => {
       mounted = false;
     };
-  }, [user, activeView]);
+  }, [user, activeView, debouncedSearchTerm]);
 
   const handleCloseModal = () => {
     setShowUploadModal(false);
@@ -120,7 +122,7 @@ export default function UserPage() {
       await handleUpload();
       handleCloseModal();
       // Reload danh sách sau khi upload thành công
-      await fetchDocuments();
+      await fetchDocuments(debouncedSearchTerm, user);
     } catch (error) {
       // Error đã được handle trong handleUpload
       console.error('Upload failed:', error);
@@ -218,15 +220,7 @@ export default function UserPage() {
   };
 
   // Filter files based on search term
-  const filteredLessons = uploadedLessons.filter((lesson) => {
-    if (!searchTerm.trim()) return true;
-
-    const searchLower = searchTerm.toLowerCase();
-    const nameLower = lesson.name?.toLowerCase() || '';
-    const titleLower = lesson.title?.toLowerCase() || '';
-
-    return nameLower.includes(searchLower) || titleLower.includes(searchLower);
-  });
+  const filteredLessons = uploadedLessons;
 
   return (
     <div className="flex pt-[20px]" style={{ height: '100vh' }}>

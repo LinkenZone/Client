@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import LessonCard from '../components/LessonCard';
+import { useDebounce } from '../hooks/useDebounce';
 import { api } from '../services/api';
 
 export default function LessonPage() {
@@ -8,6 +9,7 @@ export default function LessonPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const searchRef = useRef(null);
 
   // Fetch lessons từ API
@@ -29,8 +31,10 @@ export default function LessonPage() {
       }
     };
 
-    fetchLessons(searchTerm);
-  }, [searchTerm]);
+    fetchLessons(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
+
+  const approvedLessons = lessons.filter((lesson) => lesson.status === 'approved');
 
   // // Lọc bài học theo category và từ khóa
   // const filteredLessons = useMemo(() => {
@@ -185,7 +189,7 @@ export default function LessonPage() {
                   <span>{cat.name}</span>
                   {selectedCategory === cat.id && (
                     <span className="ml-2 rounded-full bg-white/30 px-2 py-0.5 text-xs">
-                      {lessons.length}
+                      {approvedLessons.length}
                     </span>
                   )}
                 </span>
@@ -200,7 +204,7 @@ export default function LessonPage() {
             <div className="mx-auto mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-[#4AA4FF] border-r-transparent"></div>
             <p className="font-roboto text-xl text-gray-600">Đang tải bài học...</p>
           </div>
-        ) : lessons.length === 0 ? (
+        ) : approvedLessons.length === 0 ? (
           <div className="mt-20 text-center">
             <div className="mx-auto mb-6 text-8xl">�</div>
             <h3 className="font-roboto mb-4 text-2xl font-bold text-gray-700">
@@ -226,7 +230,7 @@ export default function LessonPage() {
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <p className="font-roboto text-xl font-semibold text-gray-700">
-                  <span className="text-[#4AA4FF]">{lessons.length}</span> bài học
+                  <span className="text-[#4AA4FF]">{approvedLessons.length}</span> bài học
                   {searchTerm && (
                     <span className="ml-2 text-base font-normal text-gray-500">
                       cho "<span className="font-semibold text-[#1e3a8a]">{searchTerm}</span>"
@@ -238,7 +242,7 @@ export default function LessonPage() {
 
             {/* Lesson Grid */}
             <div className="grid w-full grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
-              {lessons.map((lesson) => (
+              {approvedLessons.map((lesson) => (
                 <LessonCard key={lesson.document_id} lesson={lesson} />
               ))}
             </div>
