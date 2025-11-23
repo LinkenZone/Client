@@ -26,7 +26,7 @@ function Header() {
             <img className="h-14 w-auto transition-transform hover:scale-105" src={assets.logo} alt="Logo" />
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold text-white">LinkenZone</h1>
-              <p className="text-xs text-white/80">Nền tảng học tập trực tuyến</p>
+              <p className="text-xs text-white/80">Nền tảng quản lý tài nguyên học tập</p>
             </div>
           </div>
 

@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import noPict from '../assets/no_pic.png';
+import DocumentViewer from './UserResourcePage/DocumentViewer';
 
 function LessonCardExp({ lesson, onClose }) {
-    const navigate = useNavigate();
+    const [showDocumentViewer, setShowDocumentViewer] = useState(false);
 
     //Ngăn chặn cuộn trang khi mở LessonCardExp và ẩn header
     useEffect(() => {
@@ -37,8 +37,12 @@ function LessonCardExp({ lesson, onClose }) {
         };
     }, [onClose]);
 
-    const handleStartLearning = () => {
-        navigate(`/lesson/${lesson._id}`);
+    const handleViewDocument = () => {
+        setShowDocumentViewer(true);
+    };
+
+    const handleCloseViewer = () => {
+        setShowDocumentViewer(false);
     };
 
     return (
@@ -82,10 +86,10 @@ function LessonCardExp({ lesson, onClose }) {
           {/* Action buttons */}
           <div className="mt-4 flex gap-3">
             <button 
-              onClick={handleStartLearning}
-              className="flex-1 rounded-full border-2 border-[#4AA4FF] bg-white px-6 py-3 font-roboto font-semibold text-[#4AA4FF] transition-all hover:bg-[#4AA4FF] hover:text-white"
+              onClick={handleViewDocument}
+              className="flex-1 rounded-full border-2 border-[#4AA4FF] bg-[#4AA4FF] px-6 py-3 font-roboto font-semibold text-white transition-all hover:bg-[#3d8fdb]"
             >
-              Bắt đầu học
+              Xem tài liệu
             </button>
             <button className="flex-1 rounded-full border-2 border-[#4AA4FF] bg-white px-6 py-3 font-roboto font-semibold text-[#4AA4FF] transition-all hover:bg-[#4AA4FF] hover:text-white">
               Thêm vào yêu thích
@@ -93,6 +97,19 @@ function LessonCardExp({ lesson, onClose }) {
           </div>
         </div>
       </div>
+
+      {/* Document Viewer Modal */}
+      {showDocumentViewer && (
+        <DocumentViewer
+          document={{
+            name: lesson.title,
+            file_url: lesson.file_url,
+            file_type: lesson.file_type,
+            size: lesson.file_size || 'N/A'
+          }}
+          onClose={handleCloseViewer}
+        />
+      )}
     </div>
   );
 }   

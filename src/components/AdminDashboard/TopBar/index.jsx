@@ -2,6 +2,7 @@
 import React from "react";
 import { Menu, Search, Bell, MessageSquare, Calendar } from "lucide-react";
 import UserDropdown from "../../UserDropdown";
+import { assets } from "../../../assets/assets";
 
 export default function DashboardTopBar({ onToggleSidebar }) {
   return (
@@ -33,11 +34,6 @@ export default function DashboardTopBar({ onToggleSidebar }) {
 
         {/* Right side - Date and Icons */}
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600">
-            <Calendar className="h-4 w-4" />
-            <span>August 3, 2020 - August 31, 2020</span>
-          </div>
-
           <button className="relative rounded-lg p-2 hover:bg-gray-100">
             <Bell className="h-5 w-5 text-gray-600" />
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-orange-500"></span>
@@ -50,7 +46,7 @@ export default function DashboardTopBar({ onToggleSidebar }) {
 
           {/* User Dropdown */}
           <UserDropdown
-            avatarSrc="https://i.pravatar.cc/150?img=12"
+            avatarSrc={assets.avatar}
             avatarSize="h-8 w-8"
           />
         </div>

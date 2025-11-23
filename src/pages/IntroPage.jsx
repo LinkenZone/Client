@@ -29,7 +29,7 @@ export default function IntroPage() {
 
             {/* Subtitle */}
             <p className="mb-4 max-w-3xl text-xl text-white/90 drop-shadow md:text-2xl">
-              Nền tảng học tập mở
+              Nền tảng quản lý mở
             </p>
             <p className="mb-12 max-w-3xl text-lg text-white/80 drop-shadow">
               Nơi mọi người có thể chia sẻ, khám phá và kết nối tri thức với nhau

@@ -43,18 +43,18 @@ export default function Home() {
             </span>
           </h1>
           <p className="mx-auto mb-8 max-w-3xl text-xl text-white/90 drop-shadow md:text-2xl">
-            Nền tảng học tập trực tuyến hàng đầu - Khám phá kiến thức Tự nhiên và Xã hội
+            Nền tảng quản lý tài nguyên học tập hàng đầu - Khám phá kiến thức Tự nhiên và Xã hội
           </p>
 
           {/* Stats */}
           <div className="mx-auto mt-12 grid max-w-4xl grid-cols-3 gap-4 md:gap-8">
             <div className="rounded-2xl bg-white/20 p-6 backdrop-blur-sm">
               <div className="text-4xl font-bold text-white md:text-5xl">100+</div>
-              <div className="mt-2 text-sm text-white/80 md:text-base">Bài học</div>
+              <div className="mt-2 text-sm text-white/80 md:text-base">Tài liệu</div>
             </div>
             <div className="rounded-2xl bg-white/20 p-6 backdrop-blur-sm">
               <div className="text-4xl font-bold text-white md:text-5xl">50K+</div>
-              <div className="mt-2 text-sm text-white/80 md:text-base">Học viên</div>
+              <div className="mt-2 text-sm text-white/80 md:text-base">Người dùng</div>
             </div>
             <div className="rounded-2xl bg-white/20 p-6 backdrop-blur-sm">
               <div className="text-4xl font-bold text-white md:text-5xl">4.8★</div>
@@ -100,17 +100,17 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl font-bold text-[#1e3a8a] md:text-4xl">
-              Khóa học nổi bật ⭐
+              Tài liệu nổi bật ⭐
             </h2>
             <p className="text-lg text-gray-600">
-              Các bài học được yêu thích nhất bởi cộng đồng học viên
+              Các tài liệu được yêu thích nhất bởi cộng đồngn
             </p>
           </div>
 
           {loading ? (
             <div className="mt-12 text-center">
               <div className="mx-auto mb-6 inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-[#4AA4FF] border-r-transparent"></div>
-              <p className="text-xl text-gray-600">Đang tải bài học...</p>
+              <p className="text-xl text-gray-600">Đang tải...</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
@@ -126,7 +126,7 @@ export default function Home() {
               href="/lesson"
               className="inline-flex items-center gap-2 rounded-full bg-[#4AA4FF] px-8 py-4 font-semibold text-white transition-all hover:bg-[#3b8dd9] hover:shadow-lg"
             >
-              Xem tất cả khóa học
+              Xem tất cả tài nguyên
               <span className="text-xl">→</span>
             </a>
           </div>

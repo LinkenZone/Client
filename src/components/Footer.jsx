@@ -24,8 +24,8 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="mb-4 text-2xl font-bold text-white">LinkenZone</h3>
             <p className="text-sm leading-relaxed text-gray-300">
-              Nền tảng học tập trực tuyến hàng đầu, mang đến trải nghiệm học tập chất lượng cao với 
-              hàng ngàn bài giảng từ các giảng viên uy tín.
+              Nền tảng lưu trữ tài liệu hàng đầu, mang đến trải nghiệm chất lượng cao với 
+              hàng ngàn tài liệu từ các nguồn uy tín đã được qua kiểm duyệt.
             </p>
             
             {/* Contact Info */}
