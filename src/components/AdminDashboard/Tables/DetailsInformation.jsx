@@ -5,6 +5,7 @@ import {
   DownloadCloud,
   MessageSquare,
   User2,
+  Star,
 } from "lucide-react";
 import { api } from "../../../services/api";
 import { toast } from "react-toastify";
@@ -15,6 +16,7 @@ export default function SalesDetailsTable() {
     totalDownloads: 0,
     totalComments: 0,
     totalAccounts: 0,
+    totalRatings: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -30,6 +32,7 @@ export default function SalesDetailsTable() {
           totalDownloads: data.total_download || 0,
           totalComments: data.total_comments || 0,
           totalAccounts: data.total_accounts || 0,
+          totalRatings: data.total_ratings || 0,
         });
       } catch (error) {
         console.error('Error fetching stats:', error);
@@ -66,6 +69,13 @@ export default function SalesDetailsTable() {
     },
     {
       id: 4,
+      icon: <Star className="h-5 w-5 text-yellow-500" />,
+      amount: loading ? "..." : stats.totalRatings.toLocaleString(),
+      label: "Tổng số lượt đánh giá",
+      bgColor: "bg-yellow-50",
+    },
+    {
+      id: 5,
       icon: <User2 className="h-5 w-5 text-green-500" />,
       amount: loading ? "..." : stats.totalAccounts.toLocaleString(),
       label: "Tổng số tài khoản",

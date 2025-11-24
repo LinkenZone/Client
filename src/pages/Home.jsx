@@ -1,6 +1,62 @@
 import { useEffect, useState } from 'react';
-import LessonCard from '../components/LessonCard';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
+import { Star } from 'lucide-react';
+
+// LessonCard component
+function LessonCard({ lesson }) {
+  const navigate = useNavigate();
+
+  const getFileIcon = () => {
+    const fileType = lesson.file_type?.toLowerCase() || '';
+    if (fileType.includes('pdf')) return '📄';
+    if (fileType.includes('doc')) return '📝';
+    if (fileType.includes('ppt') || fileType.includes('presentation')) return '📊';
+    if (fileType.includes('video') || fileType.includes('mp4')) return '🎥';
+    if (fileType.includes('zip') || fileType.includes('rar')) return '📦';
+    return '📁';
+  };
+
+  const renderStars = () => {
+    const rating = lesson.avgRating || 0;
+    const fullStars = Math.floor(rating);
+    const emptyStars = 5 - fullStars;
+
+    return (
+      <div className="flex items-center gap-0.5">
+        {[...Array(fullStars)].map((_, i) => (
+          <Star key={`full-${i}`} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+        ))}
+        {[...Array(emptyStars)].map((_, i) => (
+          <Star key={`empty-${i}`} className="h-3 w-3 fill-gray-300 text-gray-300" />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div
+      onClick={() => navigate(`/lesson/${lesson.document_id}`)}
+      className="group cursor-pointer rounded-xl bg-white p-4 shadow-md transition-all hover:scale-105 hover:shadow-xl"
+    >
+      <div className="mb-3 flex h-20 items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 text-5xl">
+        {getFileIcon()}
+      </div>
+      <h3 className="mb-2 truncate text-sm font-semibold text-gray-800 group-hover:text-blue-600">
+        {lesson.title || lesson.file_name}
+      </h3>
+      <div className="mb-2 flex items-center justify-between">
+        {renderStars()}
+        <span className="text-xs text-gray-500">
+          {lesson.avgRating ? lesson.avgRating.toFixed(1) : '0.0'}
+        </span>
+      </div>
+      <p className="truncate text-xs text-gray-500">
+        {lesson.uploader?.full_name || 'Ẩn danh'}
+      </p>
+    </div>
+  );
+}
 
 export default function Home() {
   const [lessons, setLessons] = useState([]);

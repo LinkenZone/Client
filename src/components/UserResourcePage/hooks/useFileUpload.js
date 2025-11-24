@@ -8,6 +8,8 @@ export function useFileUpload() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [description, setDescription] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -31,6 +33,11 @@ export function useFileUpload() {
       // Tạo FormData để gửi file
       const formData = new FormData();
       formData.append("file", file);
+      
+      // Thêm description nếu có
+      if (description.trim()) {
+        formData.append("description", description.trim());
+      }
 
       // Gửi request với Content-Type: multipart/form-data
       const res = await api.post("/document/", formData, {
@@ -47,6 +54,18 @@ export function useFileUpload() {
           console.log(`Upload progress: ${percentCompleted}%`);
         },
       });
+
+      // Gán tags cho document sau khi upload thành công
+      if (selectedTags.length > 0 && res.data.data?.document?.document_id) {
+        try {
+          await api.post(`/tags/document/${res.data.data.document.document_id}`, {
+            tagIds: selectedTags,
+          });
+        } catch (tagError) {
+          console.error("Error assigning tags:", tagError);
+          toast.warning("Tải file thành công nhưng không thể gán tags!");
+        }
+      }
 
       toast.success("Tải file lên thành công!");
       console.log("Upload response:", res.data);
@@ -68,6 +87,8 @@ export function useFileUpload() {
     setFile(null);
     setPreviewUrl(null);
     setUploadProgress(0);
+    setDescription("");
+    setSelectedTags([]);
     // Cleanup object URL để tránh memory leak
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
@@ -79,8 +100,12 @@ export function useFileUpload() {
     previewUrl,
     uploading,
     uploadProgress,
+    description,
+    selectedTags,
     handleChange,
     handleUpload,
+    setDescription,
+    setSelectedTags,
     reset,
   };
 }

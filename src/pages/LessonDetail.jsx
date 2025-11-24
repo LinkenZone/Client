@@ -1,80 +1,73 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Download, Star, Send, ChevronDown, ChevronUp, User, FileText, Calendar } from 'lucide-react';
+import { Star, Send, User, Calendar, Download, ExternalLink, MessageSquare, Tag } from 'lucide-react';
 import { api } from '../services/api';
 import { toast } from 'react-toastify';
-import noPict from '../assets/no_pic.png';
+import { AuthContext } from '../context/AuthContext';
 
 function LessonDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [lesson, setLesson] = useState(null);
+  const { user } = useContext(AuthContext);
+  const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userRating, setUserRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [reviewText, setReviewText] = useState('');
-  const [reviews, setReviews] = useState([]);
-  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [expandedComments, setExpandedComments] = useState({});
+  const [comments, setComments] = useState([]);
+  const [ratings, setRatings] = useState([]);
 
-  useEffect(() => {
-    fetchLessonDetail();
-    fetchReviews();
-    fetchComments();
-  }, [id]);
-
-  const fetchLessonDetail = async () => {
+  const fetchDocumentDetail = useCallback(async () => {
     try {
-      const response = await api.get(`/lessons/${id}`);
-      setLesson(response.data.data);
+      const response = await api.get(`/document/${id}`);
+      setDocument(response.data.data.document || response.data.data);
     } catch (error) {
-      toast.error('Không thể tải thông tin bài học');
+      toast.error('Không thể tải thông tin tài liệu');
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  const fetchReviews = async () => {
+  const fetchRatings = useCallback(async () => {
     try {
-      const response = await api.get(`/lessons/${id}/reviews`);
-      setReviews(response.data.data || []);
+      const response = await api.get(`/document/${id}/rating`);
+      setRatings(response.data.data || []);
     } catch (error) {
       console.error('Lỗi tải đánh giá:', error);
     }
-  };
+  }, [id]);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
-      const response = await api.get(`/lessons/${id}/comments`);
+      const response = await api.get(`/document/${id}/comment`);
       setComments(response.data.data || []);
     } catch (error) {
       console.error('Lỗi tải bình luận:', error);
     }
-  };
+  }, [id]);
 
-  const handleSubmitReview = async (e) => {
+  useEffect(() => {
+    fetchDocumentDetail();
+    fetchComments();
+    fetchRatings();
+  }, [fetchDocumentDetail, fetchComments, fetchRatings]);
+
+  const handleSubmitRating = async (e) => {
     e.preventDefault();
     if (userRating === 0) {
       toast.warning('Vui lòng chọn số sao đánh giá');
       return;
     }
-    if (!reviewText.trim()) {
-      toast.warning('Vui lòng viết nội dung đánh giá');
-      return;
-    }
 
     try {
-      await api.post(`/lessons/${id}/reviews`, {
-        rating: userRating,
-        content: reviewText,
+      await api.post(`/document/${id}/rating`, {
+        score: userRating,
       });
       toast.success('Đã gửi đánh giá thành công!');
       setUserRating(0);
-      setReviewText('');
-      fetchReviews();
-      fetchLessonDetail(); // Cập nhật lại rating trung bình
+      fetchRatings();
+      fetchDocumentDetail(); // Cập nhật lại rating trung bình
     } catch (error) {
       toast.error(error.response?.data?.message || 'Không thể gửi đánh giá');
     }
@@ -88,7 +81,7 @@ function LessonDetail() {
     }
 
     try {
-      await api.post(`/lessons/${id}/comments`, {
+      await api.post(`/document/${id}/comment`, {
         content: newComment,
       });
       toast.success('Đã gửi bình luận thành công!');
@@ -99,48 +92,150 @@ function LessonDetail() {
     }
   };
 
-  const handleDownloadFile = async (fileUrl, fileName) => {
-    try {
-      const response = await api.get(fileUrl, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      toast.success('Đang tải xuống...');
-    } catch (error) {
-      toast.error('Không thể tải xuống tệp');
-    }
+  const formatFileSize = (size) => {
+    if (!size || size === 'N/A') return 'N/A';
+    if (typeof size === 'string' && size.includes('MB')) return size;
+    
+    const bytes = parseInt(size);
+    if (isNaN(bytes)) return 'N/A';
+    
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
   };
 
-  const toggleCommentReplies = (commentId) => {
-    setExpandedComments(prev => ({
-      ...prev,
-      [commentId]: !prev[commentId]
-    }));
+  const getAverageRating = () => {
+    if (!ratings || ratings.length === 0) return 0;
+    const sum = ratings.reduce((acc, r) => acc + r.score, 0);
+    return (sum / ratings.length).toFixed(1);
+  };
+
+  // Hàm render nội dung document viewer
+  const getFileType = (fileType) => {
+    if (!fileType) return "unknown";
+    if (fileType.includes("powerpoint") || fileType.includes("presentation")) return "presentation";
+    if (fileType.includes("pdf")) return "pdf";
+    if (fileType.includes("word") || fileType.includes("document")) return "document";
+    if (fileType.includes("excel") || fileType.includes("spreadsheet")) return "spreadsheet";
+    if (fileType.includes("image")) return "image";
+    if (fileType.includes("video")) return "video";
+    if (fileType.includes("audio")) return "audio";
+    return "unknown";
+  };
+
+  const renderDocumentContent = () => {
+    if (!document) return null;
+    
+    const fileType = getFileType(document.file_type);
+    const fileUrl = document.file_url;
+
+    switch (fileType) {
+      case "pdf":
+        return (
+          <iframe
+            src={`https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+            className="w-full h-full"
+            title={document.file_name}
+            frameBorder="0"
+          />
+        );
+
+      case "image":
+        return (
+          <div className="flex h-full items-center justify-center bg-gray-100">
+            <img
+              src={fileUrl}
+              alt={document.file_name}
+              className="max-h-full max-w-full object-contain"
+            />
+          </div>
+        );
+
+      case "video":
+        return (
+          <div className="flex h-full items-center justify-center bg-black">
+            <video
+              controls
+              className="max-h-full max-w-full"
+              src={fileUrl}
+            >
+              Trình duyệt của bạn không hỗ trợ video.
+            </video>
+          </div>
+        );
+
+      case "audio":
+        return (
+          <div className="flex h-full items-center justify-center">
+            <div className="w-full max-w-2xl rounded-lg bg-white p-8 shadow-lg">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">
+                {document.file_name}
+              </h3>
+              <audio controls className="w-full" src={fileUrl}>
+                Trình duyệt của bạn không hỗ trợ audio.
+              </audio>
+            </div>
+          </div>
+        );
+
+      case "document":
+      case "spreadsheet":
+      case "presentation":
+        return (
+          <iframe
+            src={`https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`}
+            className="w-full h-full"
+            title={document.file_name}
+            frameBorder="0"
+          />
+        );
+
+      default:
+        return (
+          <div className="flex h-full flex-col items-center justify-center gap-4 p-8">
+            <div className="text-center">
+              <div className="mb-4 text-6xl">📄</div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-800">
+                {document.file_name}
+              </h3>
+              <p className="mb-6 text-gray-600">
+                Không thể xem trước loại tài liệu này trực tiếp
+              </p>
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-white transition-colors hover:bg-blue-700"
+              >
+                <ExternalLink className="h-5 w-5" />
+                Mở trong tab mới
+              </a>
+            </div>
+          </div>
+        );
+    }
   };
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
-          <p className="mt-4 text-xl text-gray-600">Đang tải bài học...</p>
+          <p className="mt-4 text-xl text-gray-600">Đang tải tài liệu...</p>
         </div>
       </div>
     );
   }
 
-  if (!lesson) {
+  if (!document) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-2xl text-gray-600">Không tìm thấy bài học</p>
+          <p className="text-2xl text-gray-600">Không tìm thấy tài liệu</p>
           <button
             onClick={() => navigate(-1)}
-            className="mt-4 rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600"
+            className="mt-4 rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 transition-colors"
           >
             Quay lại
           </button>
@@ -150,309 +245,282 @@ function LessonDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f0f9ff] via-white to-[#e0f2f1] py-8">
-      <div className="mx-auto max-w-6xl px-4">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-6 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-gray-700 shadow-md transition-all hover:bg-gray-50 hover:shadow-lg"
-        >
-          ← Quay lại
-        </button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b shadow-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            ← Quay lại
+          </button>
+          <h1 className="text-lg font-semibold text-gray-900 truncate flex-1 mx-4">
+            {document.file_name}
+          </h1>
+        </div>
+      </div>
 
-        {/* Header Section */}
-        <div className="mb-8 overflow-hidden rounded-3xl bg-white shadow-2xl">
-          {/* Image */}
-          <div className="h-[400px] w-full overflow-hidden bg-gray-100">
-            <img
-              src={lesson.image || noPict}
-              alt={lesson.title}
-              className="h-full w-full object-cover"
-            />
+      {/* 2-Column Layout */}
+      <div className="max-w-7xl mx-auto p-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          
+          {/* Left Column - Document Viewer */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              {/* Document Preview - Embedded Viewer */}
+              <div className="relative bg-gray-50" style={{ height: '700px' }}>
+                {renderDocumentContent()}
+              </div>
+
+              {/* Download Button */}
+              <div className="p-4 border-t flex gap-2">
+                <a
+                  href={document.file_url}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 flex-1 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  <Download size={20} />
+                  Tải xuống tài liệu
+                </a>
+                <a
+                  href={document.file_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  title="Mở trong tab mới"
+                >
+                  <ExternalLink size={20} />
+                </a>
+              </div>
+            </div>
           </div>
 
-          {/* Title and Author */}
-          <div className="border-t-4 border-[#4AA4FF] bg-gradient-to-r from-[#ecfdf5] to-[#f0f9ff] p-8">
-            <h1 className="mb-4 text-4xl font-bold text-gray-800">{lesson.title}</h1>
-            <div className="flex flex-wrap items-center gap-6">
-              <div className="flex items-center gap-2">
-                <User className="text-[#4AA4FF]" size={20} />
-                <span className="text-lg text-gray-700">
-                  Giảng viên: <span className="font-semibold">{lesson.author || 'Ẩn danh'}</span>
-                </span>
+          {/* Right Column - Info, Comments, Rating */}
+          <div className="lg:col-span-1 space-y-4">
+            
+            {/* Document Info */}
+            <div className="bg-white rounded-lg shadow p-4">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">{document.file_name}</h2>
+              
+              {/* Author & Date */}
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <User size={18} className="text-blue-500" />
+                  <span className="text-sm">
+                  <span className="font-medium">Tác giả:</span> {document.uploader?.full_name || 'Ẩn danh'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar size={18} className="text-blue-500" />
+                  <span className="text-sm">
+                    {new Date(document.created_at).toLocaleDateString('vi-VN', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
+
+              {/* Rating */}
+              <div className="flex items-center gap-2 mb-4 pb-4 border-b">
                 <Star className="fill-yellow-400 text-yellow-400" size={20} />
-                <span className="text-lg font-semibold text-gray-800">
-                  {lesson.rating}/5 ({lesson.reviewCount || 0} đánh giá)
+                <span className="text-lg font-semibold">
+                  {getAverageRating()}/5
+                </span>
+                <span className="text-sm text-gray-500">
+                  ({ratings.length} đánh giá)
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="text-[#4AA4FF]" size={20} />
-                <span className="text-lg text-gray-700">
-                  {new Date(lesson.createdAt).toLocaleDateString('vi-VN')}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Content Section */}
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow-xl">
-          <h2 className="mb-4 flex items-center gap-2 text-2xl font-bold text-gray-800">
-            <FileText className="text-[#4AA4FF]" />
-            Nội dung bài giảng
-          </h2>
-          <div className="prose max-w-none text-gray-700">
-            <p className="text-lg leading-relaxed">{lesson.content || lesson.description}</p>
-          </div>
+              {/* Description */}
+              {document.description && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2">Mô tả</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {document.description}
+                  </p>
+                </div>
+              )}
 
-          {/* Files Section */}
-          {(lesson.powerpoint || lesson.contentFile) && (
-            <div className="mt-8 rounded-2xl bg-gradient-to-r from-[#f0f9ff] to-[#ecfdf5] p-6">
-              <h3 className="mb-4 text-xl font-semibold text-gray-800">📎 Tài liệu đính kèm</h3>
-              <div className="grid gap-4 md:grid-cols-2">
-                {lesson.powerpoint && (
-                  <button
-                    onClick={() => handleDownloadFile(lesson.powerpoint, 'BaiGiang.pptx')}
-                    className="flex items-center gap-3 rounded-xl bg-white p-4 shadow-md transition-all hover:scale-105 hover:shadow-lg"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-                      <span className="text-2xl">📊</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p className="font-semibold text-gray-800">Slide PowerPoint</p>
-                      <p className="text-sm text-gray-500">Bài giảng trình chiếu</p>
-                    </div>
-                    <Download className="text-[#4AA4FF]" size={24} />
-                  </button>
-                )}
+              {/* Tags */}
+              {document.tags && document.tags.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                    <Tag size={16} />
+                    Thẻ
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {document.tags.map((tag) => (
+                      <span
+                        key={tag.tag_id}
+                        className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-medium"
+                      >
+                        {tag.tag_name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-                {lesson.contentFile && (
-                  <button
-                    onClick={() => handleDownloadFile(lesson.contentFile, 'TaiLieu.pdf')}
-                    className="flex items-center gap-3 rounded-xl bg-white p-4 shadow-md transition-all hover:scale-105 hover:shadow-lg"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                      <span className="text-2xl">📄</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p className="font-semibold text-gray-800">Tài liệu nội dung</p>
-                      <p className="text-sm text-gray-500">File học tập chi tiết</p>
-                    </div>
-                    <Download className="text-[#4AA4FF]" size={24} />
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Rating Section */}
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow-xl">
-          <h2 className="mb-6 text-2xl font-bold text-gray-800">⭐ Đánh giá bài học</h2>
-          <form onSubmit={handleSubmitReview} className="space-y-4">
-            {/* Star Rating */}
-            <div>
-              <label className="mb-2 block text-lg font-semibold text-gray-700">
-                Chọn số sao (1-5):
-              </label>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setUserRating(star)}
-                    onMouseEnter={() => setHoverRating(star)}
-                    onMouseLeave={() => setHoverRating(0)}
-                    className="transition-transform hover:scale-125"
-                  >
-                    <Star
-                      size={40}
-                      className={
-                        star <= (hoverRating || userRating)
-                          ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-gray-300'
-                      }
-                    />
-                  </button>
-                ))}
-                <span className="ml-4 flex items-center text-xl font-semibold text-gray-700">
-                  {userRating > 0 ? `${userRating}/5` : 'Chưa chọn'}
-                </span>
+              {/* File Info */}
+              <div className="text-xs text-gray-500 space-y-1">
+                <p>Kích thước: {formatFileSize(document.file_size)}</p>
+                <p>Loại: {document.file_type}</p>
+                <p>Lượt xem: {document.view_count || 0}</p>
               </div>
             </div>
 
-            {/* Review Text */}
-            <div>
-              <label className="mb-2 block text-lg font-semibold text-gray-700">
-                Viết đánh giá của bạn:
-              </label>
-              <textarea
-                value={reviewText}
-                onChange={(e) => setReviewText(e.target.value)}
-                placeholder="Chia sẻ trải nghiệm của bạn về bài học này..."
-                className="w-full rounded-xl border-2 border-gray-200 p-4 text-base transition-all focus:border-[#4AA4FF] focus:outline-none focus:ring-2 focus:ring-[#4AA4FF]/20"
-                rows="4"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#4AA4FF] to-[#6B8DD1] px-8 py-3 text-lg font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-            >
-              <Send size={20} />
-              Gửi đánh giá
-            </button>
-          </form>
-
-          {/* Reviews List */}
-          {reviews.length > 0 && (
-            <div className="mt-8">
-              <h3 className="mb-4 text-xl font-semibold text-gray-800">
-                Các đánh giá ({reviews.length})
-              </h3>
-              <div className="space-y-4">
-                {reviews.map((review) => (
-                  <div
-                    key={review._id}
-                    className="rounded-xl border border-gray-200 bg-gradient-to-r from-[#f9fafb] to-white p-4"
-                  >
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4AA4FF] text-white font-semibold">
-                          {review.user?.name?.[0]?.toUpperCase() || 'U'}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            {review.user?.name || 'Người dùng'}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            {new Date(review.createdAt).toLocaleDateString('vi-VN')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex gap-1">
-                        {[...Array(5)].map((_, i) => (
+            {/* Rating Section */}
+            {user && (
+              <div className="bg-white rounded-lg shadow p-4">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">⭐ Đánh giá</h3>
+                <form onSubmit={handleSubmitRating} className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Chọn số sao:
+                    </label>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setUserRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          className="transition-transform hover:scale-110"
+                        >
                           <Star
-                            key={i}
-                            size={18}
+                            size={32}
                             className={
-                              i < review.rating
+                              star <= (hoverRating || userRating)
                                 ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-gray-300'
                             }
                           />
-                        ))}
-                      </div>
-                    </div>
-                    <p className="text-gray-700">{review.content}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Comments Section */}
-        <div className="mb-8 rounded-3xl bg-white p-8 shadow-xl">
-          <h2 className="mb-6 text-2xl font-bold text-gray-800">💬 Hỏi đáp & Thảo luận</h2>
-
-          {/* New Comment Form */}
-          <form onSubmit={handleSubmitComment} className="mb-8">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Đặt câu hỏi hoặc chia sẻ ý kiến của bạn..."
-              className="w-full rounded-xl border-2 border-gray-200 p-4 text-base transition-all focus:border-[#4AA4FF] focus:outline-none focus:ring-2 focus:ring-[#4AA4FF]/20"
-              rows="3"
-            />
-            <button
-              type="submit"
-              className="mt-3 flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#10b981] to-[#059669] px-6 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-            >
-              <Send size={18} />
-              Gửi bình luận
-            </button>
-          </form>
-
-          {/* Comments List */}
-          {comments.length > 0 ? (
-            <div className="space-y-4">
-              {comments.map((comment) => (
-                <div
-                  key={comment._id}
-                  className="rounded-xl border border-gray-200 bg-gradient-to-r from-[#f0f9ff] to-white p-5"
-                >
-                  <div className="mb-3 flex items-start gap-3">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#4AA4FF] to-[#6B8DD1] text-lg font-semibold text-white">
-                      {comment.user?.name?.[0]?.toUpperCase() || 'U'}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-semibold text-gray-800">
-                          {comment.user?.name || 'Người dùng'}
-                        </p>
-                        <span className="text-sm text-gray-500">•</span>
-                        <p className="text-sm text-gray-500">
-                          {new Date(comment.createdAt).toLocaleDateString('vi-VN')}
-                        </p>
-                      </div>
-                      <p className="mt-2 text-gray-700">{comment.content}</p>
-
-                      {/* Replies Toggle */}
-                      {comment.replies && comment.replies.length > 0 && (
-                        <button
-                          onClick={() => toggleCommentReplies(comment._id)}
-                          className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#4AA4FF] transition-colors hover:text-[#6B8DD1]"
-                        >
-                          {expandedComments[comment._id] ? (
-                            <>
-                              <ChevronUp size={16} />
-                              Ẩn {comment.replies.length} phản hồi
-                            </>
-                          ) : (
-                            <>
-                              <ChevronDown size={16} />
-                              Xem {comment.replies.length} phản hồi
-                            </>
-                          )}
                         </button>
-                      )}
+                      ))}
+                    </div>
+                    {userRating > 0 && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        Bạn đã chọn: {userRating}/5
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors font-medium"
+                  >
+                    <Send size={18} />
+                    Gửi đánh giá
+                  </button>
+                </form>
 
-                      {/* Replies */}
-                      {expandedComments[comment._id] && comment.replies && (
-                        <div className="mt-4 space-y-3 border-l-2 border-[#4AA4FF] pl-4">
-                          {comment.replies.map((reply) => (
-                            <div key={reply._id} className="rounded-lg bg-white p-3">
-                              <div className="flex items-center gap-2">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-700">
-                                  {reply.user?.name?.[0]?.toUpperCase() || 'U'}
-                                </div>
-                                <div>
-                                  <p className="text-sm font-semibold text-gray-800">
-                                    {reply.user?.name || 'Người dùng'}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    {new Date(reply.createdAt).toLocaleDateString('vi-VN')}
-                                  </p>
-                                </div>
-                              </div>
-                              <p className="mt-2 text-sm text-gray-700">{reply.content}</p>
+                {/* Ratings List */}
+                {ratings.length > 0 && (
+                  <div className="mt-4 pt-4 border-t">
+                    <h4 className="text-sm font-semibold text-gray-700 mb-3">
+                      Các đánh giá ({ratings.length})
+                    </h4>
+                    <div className="space-y-3 max-h-60 overflow-y-auto">
+                      {ratings.map((rating) => (
+                        <div key={rating.rating_id} className="pb-3 border-b last:border-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-sm font-medium text-gray-900">
+                              {rating.user?.full_name || 'Người dùng'}
+                            </span>
+                            <div className="flex gap-0.5">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  size={14}
+                                  className={
+                                    i < rating.score
+                                      ? 'fill-yellow-400 text-yellow-400'
+                                      : 'text-gray-300'
+                                  }
+                                />
+                              ))}
                             </div>
-                          ))}
+                          </div>
+                          <p className="text-xs text-gray-500">
+                            {new Date(rating.rated_at).toLocaleDateString('vi-VN')}
+                          </p>
                         </div>
-                      )}
+                      ))}
                     </div>
                   </div>
+                )}
+              </div>
+            )}
+
+            {/* Comments Section */}
+            <div className="bg-white rounded-lg shadow p-4">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <MessageSquare size={20} />
+                Bình luận ({comments.length})
+              </h3>
+
+              {/* New Comment Form */}
+              {user && (
+                <form onSubmit={handleSubmitComment} className="mb-4">
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Viết bình luận của bạn..."
+                    className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none resize-none"
+                    rows="3"
+                  />
+                  <button
+                    type="submit"
+                    className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                  >
+                    <Send size={18} />
+                    Gửi bình luận
+                  </button>
+                </form>
+              )}
+
+              {/* Comments List */}
+              {comments.length > 0 ? (
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {comments.map((comment) => (
+                    <div
+                      key={comment.comment_id}
+                      className="pb-3 border-b last:border-0"
+                    >
+                      <div className="flex items-start gap-2">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold">
+                          {comment.user?.full_name?.[0]?.toUpperCase() || 'U'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-semibold text-gray-900">
+                              {comment.user?.full_name || 'Người dùng'}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(comment.created_at).toLocaleDateString('vi-VN')}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-700 break-words">
+                            {comment.content}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <MessageSquare className="mx-auto mb-2 text-gray-400" size={32} />
+                  <p className="text-sm">Chưa có bình luận nào</p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="rounded-xl bg-gray-50 p-8 text-center">
-              <p className="text-gray-500">Chưa có bình luận nào. Hãy là người đầu tiên!</p>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

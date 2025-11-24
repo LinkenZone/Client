@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import LessonCard from '../components/LessonCard';
+import LessonListItem from '../components/LessonListItem';
 import { useDebounce } from '../hooks/useDebounce';
 import { api } from '../services/api';
 
 export default function LessonPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,12 +83,6 @@ export default function LessonPage() {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setShowSuggestions(true);
-  };
-
-  const handleSuggestionClick = (lesson) => {
-    setSearchTerm(lesson.title);
-    setShowSuggestions(false);
   };
 
   const categories = [
@@ -131,7 +124,6 @@ export default function LessonPage() {
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
-              onFocus={() => setShowSuggestions(true)}
               placeholder="Tìm kiếm bài học theo tên, môn học, nội dung..."
               className="w-full rounded-full border-2 border-[#4AA4FF] bg-white py-5 pr-6 pl-16 text-base text-[#1e3a8a] shadow-xl transition-all duration-300 outline-none placeholder:text-[#999] focus:border-[#667eea] focus:shadow-2xl md:py-6 md:text-lg"
             />
@@ -230,7 +222,7 @@ export default function LessonPage() {
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <p className="font-roboto text-xl font-semibold text-gray-700">
-                  <span className="text-[#4AA4FF]">{approvedLessons.length}</span> bài học
+                  <span className="text-[#4AA4FF]">{approvedLessons.length}</span> kết quả tìm kiếm
                   {searchTerm && (
                     <span className="ml-2 text-base font-normal text-gray-500">
                       cho "<span className="font-semibold text-[#1e3a8a]">{searchTerm}</span>"
@@ -240,10 +232,10 @@ export default function LessonPage() {
               </div>
             </div>
 
-            {/* Lesson Grid */}
-            <div className="grid w-full grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+            {/* Lesson List */}
+            <div className="flex flex-col gap-3">
               {approvedLessons.map((lesson) => (
-                <LessonCard key={lesson.document_id} lesson={lesson} />
+                <LessonListItem key={lesson.document_id} lesson={lesson} />
               ))}
             </div>
           </>

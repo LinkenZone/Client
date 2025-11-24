@@ -42,8 +42,19 @@ export default function UserPage() {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const { activeView, setActiveView, viewMode, setViewMode, viewTitle } = useFileView();
-  const { file, previewUrl, uploading, uploadProgress, handleChange, handleUpload, reset } =
-    useFileUpload();
+  const { 
+    file, 
+    previewUrl, 
+    uploading, 
+    uploadProgress, 
+    description,
+    selectedTags,
+    handleChange, 
+    handleUpload, 
+    setDescription,
+    setSelectedTags,
+    reset 
+  } = useFileUpload();
 
   // Check URL params and set active view
   useEffect(() => {
@@ -296,6 +307,10 @@ export default function UserPage() {
         onUpload={handleUploadClick}
         uploading={uploading}
         uploadProgress={uploadProgress}
+        description={description}
+        onDescriptionChange={setDescription}
+        selectedTags={selectedTags}
+        onTagsChange={setSelectedTags}
       />
 
       {selectedDocument && (

@@ -31,7 +31,7 @@ export const loadFile = async (query = '', user) => {
       commentCount: doc.commentCount,
       isStarred: doc.is_starred,
     }));
-
+    
     const filteredDocuments = listDocuments.filter((doc) => doc.uploader === user.full_name);
 
     return isSearch ? filteredDocuments : listDocuments;
