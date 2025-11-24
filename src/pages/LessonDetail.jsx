@@ -1,9 +1,10 @@
 import { useEffect, useState, useContext, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Star, Send, User, Calendar, Download, ExternalLink, MessageSquare, Tag } from 'lucide-react';
+import { Star, Send, User, Calendar, Download, ExternalLink, MessageSquare, Tag, Edit } from 'lucide-react';
 import { api } from '../services/api';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../context/AuthContext';
+import TagManager from '../components/AdminDashboard/TagManager';
 
 function LessonDetail() {
   const { id } = useParams();
@@ -16,6 +17,7 @@ function LessonDetail() {
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([]);
   const [ratings, setRatings] = useState([]);
+  const [showTagManager, setShowTagManager] = useState(false);
 
   const fetchDocumentDetail = useCallback(async () => {
     try {
@@ -246,6 +248,19 @@ function LessonDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Tag Manager Modal */}
+      {showTagManager && (
+        <TagManager
+          documentId={id}
+          isOpen={showTagManager}
+          onClose={() => setShowTagManager(false)}
+          onUpdate={() => {
+            fetchDocumentDetail();
+            toast.success('Tags đã được cập nhật!');
+          }}
+        />
+      )}
+
       {/* Header */}
       <div className="bg-white border-b shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -347,24 +362,48 @@ function LessonDetail() {
               )}
 
               {/* Tags */}
-              {document.tags && document.tags.length > 0 && (
-                <div className="mb-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1">
                     <Tag size={16} />
                     Thẻ
                   </h3>
+                  {user && (user.role === 'admin' || user.role === 'lecturer') && (
+                    <button
+                      onClick={() => setShowTagManager(true)}
+                      className="text-blue-500 hover:text-blue-700 transition-colors flex items-center gap-1 text-xs"
+                    >
+                      <Edit size={14} />
+                      Chỉnh sửa
+                    </button>
+                  )}
+                </div>
+                {document.tags && document.tags.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {document.tags.map((tag) => (
                       <span
                         key={tag.tag_id}
-                        className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-medium"
+                        className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                        style={{ backgroundColor: tag.color || '#3B82F6' }}
                       >
                         {tag.tag_name}
                       </span>
                     ))}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p className="text-xs text-gray-400 italic">
+                    Chưa có thẻ nào
+                    {user && (user.role === 'admin' || user.role === 'lecturer') && (
+                      <button
+                        onClick={() => setShowTagManager(true)}
+                        className="ml-2 text-blue-500 hover:text-blue-700"
+                      >
+                        (Thêm thẻ)
+                      </button>
+                    )}
+                  </p>
+                )}
+              </div>
 
               {/* File Info */}
               <div className="text-xs text-gray-500 space-y-1">

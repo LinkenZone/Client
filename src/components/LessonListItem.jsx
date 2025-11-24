@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Star, MessageSquare, User, Calendar } from 'lucide-react';
+import { Star, MessageSquare, User, Calendar, Tag } from 'lucide-react';
 
 function LessonListItem({ lesson }) {
   const navigate = useNavigate();
@@ -96,11 +96,31 @@ function LessonListItem({ lesson }) {
           </div>
         </div>
 
-        {/* File Type Badge */}
+        {/* Tags */}
         <div className="hidden flex-shrink-0 md:block">
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-            {lesson.file_type?.toUpperCase() || 'FILE'}
-          </span>
+          {lesson.tags && lesson.tags.length > 0 ? (
+            <div className="flex flex-wrap gap-1 max-w-xs">
+              {lesson.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag.tag_id}
+                  className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium text-white"
+                  style={{ backgroundColor: tag.color || '#3B82F6' }}
+                >
+                  {tag.tag_name}
+                </span>
+              ))}
+              {lesson.tags.length > 3 && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-600">
+                  +{lesson.tags.length - 3}
+                </span>
+              )}
+            </div>
+          ) : (
+            <span className="flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-400">
+              <Tag className="h-3 w-3" />
+              Chưa có tag
+            </span>
+          )}
         </div>
       </div>
     </div>

@@ -5,7 +5,6 @@ import { api } from '../services/api';
 
 export default function LessonPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -85,13 +84,6 @@ export default function LessonPage() {
     setSearchTerm(e.target.value);
   };
 
-  const categories = [
-    { id: 'all', name: 'Tất cả', icon: '📚', color: 'from-[#667eea] to-[#764ba2]' },
-    { id: 'natural', name: 'Tự nhiên', icon: '🔬', color: 'from-[#1e88e5] to-[#4db6ac]' },
-    { id: 'social', name: 'Xã hội', icon: '🌏', color: 'from-[#d84315] to-[#ff8a65]' },
-    { id: 'language', name: 'Ngoại ngữ', icon: '🗣️', color: 'from-[#43a047] to-[#66bb6a]' },
-  ];
-
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#f0f9ff] via-white to-[#f0f9ff]">
       {/* Decorative Background Elements */}
@@ -161,33 +153,6 @@ export default function LessonPage() {
               </div>
             </div>
           )} */}
-        </div>
-
-        {/* Category Filter */}
-        <div className="mb-12">
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`group relative overflow-hidden rounded-full px-8 py-4 font-semibold shadow-lg transition-all hover:scale-105 hover:shadow-xl ${
-                  selectedCategory === cat.id
-                    ? `bg-gradient-to-r ${cat.color} text-white`
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <span className="text-2xl">{cat.icon}</span>
-                  <span>{cat.name}</span>
-                  {selectedCategory === cat.id && (
-                    <span className="ml-2 rounded-full bg-white/30 px-2 py-0.5 text-xs">
-                      {approvedLessons.length}
-                    </span>
-                  )}
-                </span>
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* Results Section */}

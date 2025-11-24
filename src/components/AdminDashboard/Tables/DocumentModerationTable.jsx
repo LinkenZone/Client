@@ -1,8 +1,9 @@
-import { AlertCircle, Calendar, Check, Eye, FileText, User, X } from 'lucide-react';
+import { AlertCircle, Calendar, Check, Eye, FileText, User, X, Tag } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { api } from '../../../services/api';
 import DocumentViewer from '../../UserResourcePage/DocumentViewer';
+import TagManager from '../TagManager';
 
 const DocumentModerationTable = () => {
   const [documents, setDocuments] = useState([]);
@@ -12,6 +13,8 @@ const DocumentModerationTable = () => {
   const [rejectionReason, setRejectionReason] = useState('');
   const [filter, setFilter] = useState('pending');
   const [viewingDocument, setViewingDocument] = useState(null);
+  const [showTagManager, setShowTagManager] = useState(false);
+  const [selectedDocForTags, setSelectedDocForTags] = useState(null);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -238,6 +241,19 @@ const DocumentModerationTable = () => {
                   {/* Actions */}
                   <td className="py-4 text-right">
                     <div className="flex justify-end gap-2">
+                      {/* Nút Quản lý Tags */}
+                      <button
+                        onClick={() => {
+                          setSelectedDocForTags(doc);
+                          setShowTagManager(true);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-purple-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-600"
+                        title="Quản lý tags"
+                      >
+                        <Tag className="h-3.5 w-3.5" />
+                        Tags
+                      </button>
+
                       {/* Nút Xem - Luôn hiển thị */}
                       <button
                         onClick={() => handleViewDocument(doc)}
@@ -333,6 +349,31 @@ const DocumentModerationTable = () => {
       {/* Document Viewer */}
       {viewingDocument && (
         <DocumentViewer document={viewingDocument} onClose={closeDocumentViewer} />
+      )}
+
+      {/* Tag Manager Modal */}
+      {showTagManager && selectedDocForTags && (
+        <TagManager
+          documentId={selectedDocForTags.document_id}
+          isOpen={showTagManager}
+          onClose={() => {
+            setShowTagManager(false);
+            setSelectedDocForTags(null);
+          }}
+          onUpdate={() => {
+            // Refresh documents list
+            const fetchDocuments = async () => {
+              try {
+                const res = await api.get('/document/all-documents');
+                setDocuments(res.data.data.allDocuments);
+                toast.success('Tags đã được cập nhật!');
+              } catch (error) {
+                console.error('Error fetching documents:', error);
+              }
+            };
+            fetchDocuments();
+          }}
+        />
       )}
     </div>
   );
