@@ -6,22 +6,26 @@ import { api } from '../services/api';
 export default function LessonPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [lessons, setLessons] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
   const [loading, setLoading] = useState(true);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const searchRef = useRef(null);
 
   // Fetch lessons từ API
   useEffect(() => {
-    const fetchLessons = async (query = '') => {
+    const fetchLessons = async (query = '', page, limit) => {
       setLoading(true);
       try {
         const isSearch = query.trim() !== '';
         const endpoint = isSearch
-          ? `/document/search?q=${encodeURIComponent(query)}`
-          : `/document/approved-documents`;
+          ? `/document/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`
+          : `/document/approved-documents?page=${page}&limit=${limit}`;
 
         const res = await api.get(endpoint);
         setLessons(res.data.data.documents || []);
+        setTotalPages(res.data.data.totalPages || 1);
       } catch (error) {
         console.log(error);
       } finally {
@@ -29,60 +33,22 @@ export default function LessonPage() {
       }
     };
 
-    fetchLessons(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
+    fetchLessons(debouncedSearchTerm, page, limit);
+  }, [debouncedSearchTerm, page]);
 
   const approvedLessons = lessons.filter((lesson) => lesson.status === 'approved');
-
-  // // Lọc bài học theo category và từ khóa
-  // const filteredLessons = useMemo(() => {
-  //   let filtered = lessons;
-
-  //   // Lọc theo category
-  //   if (selectedCategory !== 'all') {
-  //     filtered = filtered.filter((lesson) => lesson.category === selectedCategory);
-  //   }
-
-  //   // Lọc theo từ khóa tìm kiếm
-  //   if (searchTerm.trim()) {
-  //     const term = searchTerm.toLowerCase();
-  //     filtered = filtered.filter(
-  //       (lesson) =>
-  //         lesson.title.toLowerCase().includes(term) ||
-  //         lesson.description.toLowerCase().includes(term) ||
-  //         lesson.subject.toLowerCase().includes(term),
-  //     );
-  //   }
-
-  //   return filtered;
-  // }, [searchTerm, selectedCategory, allLessons]);
-
-  // Gợi ý nhanh
-  // const suggestions = useMemo(() => {
-  //   if (!searchTerm.trim() || searchTerm.length < 2) return [];
-  //   const term = searchTerm.toLowerCase();
-  //   return lessons
-  //     .filter(
-  //       (lesson) =>
-  //         lesson.title.toLowerCase().includes(term) || lesson.subject.toLowerCase().includes(term),
-  //     )
-  //     .slice(0, 5);
-  // }, [searchTerm, lessons]);
-
-  // Đóng suggestions khi click bên ngoài
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (searchRef.current && !searchRef.current.contains(event.target)) {
-  //       setShowSuggestions(false);
-  //     }
-  //   };
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => document.removeEventListener('mousedown', handleClickOutside);
-  // }, []);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
+
+  function nextPage() {
+    if (page < totalPages) setPage(page + 1);
+  }
+
+  function prevPage() {
+    if (page > 1) setPage(page - 1);
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#f0f9ff] via-white to-[#f0f9ff]">
@@ -120,39 +86,6 @@ export default function LessonPage() {
               className="w-full rounded-full border-2 border-[#4AA4FF] bg-white py-5 pr-6 pl-16 text-base text-[#1e3a8a] shadow-xl transition-all duration-300 outline-none placeholder:text-[#999] focus:border-[#667eea] focus:shadow-2xl md:py-6 md:text-lg"
             />
           </div>
-
-          {/* Suggestions Dropdown */}
-          {/* {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute top-full right-0 left-0 z-20 mt-3 max-h-96 overflow-y-auto rounded-2xl border border-[#e5e5e5] bg-white shadow-2xl">
-              <div className="p-2">
-                {suggestions.map((lesson) => (
-                  <div
-                    key={lesson.document_id}
-                    onClick={() => handleSuggestionClick(lesson)}
-                    className="cursor-pointer rounded-xl px-6 py-4 transition-all hover:bg-gradient-to-r hover:from-[#f0f9ff] hover:to-[#e6f2ff]"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-3xl">
-                        {lesson.category === 'natural'
-                          ? '�'
-                          : lesson.category === 'social'
-                            ? '🌏'
-                            : '🗣️'}
-                      </span>
-                      <div className="flex-1 text-left">
-                        <p className="font-roboto font-semibold text-[#1e3a8a]">{lesson.title}</p>
-                        <p className="font-roboto text-sm text-gray-600"></p>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-yellow-500">⭐</span>
-                        <span className="font-semibold text-gray-700"></span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )} */}
         </div>
 
         {/* Results Section */}
@@ -206,6 +139,37 @@ export default function LessonPage() {
           </>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 md:px-8">
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={prevPage}
+              disabled={page === 1}
+              className="group relative flex items-center gap-2 rounded-full bg-white px-6 py-3 font-medium text-[#1e3a8a] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#4AA4FF] hover:text-white hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100 disabled:hover:bg-white disabled:hover:text-[#1e3a8a]"
+            >
+              <span className="text-xl">←</span>
+              <span className="font-roboto">Trang trước</span>
+            </button>
+
+            <div className="flex items-center gap-2 rounded-full bg-white px-8 py-3 shadow-lg">
+              <span className="font-roboto text-lg font-bold text-[#4AA4FF]">{page}</span>
+              <span className="font-roboto text-lg text-gray-400">/</span>
+              <span className="font-roboto text-lg font-semibold text-gray-600">{totalPages}</span>
+            </div>
+
+            <button
+              onClick={nextPage}
+              disabled={page === totalPages}
+              className="group relative flex items-center gap-2 rounded-full bg-white px-6 py-3 font-medium text-[#1e3a8a] shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#4AA4FF] hover:text-white hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100 disabled:hover:bg-white disabled:hover:text-[#1e3a8a]"
+            >
+              <span className="font-roboto">Trang sau</span>
+              <span className="text-xl">→</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
